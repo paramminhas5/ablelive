@@ -1,12 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { DEVICES } from "@/content/devices";
-import { getCtx, type SampleName } from "@/lib/audio";
-import { createSource, type SourceHandle } from "@/lib/source";
-import type { DeviceNode } from "@/lib/audio-bus";
-import { DeviceEngine } from "@/lib/device-engine";
-import { SpectrumMeter } from "@/components/SpectrumMeter";
+import { useState } from "react";
 import { Simulator } from "@/components/sims/Simulator";
+import { DeviceChainSim } from "@/components/sims/DeviceChainSim";
 import type { SimType } from "@/content/types";
 
 export const Route = createFileRoute("/playground")({
