@@ -211,9 +211,6 @@ export function DeviceLab({
         </div>
       </div>
 
-      {/* Signal Flow */}
-      <SignalFlowSVG flow={signalFlow} />
-
       {/* Main Device + Meters */}
       <div className="grid md:grid-cols-[2fr,1fr] gap-4">
         <div className="brutal-border bg-card p-4 space-y-4">
@@ -276,7 +273,7 @@ export function DeviceLab({
         <div className="space-y-3">
           <div className="brutal-border bg-ink text-bone p-2">
             <div className="font-mono text-[10px] uppercase mb-1">OUTPUT SPECTRUM</div>
-            <SpectrumMeter analyser={engineRef.current?.analyserOut ?? null} height={120} />
+            <SpectrumMeter analyser={engineRef.current?.analyserOut ?? null} height={90} />
           </div>
 
           {focused && (
@@ -306,6 +303,9 @@ export function DeviceLab({
           </div>
         </div>
       </div>
+
+      {/* Signal flow — collapsed by default at the bottom */}
+      <SignalFlowSVG flow={signalFlow} defaultOpen={false} />
     </div>
   );
 }

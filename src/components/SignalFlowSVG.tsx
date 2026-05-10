@@ -1,8 +1,11 @@
 // SignalFlowSVG — render a textual "A → B → C" pipeline as boxes + arrows.
-// Falls back gracefully when the input is just one chunk.
+// High-contrast colors only; never relies on theme variables that could resolve
+// to black-on-black.
 
-export function SignalFlowSVG({ flow }: { flow: string }) {
-  // Split on arrow glyphs; trim noise.
+import { useState } from "react";
+
+export function SignalFlowSVG({ flow, defaultOpen = false }: { flow: string; defaultOpen?: boolean }) {
+  const [open, setOpen] = useState(defaultOpen);
   const stages = flow
     .split(/→|->/)
     .map((s) => s.trim())
@@ -16,65 +19,60 @@ export function SignalFlowSVG({ flow }: { flow: string }) {
   const totalW = stages.length * boxW + (stages.length - 1) * gap;
   const h = boxH + 24;
 
+  const palette = ["#0A0A0A", "#C6FF00", "#FF2E88", "#7C3AED", "#FFD400", "#00B5D8"];
+
   return (
-    <div className="brutal-border bg-bone p-3 overflow-x-auto">
-      <div className="font-mono text-[10px] uppercase mb-2 opacity-70">▸ SIGNAL FLOW</div>
-      <svg
-        width={totalW}
-        height={h}
-        viewBox={`0 0 ${totalW} ${h}`}
-        className="block"
-        role="img"
-        aria-label={flow}
+    <div className="brutal-border bg-bone">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="w-full text-left p-3 font-mono text-[10px] uppercase opacity-80 flex items-center justify-between"
       >
-        {stages.map((s, i) => {
-          const x = i * (boxW + gap);
-          const fillCls =
-            i === 0
-              ? "fill-[hsl(var(--ink))]"
-              : i === stages.length - 1
-                ? "fill-[hsl(var(--volt))]"
-                : "fill-[hsl(var(--acid))]";
-          const textFill = i === 0 || i === stages.length - 1 ? "#FAF9F6" : "#0A0A0A";
-          return (
-            <g key={i}>
-              <rect
-                x={x}
-                y={12}
-                width={boxW}
-                height={boxH}
-                className={`${fillCls} stroke-[hsl(var(--ink))]`}
-                strokeWidth={3}
-              />
-              <text
-                x={x + boxW / 2}
-                y={12 + boxH / 2 + 4}
-                textAnchor="middle"
-                fill={textFill}
-                style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700 }}
-              >
-                {truncate(s, 16)}
-              </text>
-              {i < stages.length - 1 && (
-                <g>
-                  <line
-                    x1={x + boxW}
-                    y1={12 + boxH / 2}
-                    x2={x + boxW + gap - 6}
-                    y2={12 + boxH / 2}
-                    stroke="#0A0A0A"
-                    strokeWidth={2}
-                  />
-                  <polygon
-                    points={`${x + boxW + gap - 6},${12 + boxH / 2 - 5} ${x + boxW + gap},${12 + boxH / 2} ${x + boxW + gap - 6},${12 + boxH / 2 + 5}`}
-                    fill="#0A0A0A"
-                  />
+        <span>▸ SIGNAL FLOW</span>
+        <span className="font-mono text-xs">{open ? "▾ hide" : "▸ show"}</span>
+      </button>
+      {open && (
+        <div className="p-3 pt-0 overflow-x-auto">
+          <svg
+            width={totalW}
+            height={h}
+            viewBox={`0 0 ${totalW} ${h}`}
+            className="block"
+            role="img"
+            aria-label={flow}
+          >
+            {stages.map((s, i) => {
+              const x = i * (boxW + gap);
+              const fill = i === 0 ? "#0A0A0A" : i === stages.length - 1 ? "#7C3AED" : palette[(i % (palette.length - 2)) + 1];
+              // Ensure readable text: dark fill -> bone text, light fill -> ink text.
+              const dark = fill === "#0A0A0A" || fill === "#7C3AED" || fill === "#FF2E88";
+              const textFill = dark ? "#FAF9F6" : "#0A0A0A";
+              return (
+                <g key={i}>
+                  <rect x={x} y={12} width={boxW} height={boxH} fill={fill} stroke="#0A0A0A" strokeWidth={3} />
+                  <text
+                    x={x + boxW / 2}
+                    y={12 + boxH / 2 + 4}
+                    textAnchor="middle"
+                    fill={textFill}
+                    style={{ fontFamily: "monospace", fontSize: 11, fontWeight: 700 }}
+                  >
+                    {truncate(s, 16)}
+                  </text>
+                  {i < stages.length - 1 && (
+                    <g>
+                      <line x1={x + boxW} y1={12 + boxH / 2} x2={x + boxW + gap - 6} y2={12 + boxH / 2} stroke="#0A0A0A" strokeWidth={2} />
+                      <polygon
+                        points={`${x + boxW + gap - 6},${12 + boxH / 2 - 5} ${x + boxW + gap},${12 + boxH / 2} ${x + boxW + gap - 6},${12 + boxH / 2 + 5}`}
+                        fill="#0A0A0A"
+                      />
+                    </g>
+                  )}
                 </g>
-              )}
-            </g>
-          );
-        })}
-      </svg>
+              );
+            })}
+          </svg>
+        </div>
+      )}
     </div>
   );
 }

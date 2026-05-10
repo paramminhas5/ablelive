@@ -4,6 +4,7 @@ import { DeviceLab } from "@/components/DeviceLab";
 import { DeviceExplainers } from "@/components/DeviceExplainers";
 import { getDeviceExplainer } from "@/content/device-explainers";
 import { ClientOnly } from "@/components/ClientOnly";
+import { useMode } from "@/lib/mode";
 
 export const Route = createFileRoute("/device/$slug")({
   head: ({ params }) => {
@@ -19,6 +20,8 @@ export const Route = createFileRoute("/device/$slug")({
 
 function DevicePage() {
   const { slug } = Route.useParams();
+  const { mode } = useMode();
+  const advanced = mode === "advanced";
   const d = deviceBySlug(slug);
   if (!d) throw notFound();
   const idx = DEVICES.findIndex((x) => x.slug === slug);
@@ -29,7 +32,10 @@ function DevicePage() {
       <Link to="/devices" className="font-mono text-xs uppercase underline">← all devices</Link>
 
       <header className="brutal-border bg-acid p-6 brutal-shadow">
-        <div className="font-mono text-xs uppercase">{d.category} · DEVICE LAB</div>
+        <div className="font-mono text-xs uppercase flex items-center gap-2">
+          <span>{d.category} · DEVICE LAB</span>
+          <span className={`brutal-border px-2 py-0.5 ${advanced ? "bg-volt text-bone" : "bg-bone text-ink"}`}>{advanced ? "ADVANCED" : "BEGINNER"} MODE</span>
+        </div>
         <h1 className="text-5xl md:text-7xl mt-2">{d.name}</h1>
         <p className="font-mono mt-2 text-lg">{d.tagline}</p>
       </header>
@@ -106,10 +112,17 @@ function DevicePage() {
         </section>
       )}
 
-      {/* Deep Explanations */}
-      <div className="brutal-border bg-card p-6 space-y-4">
-        <DeviceExplainers blocks={getDeviceExplainer(slug)} />
-      </div>
+      {/* Deep Explanations — advanced mode only */}
+      {advanced ? (
+        <div className="brutal-border bg-card p-6 space-y-4">
+          <div className="font-mono text-xs uppercase opacity-70">▸ ADVANCED · ENGINEER NOTES</div>
+          <DeviceExplainers blocks={getDeviceExplainer(slug)} />
+        </div>
+      ) : (
+        <div className="brutal-border bg-bone p-4 font-mono text-xs uppercase opacity-80">
+          ▸ Want the technical breakdown, DSP notes and edge cases? Switch to <b>ADVANCED</b> mode in the header.
+        </div>
+      )}
 
       <div className="flex justify-between gap-3">
         {prev ? (
