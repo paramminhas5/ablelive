@@ -58,6 +58,67 @@ export const PATHS: LearningPath[] = [
       "tempo-following", "automation", "exporting",
     ],
   },
+  {
+    slug: "finish-a-track",
+    title: "Finish a Track",
+    tagline: "From idea to bounce, no half-songs.",
+    color: "bg-sun",
+    description: "Arrangement editing, comping, automation, export. The path most producers never actually finish — until now.",
+    missionSlugs: [
+      "arrangement-view", "linked-track-editing", "comping-flow",
+      "take-lanes", "automation", "modulation-lanes",
+      "limiter-truepeak", "exporting",
+    ],
+  },
+  {
+    slug: "studio-to-stage",
+    title: "Studio to Stage",
+    tagline: "Push 3, Link, controllers, performable sets.",
+    color: "bg-hot text-bone",
+    description: "Build a Session you can actually play. Map a controller. Sync to the room. Walk on knowing nothing silently fails.",
+    missionSlugs: [
+      "session-view", "scenes-follow", "push-controllers",
+      "push3-workflow", "push3-standalone", "midi-mapping",
+      "ableton-link", "tempo-following", "automation",
+    ],
+  },
+  {
+    slug: "sampling-deep",
+    title: "Sampling Deep Dive",
+    tagline: "Simpler, Sampler, Drum Rack, Granulator, warp.",
+    color: "bg-volt text-bone",
+    description: "Turn any sound source into a playable instrument. Slice, map, warp, granulate.",
+    missionSlugs: [
+      "sampler-simpler", "sampler-deep", "drum-rack",
+      "drum-sampler", "slicing", "warping",
+      "warp-modes-deep", "granulator-iii", "stem-separation",
+    ],
+  },
+  {
+    slug: "live12-power",
+    title: "Live 12 Power Tools",
+    tagline: "What makes Live 12 a step-change.",
+    color: "bg-acid",
+    description: "Stem separation, MIDI transformations, scale awareness, sound similarity, Push 3 standalone.",
+    missionSlugs: [
+      "stem-separation", "midi-transforms", "scale-awareness",
+      "sound-similarity", "groove-pool", "push3-standalone",
+      "accessibility-features",
+    ],
+  },
+  {
+    slug: "midi-instruments",
+    title: "MIDI & Instruments Tour",
+    tagline: "Every built-in synth, sampler and rack.",
+    color: "bg-volt text-bone",
+    description: "Drift, Wavetable, Operator, Meld, Sampler, Granulator, Collision/Tension/Electric/Analog, Bass & Poli, Racks, MIDI effects, External Instrument.",
+    missionSlugs: [
+      "instruments-overview", "drift", "wavetable", "operator", "meld",
+      "sampler-simpler", "sampler-deep", "granulator-iii",
+      "collision-tension-electric", "bass-poli",
+      "instrument-rack", "midi-effects-tour", "external-instrument",
+    ],
+  },
 ];
 
 export function pathBySlug(slug: string) {
