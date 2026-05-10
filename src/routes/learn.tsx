@@ -74,9 +74,9 @@ function LearnPage() {
         </div>
       </section>
 
-      {/* Path picker */}
+      {/* Path picker + view toggle */}
       <section className="max-w-5xl mx-auto px-4 py-5">
-        <div className="flex gap-2 flex-wrap font-mono text-xs uppercase">
+        <div className="flex gap-2 flex-wrap items-center font-mono text-xs uppercase">
           {PATHS.map((p) => (
             <button
               key={p.slug}
@@ -86,42 +86,109 @@ function LearnPage() {
               {p.slug === MARQUEE_PATH ? "★ " : ""}{p.title}
             </button>
           ))}
+          <span className="ml-auto flex gap-2">
+            <button
+              onClick={() => setView("tree")}
+              className={`brutal-border px-3 py-2 brutal-press ${view === "tree" ? "bg-volt text-bone" : "bg-bone"}`}
+            >TREE</button>
+            <button
+              onClick={() => setView("lanes")}
+              className={`brutal-border px-3 py-2 brutal-press ${view === "lanes" ? "bg-volt text-bone" : "bg-bone"}`}
+            >SKILL MAP</button>
+          </span>
         </div>
         <p className="font-mono text-xs mt-3 opacity-70">{path.description}</p>
       </section>
 
-      {/* Tree */}
-      <section className="max-w-3xl mx-auto px-4 pb-20">
-        <ol className="relative">
-          {lessons.map((l, i) => {
-            const offset = i % 4; // serpentine
-            const ml = ["ml-0", "ml-12 md:ml-24", "ml-24 md:ml-48", "ml-12 md:ml-24"][offset];
-            const isCheck = (i + 1) % 5 === 0;
-            return (
-              <li key={l.slug} className={`flex items-center gap-4 my-3 ${ml}`}>
-                <Connector last={i === lessons.length - 1} />
-                <LessonNode
-                  num={i + 1}
-                  title={l.mission?.title ?? l.slug}
-                  slug={l.slug}
-                  done={l.done}
-                  locked={l.locked}
-                  isCheck={isCheck}
-                  ccd={learnMode === "ccd"}
-                />
-              </li>
-            );
-          })}
-        </ol>
+      {view === "tree" ? (
+        <section className="max-w-3xl mx-auto px-4 pb-20">
+          <ol className="relative">
+            {lessons.map((l, i) => {
+              const offset = i % 4; // serpentine
+              const ml = ["ml-0", "ml-12 md:ml-24", "ml-24 md:ml-48", "ml-12 md:ml-24"][offset];
+              const isCheck = (i + 1) % 5 === 0;
+              return (
+                <li key={l.slug} className={`flex items-center gap-4 my-3 ${ml}`}>
+                  <Connector last={i === lessons.length - 1} />
+                  <LessonNode
+                    num={i + 1}
+                    title={l.mission?.title ?? l.slug}
+                    slug={l.slug}
+                    done={l.done}
+                    locked={l.locked}
+                    isCheck={isCheck}
+                    ccd={learnMode === "ccd"}
+                  />
+                </li>
+              );
+            })}
+          </ol>
 
-        {/* End cap */}
-        <div className="mt-8 brutal-border bg-sun p-5 text-center">
-          <div className="font-display text-2xl">PATH COMPLETE → CROWN</div>
-          <p className="font-mono text-xs mt-1 uppercase">
-            Finish all {lessons.length} lessons to earn the {path.title} crown.
-          </p>
-        </div>
-      </section>
+          <div className="mt-8 brutal-border bg-sun p-5 text-center">
+            <div className="font-display text-2xl">PATH COMPLETE → CROWN</div>
+            <p className="font-mono text-xs mt-1 uppercase">
+              Finish all {lessons.length} lessons to earn the {path.title} crown.
+            </p>
+          </div>
+        </section>
+      ) : (
+        <section className="max-w-6xl mx-auto px-4 pb-20 space-y-6">
+          {/* All paths as skill lanes */}
+          <div className="brutal-border bg-card p-4 brutal-shadow-sm overflow-x-auto">
+            <div className="font-mono text-xs uppercase mb-3">// SKILL LANES — paths as routes through the same map</div>
+            <div className="space-y-3 min-w-max">
+              {PATHS.map((p) => {
+                const ms = p.missionSlugs.map((s) => missionBySlug(s)).filter(Boolean);
+                const doneCount = p.missionSlugs.filter((s) => progress.completedMissions[s]).length;
+                return (
+                  <div key={p.slug} className="flex items-center gap-2">
+                    <button
+                      onClick={() => setActivePath(p.slug)}
+                      className={`${p.color} brutal-border px-2 py-2 font-mono text-[10px] uppercase w-40 shrink-0 leading-tight brutal-press text-left ${activePath === p.slug ? "ring-2 ring-ink" : ""}`}
+                    >
+                      <div className="font-display text-sm truncate">{p.title}</div>
+                      <div className="opacity-80">{doneCount}/{p.missionSlugs.length}</div>
+                    </button>
+                    <div className="relative flex items-center py-3">
+                      <div className={`absolute left-3 right-3 h-1 ${p.color} brutal-border border-x-0`} aria-hidden />
+                      {p.missionSlugs.map((slug, idx) => {
+                        const m = missionBySlug(slug);
+                        const isDone = !!progress.completedMissions[slug];
+                        const prevDone = idx === 0 || (progress.completedMissions[p.missionSlugs[idx - 1]]?.score ?? 0) >= 0.6;
+                        const locked = learnMode === "ccd" && !prevDone && !isDone;
+                        const tone = isDone ? "bg-acid text-ink"
+                                  : locked ? "bg-bone opacity-40"
+                                  : "bg-bone text-ink hover:bg-sun";
+                        return (
+                          <Link
+                            key={slug}
+                            to="/mission/$slug"
+                            params={{ slug }}
+                            title={`${m?.title ?? slug}${locked ? " — LOCKED" : ""}`}
+                            disabled={locked as never}
+                            className="relative z-10 mx-1"
+                            onClick={(e) => { if (locked) e.preventDefault(); }}
+                          >
+                            <span className={`${tone} brutal-border w-8 h-8 flex items-center justify-center font-mono text-[10px] brutal-press`}>
+                              {isDone ? "✓" : locked ? "🔒" : idx + 1}
+                            </span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-3 font-mono text-[10px] uppercase opacity-60">
+              ▸ Each lane is a learning path. Stops are missions. Cross-paths share stops where skills overlap.
+            </div>
+          </div>
+
+          {/* Worlds as subway */}
+          <JourneyMap />
+        </section>
+      )}
     </main>
   );
 }
