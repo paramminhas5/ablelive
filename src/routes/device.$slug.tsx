@@ -20,6 +20,8 @@ export const Route = createFileRoute("/device/$slug")({
 
 function DevicePage() {
   const { slug } = Route.useParams();
+  const { mode } = useMode();
+  const advanced = mode === "advanced";
   const d = deviceBySlug(slug);
   if (!d) throw notFound();
   const idx = DEVICES.findIndex((x) => x.slug === slug);
@@ -30,7 +32,10 @@ function DevicePage() {
       <Link to="/devices" className="font-mono text-xs uppercase underline">← all devices</Link>
 
       <header className="brutal-border bg-acid p-6 brutal-shadow">
-        <div className="font-mono text-xs uppercase">{d.category} · DEVICE LAB</div>
+        <div className="font-mono text-xs uppercase flex items-center gap-2">
+          <span>{d.category} · DEVICE LAB</span>
+          <span className={`brutal-border px-2 py-0.5 ${advanced ? "bg-volt text-bone" : "bg-bone text-ink"}`}>{advanced ? "ADVANCED" : "BEGINNER"} MODE</span>
+        </div>
         <h1 className="text-5xl md:text-7xl mt-2">{d.name}</h1>
         <p className="font-mono mt-2 text-lg">{d.tagline}</p>
       </header>
