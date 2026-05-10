@@ -4,6 +4,7 @@ import { DeviceLab } from "@/components/DeviceLab";
 import { DeviceExplainers } from "@/components/DeviceExplainers";
 import { getDeviceExplainer } from "@/content/device-explainers";
 import { ClientOnly } from "@/components/ClientOnly";
+import { useMode } from "@/lib/mode";
 
 export const Route = createFileRoute("/device/$slug")({
   head: ({ params }) => {
