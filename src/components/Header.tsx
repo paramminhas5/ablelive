@@ -4,8 +4,10 @@ import { useProgress } from "@/lib/progress";
 import { ModeToggle } from "./ModeToggle";
 import { useAuth, signOut } from "@/lib/auth";
 import { RankBadge } from "./HomeWidgets";
+import { useLearnMode } from "@/lib/mode";
 
 const PRIMARY = [
+  { to: "/learn", label: "Skill Tree", hover: "hover:bg-hot hover:text-bone" },
   { to: "/worlds", label: "Worlds", hover: "hover:bg-acid" },
   { to: "/devices", label: "Devices", hover: "hover:bg-volt hover:text-bone" },
   { to: "/playground", label: "Workbench", hover: "hover:bg-hot hover:text-bone" },
