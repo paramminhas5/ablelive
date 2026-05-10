@@ -1,5 +1,6 @@
 // CompLakeSim — show 4 take lanes, swipe across them to comp a winning take.
 import { useState } from "react";
+import { getCtx, getMaster, midiToFreq, playTone } from "@/lib/audio";
 
 const BARS = 8;
 const TAKES = 4;
@@ -29,6 +30,16 @@ export function CompLakeSim() {
       <div className="brutal-border bg-ink text-bone p-3 flex flex-wrap gap-2 items-center font-mono text-xs uppercase">
         <span>SCORE {score}/{max} ({pct}%)</span>
         <span className="opacity-70">Click a bar in each take lane to pick the winning slice.</span>
+        <button onClick={async () => {
+          const c = getCtx(); if (!c) return;
+          if (c.state !== "running") { try { await c.resume(); } catch {} }
+          // Each take has its own vocal "pitch lane"; play the comp's pitches with quality-mapped velocity.
+          const PITCH_PER_TAKE = [60, 62, 64, 67];
+          comp.forEach((t, b) => {
+            const q = QUALITY[t][b];
+            playTone(midiToFreq(PITCH_PER_TAKE[t]), b * 0.22, 0.2, "triangle", 0.08 + q * 0.015, getMaster());
+          });
+        }} className="brutal-border bg-hot text-bone px-3 py-1.5 brutal-press">▶ AUDITION COMP</button>
         <button onClick={() => setComp(BEST)} className="brutal-border bg-acid text-ink px-3 py-1.5 brutal-press ml-auto">AUTO-COMP</button>
         <button onClick={() => setComp(Array(BARS).fill(0))} className="brutal-border bg-bone text-ink px-3 py-1.5 brutal-press">RESET</button>
       </div>

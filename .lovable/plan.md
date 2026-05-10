@@ -1,94 +1,105 @@
-## Plan: make the learning tools reliable and more Duolingo-like while keeping both looks
+# Plan — Fix learning chain, audio, nav, and skill page
 
-### 1) Fix audio first, then simplify the device chain
-- Replace the fragile Workbench chain graph with a very small, deterministic chain demo focused on learning:
-  - one local Play/Stop button
-  - one source selector
-  - 4 clearly audible effects: EQ/filter, compressor, saturator, reverb/delay
-  - per-effect on/off and A/B dry/wet comparison
-  - visible before/after meters so students understand what each effect changed
-- Keep the existing `DeviceEngine` for single device pages, but stop using the complex Workbench chain as the main teaching path.
-- Remove the confusing shared Workbench/master transport behavior where possible: each sim/tool should own its own Play button and audio.
-- Add lightweight audio debug state in the simplified chain: `Audio ready`, `Playing`, `Source`, `Effect active`, `Output moving`.
+## 1. Fix the broken quiz on Next
 
-### 2) Improve Sidechain Sim with a better example
-- Rebuild the sidechain example around a clear musical contrast:
-  - kick + sustained bass/pad fighting for space
-  - toggle sidechain off/on
-  - presets like `No Duck`, `Clean Pump`, `EDM Pump`, `Too Much`
-  - animated ducking curve and gain-reduction meter
-- Make the lesson point explicit in the interaction: users hear the kick become clearer when the pad ducks.
+**Bug:** When you press a "Next mission" link the route param changes but `<Quiz>` keeps its previous `answers` / `submitted` state, so the new mission appears to be already answered/submitted.
 
-### 3) Make spectrum meters more useful and fit the same window
-- Update `SpectrumMeter` to use RGB/wavelength-style frequency coloring:
-  - lows red/orange
-  - mids green
-  - highs blue/violet
-- Add compact sizing options and reduce the output spectrum height in device pages/workbench so the core controls, signal flow, and spectrum fit together better.
-- Keep high contrast and avoid direct black-on-black text.
+**Fix:** in `src/routes/mission.$slug.tsx`, key the quiz + completion state by slug.
 
-### 4) Rework device pages layout
-- Move signal flow lower and make it collapsed by default inside device pages.
-- Fix signal-flow colors so text is always readable.
-- Keep the brutalist look, but make the learning layout cleaner:
-  - transport and A/B at top
-  - device controls in the main area
-  - compact output spectrum in the side rail
-  - collapsed signal flow/details below
-- Fix the “Advanced” expectation by making advanced mode visibly affect device pages too:
-  - beginner mode: concise controls + listen-for + simple explanation
-  - advanced mode: expanded technical notes/signal flow/manual source details
+- Add `key={slug}` to `<Quiz>` so it remounts per mission.
+- Replace `useState(!!progress.completedMissions[slug])` with `useEffect` that resets `completed` and `flowKey` whenever `slug` changes.
+- Also remount `<Simulator>` with `key={slug}` so audio nodes from the previous sim are torn down.
 
-### 5) Make Ear Training a real answer-based drill
-- Change ear training from “click options and maybe see feedback” into rounds:
-  - Play Target
-  - audition options A/B/C/D
-  - choose final answer
-  - submit/check
-  - streak/score and next round
-- Add a clear correct/incorrect mechanism and prevent accidental answer locking while auditioning.
+## 2. Audio missing on new sims
 
-### 6) Merge Paths and Skill Tree into one page
-- Make `/paths` and `/learn` the same learning-map experience instead of separate concepts.
-- Use existing `PATHS`, `WORLDS`, and missions together:
-  - each path is a selectable route through the same map
-  - worlds are map regions
-  - skills like beat, melody, drums, MIDI, audio, mixing, arrangement, sound design appear as map lanes/tags
-- Classic mode: all nodes stay open and brutalist.
-- CCD/Duolingo mode: path nodes are gated, with XP/streak/hearts displayed.
-- Header keeps both looks/modes and adds a clear Duolingo/CCD tab.
+Audit the six new sims (`StemSplitterSim`, `MidiTransformSim`, `ScaleAwareSim`, `CompLakeSim`, `GrooveExtractorSim`, `Push3Sim`) and the older `EarTrainingSim`. For each, either:
 
-### 7) Upgrade the journey map visually
-- Replace the plain row of numbered boxes with a more creative map:
-  - subway/skill-lane hybrid using world regions
-  - path branches for beat, melody, drums, mixing, sound design, performance
-  - better completed/current/locked states
-  - progress summary without overwhelming the screen
-- Reuse the earlier “skill map” idea, but bind it to the real mission/path data.
+- Wire them to the shared `audio.ts` / `source.ts` engine (drum-loop, bass-loop, vox-chop, MIDI synth voice via `audio.ts` oscillators), with a local Play/Stop button using `AudioUnlock`, or
+- If the sim is conceptual only (e.g. Scale-Aware piano roll), add a small "▶ Audition" button that plays back the result using the shared synth.
 
-### 8) Manual coverage audit
-- Use the uploaded Live 12 manual contents as the source of truth for a coverage gap report.
-- Produce a new artifact, e.g. `/mnt/documents/manual-coverage.md`, listing:
-  - already covered topics
-  - partially covered topics
-  - missing high-priority topics
-  - device gaps, especially instruments vs audio effects
-  - recommended new worlds/paths/lessons
-- Initial visible gaps from the parsed contents: Browser depth, file/project management, Arrangement editing, Clip View, Warping, Recording, MIDI tools, automation, comping, stem separation, Push, settings/preferences, CPU/audio setup, accessibility, and a much broader instrument catalog.
+Standard pattern (already used in `SidechainSim`): create source on first interaction, route through whatever the sim is demonstrating, expose Play/Stop + a "bypass" or A/B if relevant.
 
-## Technical notes
-- Files likely touched:
-  - `src/components/SpectrumMeter.tsx`
-  - `src/components/SignalFlowSVG.tsx`
-  - `src/components/DeviceLab.tsx`
-  - `src/components/sims/DeviceChainSim.tsx`
-  - `src/components/sims/SidechainSim.tsx`
-  - `src/components/sims/EarTrainingSim.tsx`
-  - `src/routes/playground.tsx`
-  - `src/routes/learn.tsx`
-  - `src/routes/paths.tsx`
-  - `src/components/JourneyMap.tsx`
-  - possibly `src/components/Header.tsx` and `src/routes/__root.tsx` for nav/master-bar cleanup
-- No database changes needed for this pass; keep progress local as currently implemented.
-- Do not edit generated route files directly.
-- Keep both visual modes: classic brutalist remains, CCD/Duolingo mode becomes the gated learning layer.
+## 3. Prune mis-matched sim assignments
+
+A lot of missions reuse a generic sim that doesn't teach the lesson topic. Pass:
+
+- Read `src/content/missions.ts` end-to-end.
+- For every mission where `sim.type` is unrelated to the topic, switch to either:
+  - the matching `device-lab` (pass `preset.device`) when the lesson is about a built-in device, or
+  - `none` (renders the "read & quiz only" block) when no useful sim exists yet.
+- Examples to fix: instrument-overview lessons → `device-lab` of the discussed instrument; routing/sends lessons → `send-return`; warp-modes-deep → `warp-lab`; etc.
+- Output a short table in the PR notes listing every mission whose sim changed.
+
+## 4. Make Beginner/Advanced contextual
+
+Remove the global `<ModeToggle>` from the header. The toggle should only appear where it actually changes content:
+
+- `mission/$slug.tsx` — only render the toggle when `LESSONS[slug]` has BOTH a `beginner` and an `advanced` track (or differing `quizEasy`/`quizHard`).
+- `device/$slug.tsx` — only render the toggle when the device explainer has advanced engineer notes.
+- Everywhere else: hide it. The state still lives in `useMode()` so it persists when present.
+
+## 5. Nav cleanup
+
+- Remove `Paths` from the `MORE` menu in `Header.tsx` (route already redirects to /learn; the page now owns paths).
+- Rename the top nav item `Skill Tree` → `**Learn**`.
+- Update the `/learn` page H1 from "SKILL TREE" to **"LEARN — PATHS & SKILLS"** (or similar, see §7).
+
+## 6. Add instrument explanations on /devices
+
+On the Devices index and each `device/$slug` page, add a short "What it does / What it's for" block sourced from `device-explainers.ts`. For instruments specifically (Drift, Wavetable, Operator, Meld, Sampler, Drum Rack, Granulator III, Collision/Tension/Electric/Analog, Bass, Poli):
+
+- 1-line tagline (already present)
+- 2-3 sentence "what kind of sounds it makes & when to reach for it"
+- A "Try a preset" row that loads 3 hand-picked presets into the existing device-lab.
+
+Where copy doesn't exist yet, extend `src/content/device-explainers.ts` with an `overview` field and render it above the lab.  
+Move the device chain to the bottom collapsed, its not very usful right now. Also make these new instruments and devices appear on the device tab i cant see it
+
+## 7. Rebuild /learn page (paths + skills clearer, mobile-first)
+
+The current page has three views (tree/lanes + JourneyMap) all stacked. Replace with a tighter layout:
+
+```text
+┌─ Hero: LEARN. progress + streak + XP ─┐
+├─ Tabs:  [Paths] [Skill Map] [Journey] ┤
+│                                       │
+│  Paths tab → vertical list of paths,  │
+│  each row shows mini-rail of stops    │
+│  (mobile-friendly, no horizontal      │
+│  scroll-fest). Tap a row to expand    │
+│  into the Duolingo-style serpentine.  │
+│                                       │
+│  Skill Map tab → existing lanes view  │
+│  but each lane wraps on mobile        │
+│  (flex-wrap, 8 stops per row).        │
+│                                       │
+│  Journey tab → the subway JourneyMap, │
+│  rotated to vertical on viewports     │
+│  <768px so lanes stack instead of     │
+│  overflowing horizontally.            │
+└───────────────────────────────────────┘
+```
+
+- Fix `JourneyMap` mobile layout: replace `min-w-max` + horizontal rail with a responsive grid; on `<md` each world renders its stops as a wrapping 6-col grid.
+- Rename internal "TREE" / "SKILL MAP" buttons to "PATHS" / "SKILL MAP" / "JOURNEY".
+
+## 8. Verification
+
+- Build & open `/learn` on 390px viewport — confirm no horizontal overflow, JourneyMap readable.
+- Walk through `first-beat` path: start mission, submit quiz, click Next — confirm new mission has clean quiz state and the simulator audio starts fresh.
+- Visit 3-4 randomly chosen missions whose sim assignment was changed; confirm sim matches topic.
+- Visit `/devices/wavetable` and `/devices/drift` — confirm new explainer block renders and presets load.
+- Confirm Beginner/Advanced toggle only appears on missions/devices where it changes content.
+
+## Files touched
+
+- `src/components/Header.tsx` — rename label, remove Paths, gate ModeToggle.
+- `src/components/Quiz.tsx` — no change needed; keying happens at parent.
+- `src/routes/mission.$slug.tsx` — slug-scoped state, key Quiz/Simulator, conditional ModeToggle.
+- `src/routes/device.$slug.tsx` — conditional ModeToggle, instrument overview block.
+- `src/routes/devices.tsx` — show overview blurb per device card (instruments only).
+- `src/routes/learn.tsx` — new 3-tab layout, mobile fixes.
+- `src/components/JourneyMap.tsx` — responsive layout.
+- `src/components/sims/*` — wire audio in the six new sims.
+- `src/content/missions.ts` — re-map mis-assigned sims.
+- `src/content/device-explainers.ts` — add `overview` field for instruments.

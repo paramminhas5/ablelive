@@ -1,5 +1,6 @@
-// MidiTransformSim — pick a clip, apply a transform, see notes change.
+// MidiTransformSim — pick a clip, apply a transform, see + hear notes change.
 import { useMemo, useState } from "react";
+import { getCtx, getMaster, midiToFreq, playTone } from "@/lib/audio";
 
 type Note = { step: number; pitch: number; len: number; vel: number };
 
@@ -81,9 +82,21 @@ export function MidiTransformSim() {
         <Roll title={`AFTER · ${T.label}`} notes={transformed} accent="bg-acid" />
       </div>
 
-      <div className="flex gap-2">
-        <button onClick={() => setSeed(SEED)} className="brutal-border bg-bone px-3 py-1.5 font-mono text-xs uppercase brutal-press">RESET CLIP</button>
-        <button onClick={() => setSeed(transformed)} className="brutal-border bg-hot text-bone px-3 py-1.5 font-mono text-xs uppercase brutal-press">COMMIT TRANSFORM</button>
+      <div className="flex gap-2 flex-wrap">
+        <button onClick={async () => {
+          const c = getCtx(); if (!c) return;
+          if (c.state !== "running") { try { await c.resume(); } catch {} }
+          const beat = 0.18;
+          [...seed].forEach((n) => playTone(midiToFreq(n.pitch), n.step * beat, beat * 0.9, "sawtooth", 0.15, getMaster()));
+        }} className="brutal-border bg-bone px-3 py-1.5 font-mono text-xs uppercase brutal-press">▶ BEFORE</button>
+        <button onClick={async () => {
+          const c = getCtx(); if (!c) return;
+          if (c.state !== "running") { try { await c.resume(); } catch {} }
+          const beat = 0.18;
+          transformed.forEach((n) => playTone(midiToFreq(n.pitch), n.step * beat, beat * (n.len || 1) * 0.9, "sawtooth", 0.18, getMaster()));
+        }} className="brutal-border bg-acid px-3 py-1.5 font-mono text-xs uppercase brutal-press">▶ AFTER</button>
+        <button onClick={() => setSeed(SEED)} className="brutal-border bg-bone px-3 py-1.5 font-mono text-xs uppercase brutal-press">RESET</button>
+        <button onClick={() => setSeed(transformed)} className="brutal-border bg-hot text-bone px-3 py-1.5 font-mono text-xs uppercase brutal-press">COMMIT</button>
       </div>
       <p className="font-mono text-[11px] uppercase opacity-70">
         ▸ Commit is destructive in real Live too — duplicate your clip first if you want a safe before/after.

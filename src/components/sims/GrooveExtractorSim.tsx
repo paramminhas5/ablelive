@@ -1,6 +1,7 @@
-// GrooveExtractorSim — visualise extracting a groove from a sampled loop
+// GrooveExtractorSim — visualise + audition extracting a groove from a sampled loop
 // and applying it (timing + velocity) to a stiff MIDI loop.
 import { useMemo, useState } from "react";
+import { getCtx, getMaster, playKick, playHat } from "@/lib/audio";
 
 // A "sampled" groove (offsets in ticks, velocities)
 const SOURCE = [
@@ -40,6 +41,17 @@ export function GrooveExtractorSim() {
         <label className="flex items-center gap-1">VELOCITY {Math.round(velocity * 100)}
           <input type="range" min={0} max={1} step={0.01} value={velocity} onChange={(e) => setVelocity(+e.target.value)} />
         </label>
+        <button onClick={async () => {
+          const c = getCtx(); if (!c) return;
+          if (c.state !== "running") { try { await c.resume(); } catch {} }
+          const sec = 0.12;
+          const out = getMaster();
+          grooved.forEach((n) => {
+            const t = n.step * sec * 0.5;
+            playKick(t, out);
+            if (n.vel > 100) playHat(t + sec * 0.5, false, out);
+          });
+        }} className="brutal-border bg-hot text-bone px-3 py-1.5 brutal-press">▶ AUDITION</button>
         <button onClick={() => setCommitted((c) => !c)} className={`brutal-border px-3 py-1.5 brutal-press ml-auto ${committed ? "bg-hot text-bone" : "bg-acid text-ink"}`}>
           {committed ? "COMMITTED" : "COMMIT"}
         </button>

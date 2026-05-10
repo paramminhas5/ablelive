@@ -4,10 +4,11 @@ import { WORLDS } from "@/content/worlds";
 import { Simulator } from "@/components/sims/Simulator";
 import { Quiz } from "@/components/Quiz";
 import { useProgress } from "@/lib/progress";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LESSONS } from "@/content/lesson-deep";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
 import { useMode } from "@/lib/mode";
+import { ModeToggle } from "@/components/ModeToggle";
 
 export const Route = createFileRoute("/mission/$slug")({
   head: ({ params }) => {
@@ -27,8 +28,15 @@ function MissionPage() {
   const { mode } = useMode();
   const advanced = mode === "advanced";
   const { progress, completeMission } = useProgress();
-  const [completed, setCompleted] = useState(!!progress.completedMissions[slug]);
+  const [completed, setCompleted] = useState(false);
   const [flowKey, setFlowKey] = useState(0);
+  // Reset transient state whenever we navigate to a different mission.
+  // Without this, Quiz/Simulator keep stale state from the previous slug.
+  useEffect(() => {
+    setCompleted(!!progress.completedMissions[slug]);
+    setFlowKey(0);
+    if (typeof window !== "undefined") window.scrollTo({ top: 0 });
+  }, [slug, progress.completedMissions]);
   const next = nextMission(slug);
   const prev = prevMission(slug);
   const colorClass = { acid: "bg-acid", hot: "bg-hot text-bone", volt: "bg-volt text-bone", sun: "bg-sun", bone: "bg-bone", ink: "bg-ink text-bone" }[w.color];
@@ -52,12 +60,17 @@ function MissionPage() {
     <div className="max-w-5xl mx-auto p-4 md:p-12 space-y-6 animate-fade-in">
       <Link to="/world/$slug" params={{ slug: m.world }} className="font-mono text-xs uppercase underline">← {w.title}</Link>
 
-      <nav className="sticky top-[60px] z-30 brutal-border bg-bone p-2 flex flex-wrap gap-1 font-mono text-[10px] uppercase">
+      <nav className="sticky top-[60px] z-30 brutal-border bg-bone p-2 flex flex-wrap gap-1 font-mono text-[10px] uppercase items-center">
         <a href="#hook" className="brutal-border px-2 py-1 bg-acid">Hook</a>
         <a href="#play" className="brutal-border px-2 py-1 bg-sun">Play</a>
         <a href="#how" className="brutal-border px-2 py-1 bg-volt text-bone">How</a>
         <a href="#quiz" className="brutal-border px-2 py-1 bg-hot text-bone">Quiz</a>
-        <span className="ml-auto opacity-60 self-center">M{m.number}/{MISSIONS.length} · {mode.toUpperCase()}</span>
+        {/* Beginner/Advanced toggle — only when content actually differs */}
+        {(deep?.beginner && deep?.advanced) || (deep?.quizEasy && deep?.quizHard) ? (
+          <span className="ml-auto"><ModeToggle /></span>
+        ) : (
+          <span className="ml-auto opacity-60 self-center">M{m.number}/{MISSIONS.length}</span>
+        )}
       </nav>
 
       <header id="hook" className={`${colorClass} brutal-border p-4 md:p-6 brutal-shadow`}>
@@ -100,7 +113,7 @@ function MissionPage() {
 
       <section id="play">
         <h2 className="text-2xl mb-2">// SEE & HEAR IT</h2>
-        <Simulator type={m.sim.type} preset={m.sim.preset} />
+        <Simulator key={slug} type={m.sim.type} preset={m.sim.preset} />
       </section>
 
       {(deep?.mechanism || deep?.flow) && (
@@ -208,7 +221,7 @@ function MissionPage() {
 
       <section id="quiz">
         <h2 className="text-2xl mb-2">// QUIZ {advanced ? "(PRO)" : "(QUICK)"}</h2>
-        <Quiz qs={quizQs} onComplete={onQuizDoneAdj} />
+        <Quiz key={slug} qs={quizQs} onComplete={onQuizDoneAdj} />
       </section>
 
       {advanced && deep?.sources && deep.sources.length > 0 && (
