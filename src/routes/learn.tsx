@@ -22,6 +22,7 @@ function LearnPage() {
   const { progress } = useProgress();
   const { learnMode, setLearnMode } = useLearnMode();
   const [activePath, setActivePath] = useState(MARQUEE_PATH);
+  const [view, setView] = useState<"tree" | "lanes">("tree");
 
   const path = PATHS.find((p) => p.slug === activePath) ?? PATHS[0];
   const completed = progress.completedMissions;
