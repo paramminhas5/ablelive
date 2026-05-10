@@ -112,10 +112,17 @@ function DevicePage() {
         </section>
       )}
 
-      {/* Deep Explanations */}
-      <div className="brutal-border bg-card p-6 space-y-4">
-        <DeviceExplainers blocks={getDeviceExplainer(slug)} />
-      </div>
+      {/* Deep Explanations — advanced mode only */}
+      {advanced ? (
+        <div className="brutal-border bg-card p-6 space-y-4">
+          <div className="font-mono text-xs uppercase opacity-70">▸ ADVANCED · ENGINEER NOTES</div>
+          <DeviceExplainers blocks={getDeviceExplainer(slug)} />
+        </div>
+      ) : (
+        <div className="brutal-border bg-bone p-4 font-mono text-xs uppercase opacity-80">
+          ▸ Want the technical breakdown, DSP notes and edge cases? Switch to <b>ADVANCED</b> mode in the header.
+        </div>
+      )}
 
       <div className="flex justify-between gap-3">
         {prev ? (
