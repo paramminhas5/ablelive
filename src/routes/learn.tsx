@@ -165,7 +165,7 @@ function LearnPage() {
                             to="/mission/$slug"
                             params={{ slug }}
                             title={`${m?.title ?? slug}${locked ? " — LOCKED" : ""}`}
-                            disabled={locked as never}
+                            aria-disabled={locked || undefined}
                             className="relative z-10 mx-1"
                             onClick={(e) => { if (locked) e.preventDefault(); }}
                           >
