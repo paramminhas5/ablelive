@@ -16,6 +16,12 @@ import { MidiVsAudioSim } from "./MidiVsAudioSim";
 import { DeviceLabBySlug } from "./DeviceLabBySlug";
 import { SidechainSim } from "./SidechainSim";
 import { SendReturnSim } from "./SendReturnSim";
+import { StemSplitterSim } from "./StemSplitterSim";
+import { MidiTransformSim } from "./MidiTransformSim";
+import { ScaleAwareSim } from "./ScaleAwareSim";
+import { CompLakeSim } from "./CompLakeSim";
+import { GrooveExtractorSim } from "./GrooveExtractorSim";
+import { Push3Sim } from "./Push3Sim";
 
 export function Simulator({ type, preset }: { type: SimType; preset?: Record<string, unknown> }) {
   switch (type) {
@@ -36,6 +42,12 @@ export function Simulator({ type, preset }: { type: SimType; preset?: Record<str
     case "device-lab": return <DeviceLabBySlug slug={(preset?.device as string) || "eq"} />;
     case "sidechain": return <SidechainSim />;
     case "send-return": return <SendReturnSim />;
+    case "stem-splitter": return <StemSplitterSim />;
+    case "midi-transform": return <MidiTransformSim />;
+    case "scale-aware": return <ScaleAwareSim />;
+    case "comp-lake": return <CompLakeSim />;
+    case "groove-extractor": return <GrooveExtractorSim />;
+    case "push3": return <Push3Sim />;
     default: return <div className="brutal-border bg-bone p-6 font-mono text-xs uppercase">No simulator for this mission — read & quiz only.</div>;
   }
 }
@@ -56,4 +68,10 @@ export const SIM_LIST: { type: SimType; label: string; color: string }[] = [
   { type: "browser-tour", label: "Browser", color: "bg-acid" },
   { type: "sidechain", label: "Sidechain", color: "bg-hot text-bone" },
   { type: "send-return", label: "Sends/Returns", color: "bg-volt text-bone" },
+  { type: "stem-splitter", label: "Stem Splitter", color: "bg-acid" },
+  { type: "midi-transform", label: "MIDI Transform", color: "bg-hot text-bone" },
+  { type: "scale-aware", label: "Scale Aware", color: "bg-volt text-bone" },
+  { type: "comp-lake", label: "Comp Lake", color: "bg-sun" },
+  { type: "groove-extractor", label: "Groove Pool", color: "bg-acid" },
+  { type: "push3", label: "Push 3", color: "bg-hot text-bone" },
 ];
