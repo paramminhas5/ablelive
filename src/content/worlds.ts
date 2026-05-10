@@ -49,4 +49,20 @@ export const WORLDS: World[] = [
     color: "hot",
     description: "Take it out of the box. Play it live. Ship it.",
   },
+  {
+    slug: "midi-instruments",
+    number: 7,
+    title: "MIDI & Instruments",
+    tagline: "Synths, samplers, racks. Make sound from scratch.",
+    color: "volt",
+    description: "Tour every built-in instrument. Layer, stack, modulate. Turn MIDI into a voice.",
+  },
+  {
+    slug: "live12-power",
+    number: 8,
+    title: "Live 12 Power Tools",
+    tagline: "Stem split, MIDI transforms, scale, similarity.",
+    color: "sun",
+    description: "The Live 12 marquee features — the ones that make this version a step-change.",
+  },
 ];

@@ -1,4 +1,12 @@
-export type WorldSlug = "first-contact" | "two-views" | "midi-audio" | "devices" | "mixing" | "performance";
+export type WorldSlug =
+  | "first-contact"
+  | "two-views"
+  | "midi-audio"
+  | "devices"
+  | "mixing"
+  | "performance"
+  | "midi-instruments"
+  | "live12-power";
 
 export type SimType =
   | "drum-pad"
@@ -18,6 +26,12 @@ export type SimType =
   | "device-lab"
   | "sidechain"
   | "send-return"
+  | "comp-lake"
+  | "midi-transform"
+  | "scale-aware"
+  | "stem-splitter"
+  | "groove-extractor"
+  | "push3"
   | "none";
 
 export type QuizQ = {
