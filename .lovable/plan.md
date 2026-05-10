@@ -1,122 +1,195 @@
-# Phase 12 — Compact, Mobile, Sim Repair, World-Class Polish
+# Audit + Fix Chain + Duolingo Mode (alongside brutalist)
 
-Three problem areas: (A) navigation is too wide and breaks on mobile, (B) Workbench device chain (and several sims) still don't actually pass audio reliably, (C) we're missing the engagement/polish that would make this best-in-class.
-
----
-
-## A. Navigation & Layout — compact + mobile
-
-**Header (`src/components/Header.tsx`)**
-
-- 10 nav links in a single row blow out at <1024px — they overflow and stack ugly on a 390px viewport.
-- Collapse to: **Logo · Worlds · Devices · Workbench · ⌘K · Avatar** on desktop. Everything else (Paths, Train, Match, Glossary, Keys, Profile) moves into:
-  - Desktop: "MORE ▾" dropdown.
-  - Mobile (<768px): full-screen drawer triggered by a hamburger; nav becomes a single icon row.
-- Remove `/signal-flow` from the top nav entirely. Move it into the **Glossary** page as a "▸ Signal Flow Diagram" link/section — it's reference content, not a destination.
-- Marquee: hide on mobile (`hidden md:block`) — wastes vertical space.
-- XP / 🔥 badges: collapse to a single compact pill on mobile.
-
-**Home (`src/routes/index.tsx`)**
-
-- Hero `text-9xl` is fine on desktop but clips on 390px — clamp to `text-5xl sm:text-7xl md:text-9xl`.
-- 4 hero CTAs wrap to 4 rows on mobile — reduce to **2 primary CTAs** + a "More ▾" disclosure.
-- Progress card stacks below hero on mobile (already does) but the 3-stat grid needs `text-base` not `text-2xl` on small.
-
-**Workbench (`src/routes/playground.tsx`)**
-
-- 17-tab tab bar wraps to 4–5 rows on mobile. Replace with a horizontally scrollable strip (`overflow-x-auto flex-nowrap`) + a `<select>` fallback on `<sm`.
-- Three-column grid (`260px / 1fr / 260px`) → on mobile becomes a single column with the tray as a collapsible `<details>` accordion at top and meters as a sticky bottom strip.
-
-**Devices (`src/routes/devices.tsx`)**
-
-- Sticky filter bar overlaps content on mobile — make the search full-width on its own row, chips below.
-- Card grid: keep 1-col on mobile, but tighten padding from `p-5` to `p-4` and reduce `text-2xl` → `text-xl`.
-
-**Global tokens**
-
-- Add a `--header-h` CSS var so sticky offsets line up; reduce header height on mobile (drop padding from `py-3` to `py-2`).
+Three things, one shipment. Keep the existing brutalist site exactly as it is, and add a parallel **Duolingo Mode** layered on top of one path. Skill tree = the existing Worlds/Paths data, just rendered as a gated tree when Duo Mode is on.
 
 ---
 
-## B. Sim Audit & Repair
+## 1. Audit (what works / what's broken)
 
-Quick triage first by re-testing each sim through the **DeviceEngine** path; the inconsistency is that some sims build their own ad-hoc graph (DeviceChainSim, the Workbench chain) while others use the proven `DeviceEngine`.
+I'll produce a single report at `/mnt/documents/audit.md` covering every route + sim. For each: ✅ works / ⚠️ partial / ❌ broken, what I tested, root cause, fix size.
 
-**Workbench Chain (the headline bug)** — `src/routes/playground.tsx`
+What I already see from reading the code (no fixes applied yet, just findings):
 
-- Symptom: chain rewires, but on add/remove the source occasionally goes silent. Root cause: `bus.disconnect()` severs **all** outgoing edges including the path to `preTap` while the loop scheduler keeps firing into `bus`. Race between scheduler and rewire = dropped audio until the next tick, sometimes permanent if `preTap.gain` ramp is interrupted mid-rewire.
-- Fix: replace the manual graph with a single `DeviceEngine` instance that supports a **chain** (extend `DeviceEngine` with `setChain(devices: DeviceNode[])` that does the disconnect/reconnect atomically with a 20ms gain duck on `mix`, not on the moving `preTap`). Source feeds `engine.input` exactly once and never reconnects.
-- Also: persist saved chains via Supabase (`workbench_chains` table) in addition to localStorage so they sync across devices.
+**The chain bug (root cause located).** `src/lib/device-engine.ts` line 50:
 
-**DeviceChainSim (`src/components/sims/DeviceChainSim.tsx`)**
+```
+ACTIVE_ENGINES.forEach((e) => { if (e !== this) e.dispose(); });
+```
 
-- Same root issue + the loop is started on `bus` but the bus gets disconnected on every chain edit — the loop's destination ref is now orphaned. Replace internals with the same `DeviceEngine.setChain` API. One implementation, two mount points.
+Every new `DeviceEngine()` calls `dispose()` on every other live engine, which permanently severs `input/dry/wet/mix`. The Workbench creates one engine on mount; the moment the user opens any sim tab that mounts `DeviceChainSim` (or any other future engine consumer), the Workbench's engine is killed silently — chain stops passing audio "completely". This is the headline bug.
 
-**EarTrainingSim** — works after the resume fix, but: target sound and choice sound use the **same** seed every render, so the "target" plays a different oscillator timing than the choices, making A/B comparison unreliable. Use a shared, deterministic note + duration per round; only the parameter differs.
+**Other findings from the code:**
 
-**KnobTrainerSim** — RMS-based "match" never converges because the test tone is too short (1.2s) and the cutoff sweep range is log but the slider is linear. Switch slider to log-scale display and bump test tone to 2.5s with a sweep through several notes so the spectral fingerprint is meaningful.
+- `playground.tsx` `useEffect([chain])` runs on mount with `[]` and ducks the mix on every render — harmless but flickery.
+- `src/lib/audio.ts` scheduled notes connect transient oscillators directly to the `dest` GainNode (the engine's `input`), so they survive setChain rewires — good, no fix needed there.
+- iOS Safari audio unlock missing on `train.tsx` and `match.tsx` — known.
+- 17-tab Workbench tab strip overwhelms mobile.
+- Sims mostly call `getMaster()` directly, so they don't share the Workbench transport — known limitation.
 
-**WarpLabSim** — warped lane renders but the playhead doesn't actually scrub through the warped buffer; it visually lies. Either drive playback through a `playbackRate`-modulated buffer source (proper) or label the lane "Visual preview only" (honest). Plan: do it properly with an `OfflineAudioContext` render of the warped buffer on every marker drag (debounced 150ms).
-
-**SidechainSim** — kick LED + dip waveform now show, but the dip amount doesn't match the audible duck because the gain reduction is read from a separate envelope node, not from the actual compressor's `reduction` property. Read `compressor.reduction` each frame and drive the waveform from that. Adds a visible meter bar.
-
-**RoutingPuzzleSim** — patch-cable view planned but not implemented. Build it: SVG cables from 4 source dots to 2 return dots, click-drag to connect, click cable to delete, mute/solo per source. "HEAR TARGET" plays the goal mix; "HEAR YOURS" plays user mix; score by spectral + level distance.
-
-**MixerSim** — fader inversion works but on mobile the rotated track has hit-target issues (range thumb is rotated too, making touch awkward). Replace rotated `<input>` with a custom vertical fader (pointer events on a div) so touch behaves correctly on iOS.
-
-**Shortcuts (**`src/routes/shortcuts.tsx`**)** — preview toggle works for the first 10; expand to all 100+ with a fallback explainer when no audio preview is meaningful. we dont need to show last shortcut
-
-**Train / Match (`src/routes/train.tsx`, `match.tsx`)** — ear-target buttons fire before audio is unlocked on mobile Safari. Wrap every play call in `await ctx.resume()` and add the global "Tap to enable audio" overlay we added to EarTraining to these routes too.
-
-**MidiVsAudio, BrowserTour, InterfaceTour** — purely visual, low-priority polish: tighten copy, add a "What you just learned" footer.
+**Deliverable:** `audit.md` with the full per-route/per-sim status + a prioritised fix list.
 
 ---
 
-## C. The Missing Layer (what makes it world-class)
+## 2. Fix the chain
 
-1. **Reference Track A/B** — bundle 6 CC0 loops (drums, bass, chords, vox, full mix, master-loud reference). Every device page and Match round gets a "Compare to reference" button that crossfades 1.5s between user output and reference.
-2. **Mission "Apply" Step** — after each lesson, a 60-second timed challenge using that mission's device with auto-graded ear-based scoring (reuse the drill engine). Adds real assessment beyond quizzes.
-3. **Skill Heatmap** — replace the single XP bar on `/profile` with a 4-quadrant radar: Rhythm · Mixing · Sound Design · Arrangement. Each mission tags 1–2 skills; XP attributes to those skills.
-4. **Global Command Palette polish (⌘K)** — already built; add fuzzy match across mission body text and recent-history section.
-5. **Onboarding (60-second tour)** — one-time first-load overlay: 5 dot-points highlighting Worlds, Devices, Workbench, Train, ⌘K. Stored in localStorage.
-6. **Audio asset toggle** — switch synthesised loops for a small set of real CC0 samples (already partially set up in plan); use behind a "Realistic / Synth" toggle in the transport bar.
-7. **Share Card v2** — current canvas works, but add OG-image generation per mission so completed missions get a real shareable URL.
-8. **"Why this matters" footers** — every device page ends with a 2-sentence "When you'd reach for this in a real track" block. Currently inconsistent; standardise via a `useCases: string[]` field on `DeviceDef`.
-9. **Keyboard-first mode** — Tab/Enter/Arrow navigation through Workbench tabs and chain reorder for accessibility + power users.
-10. **Empty-state copy pass** — every "nothing here" state currently says "drop devices…" or similar. Replace with a short explainer + a CTA button.
+Three small, surgical edits in `src/lib/device-engine.ts` and `src/routes/playground.tsx`:
+
+1. **Remove the cross-instance dispose.** Drop the `ACTIVE_ENGINES.forEach(e.dispose())` line. Each engine owns its own subgraph; multiple engines coexist.
+2. **Make `setChain` idempotent.** If devices ref-equal the previous chain, no-op (no duck, no rewire).
+3. **Workbench audio status pill.** A small badge in the transport bar showing `CTX: running/suspended · ENGINE: ok · CHAIN: N`. Click to force `ctx.resume()`. Cheap, makes future regressions obvious.
+4. **A/B button** (uses existing `ABCompare.tsx`) wired to `engine.setBypass(b)` so users can flip the chain on/off in one click.
+
+That's it for the chain. No DeviceChainSim rewrite needed once #1 lands.
 
 ---
 
-## Technical changes (file list)
+## 3. Duolingo Mode (additive — does not replace the brutalist site)
 
-- **Edit** `src/components/Header.tsx` — collapse nav, add mobile drawer, remove `/signal-flow` link.
-- **Edit** `src/routes/index.tsx` — clamp hero, reduce CTAs.
-- **Edit** `src/routes/playground.tsx` — mobile-first layout, swap to `DeviceEngine.setChain`, scrollable tab strip.
-- **Edit** `src/routes/devices.tsx` — sticky bar, padding pass.
-- **Edit** `src/lib/device-engine.ts` — add `setChain(devices)` API with atomic, ducked rewire.
-- **Edit** `src/components/sims/DeviceChainSim.tsx` — rewrite on top of `DeviceEngine.setChain`.
-- **Edit** `src/components/sims/EarTrainingSim.tsx` — deterministic round seed.
-- **Edit** `src/components/sims/KnobTrainerSim.tsx` — log scale, longer test tone.
-- **Edit** `src/components/sims/WarpLabSim.tsx` — OfflineAudioContext warped render.
-- **Edit** `src/components/sims/SidechainSim.tsx` — read `compressor.reduction`.
-- **Edit** `src/components/sims/RoutingPuzzleSim.tsx` — SVG patch cables.
-- **Edit** `src/components/sims/MixerSim.tsx` — custom vertical fader.
-- **Edit** `src/routes/train.tsx`, `src/routes/match.tsx` — audio unlock overlay.
-- **Edit** `src/routes/glossary.tsx` — embed signal flow section.
-- **Create** `src/components/MobileNavDrawer.tsx`, `src/components/Onboarding.tsx`, `src/components/ReferenceCompare.tsx`.
-- **Create** `src/lib/skills.ts` (heatmap aggregation).
-- **Migration** `workbench_chains` table (id, user_id, name, slugs jsonb, created_at) with RLS.
-- **Edit** `src/styles.css` — `--header-h`, mobile tweaks.
+### 3.1 The toggle
+
+Re-use the existing `useMode()` hook (currently `beginner` / `advanced`). Extend with a separate, orthogonal flag: `**learnMode**` = `classic` | `duolingo`, persisted in localStorage.
+
+Add a tab to the Header (top right, next to streak/avatar):
+
+```text
+[ CLASSIC ]  [ DUOLINGO ]
+```
+
+- `classic` = today's site, untouched.
+- `duolingo` = the gated tree experience, lives at `/learn`.
+
+When `duolingo` is active, the home `/` redirects to `/learn` and the marquee/big nav is replaced by the Duo header (streak, hearts, XP). When `classic` is active, `/learn` is still reachable but the rest of the site renders normally.
+
+### 3.2 Skill tree = Paths + Worlds, merged
+
+We don't need new content. The skill tree IS the existing structure, just rendered as a gated tree:
+
+```text
+                    ┌─ World 1: First Contact ─┐
+                    │                          │
+              [ Path: First Beat ]  ←  the Duo path (default)
+                    │
+                    ●  Lesson 1 (unlocked)
+                    │
+                    ●  Lesson 2 (locked until L1 ≥ 80%)
+                    │
+                    ●  Lesson 3
+                    │
+                    ◆  Skill Check (5 questions, timed)
+                    │
+                    ●  Lesson 4 …
+```
+
+Mapping rule:
+
+- **One Path → one branch of the tree.** First beat → "Beats" branch, Mix a track → "Mixing" branch, Sound design → "Sound Design", Live performance → "Performance".
+- **Each mission in `path.missionSlugs` → one tree node.** Re-uses existing `mission/$slug` content.
+- **Skill Check** = an auto-generated 5-question quiz pulled from the missions in that segment, inserted every ~5 nodes.
+- **Worlds** become section headers between branches (purely cosmetic grouping inside the tree).
+
+No content rewrite. The tree is a new view over `PATHS` and `MISSIONS`.
+
+### 3.3 Gating (Duolingo mode only)
+
+- Locked lessons: visually dim, tapping opens a tooltip "Complete previous lesson to unlock".
+- Unlock rule: previous lesson `mission_completions.score ≥ 0.8`.
+- Skill Check: locked until all preceding lessons in the segment are complete; passing it adds a "crown" to the tree.
+- **Classic mode ignores all gating** — every mission is freely accessible, exactly like today.
+
+### 3.4 Engagement loop (Duo mode only)
+
+- **Hearts (5 max).** Wrong answer in a lesson = -1 heart. Out of hearts = wait 30 min OR perfect-score a previous lesson to refill 1. Stored in localStorage + synced to a new `hearts_state` table.
+- **Streak.** Already in `progress.streak_days`. Surface the flame in the Duo header. Add a "streak freeze" inventory item (1/week).
+- **XP and daily goal.** Reuse `progress.xp`. Onboarding asks "5 / 10 / 15 / 20 min/day". Goal ring fills as XP accrues today.
+- **Daily quests.** 3 rotating goals on `/learn` ("Earn 30 XP", "Complete 1 lesson", "Practice yesterday's lesson").
+- **SRS review.** Already-completed lessons re-surface based on the existing `review_schedule` table. Top of `/learn`: "5 reviews due" badge. Tapping runs a 5-question quiz drawn from those missions.
+- **Mistakes pool.** Wrong quiz answers go into a per-user pool; "Practice mistakes" button on `/learn`.
+
+### 3.5 Lesson screen (Duo mode only — `/lesson/$slug`)
+
+A focused, single-purpose screen rendered ONLY when `learnMode === 'duolingo'`. In classic mode, `/mission/$slug` continues to render the existing rich page.
+
+The Duo lesson:
+
+- Top: progress bar + heart counter + close (X).
+- One exercise per screen, "Continue" advances:
+  1. **LISTEN** — auto-plays a short clip, "Continue".
+  2. **MULTIPLE_CHOICE** — pulled from `mission.quiz`.
+  3. **EAR_PICK** — A/B/C "which one has more compression?" (graded by RMS+spectral distance, reuses `audio.ts`).
+  4. **MATCH_PAIRS** — drag term ↔ definition (from the glossary).
+  5. **BUILD_CHAIN** — drag 3 of 6 devices into the right order (re-uses `DeviceEngine.setChain`).
+  6. **KNOB_MATCH** — turn a knob until your sound matches the target (reuses KnobTrainerSim logic).
+  7. **TAP_RHYTHM** — tap 4 bars in time.
+- End screen: stars (1–3), XP earned, hearts remaining, "Continue".
+
+Per-mission Duo content is generated mostly automatically:
+
+- Quizzes → MULTIPLE_CHOICE.
+- If `mission.sim.type` is one of `ear-training | knob-trainer | device-chain | drum-pad` → use that sim as one of the exercises.
+- Otherwise insert a generic LISTEN + MULTIPLE_CHOICE pair.
+- A small `lesson-duo.ts` overlay file lets us hand-author better exercise sequences for the marquee path (First Beat) without touching `missions.ts`.
+
+### 3.6 Onboarding (first time Duo mode is enabled)
+
+90-second flow:
+
+1. "Tap to enable sound" (unlocks ctx)
+2. Play a 4-bar loop → "Did you hear that?" (diagnostic + audio unlock)
+3. Pick a goal: Beats / Mixing / Sound Design / Performance → seeds which path opens first
+4. Pick daily goal: 5/10/15/20 min
+5. First exercise — guaranteed-win EAR_PICK so the user gets +10 XP in their first 30 seconds.
+
+### 3.7 Backend (Lovable Cloud)
+
+Existing tables already cover most of this (`progress`, `mission_completions`, `review_schedule`, `badges`, `drill_scores`). Only new tables:
+
+- `hearts_state` — `user_id`, `hearts`, `last_refill_at`, `streak_freezes` (RLS: own rows).
+- `daily_quests` — `user_id`, `date`, `quests jsonb`, `progress jsonb` (RLS: own rows).
+
+Both with own-row RLS, INSERT/SELECT/UPDATE for the user.
 
 ---
 
-## Order of execution
+## 4. Order of execution
 
-1. Header + mobile drawer + remove signal-flow nav (10 min, biggest UX win).
-2. `DeviceEngine.setChain` + Workbench rewire (fixes the headline bug).
-3. DeviceChainSim port to same API.
-4. Sim fixes in priority order: Routing (most broken) → Warp → Sidechain meter → Mixer fader → Knob/Ear deterministic.
-5. Polish layer: Reference A/B, Skill heatmap, Onboarding, Apply step.
-6. Workbench Supabase chain sync.
+I'll commit after each numbered step:
 
-I'll commit after each numbered step so you can preview incrementally.
+1. **Audit report** + chain fix (remove `ACTIVE_ENGINES` dispose, idempotent `setChain`, status pill, A/B button).
+2. **Mode toggle + `/learn` skill-tree home** (read-only over existing PATHS/MISSIONS, no gating yet, classic mode unchanged).
+3. **Gating + hearts + daily quest + streak surfacing** (Duo mode only).
+4. `**/lesson/$slug` Duo lesson screen** with auto-generated exercise sequences from existing mission data.
+5. **Onboarding flow** (first Duo enable).
+6. `**lesson-duo.ts` hand-authored sequences for the First Beat path** (marquee path quality bar).
+7. **SRS review queue surfacing on `/learn**` (uses existing `review_schedule`).
+8. **Polish: skill heatmap on profile, crowns, streak freezes.**
+
+---
+
+## 5. Files touched
+
+- **Edit** `src/lib/device-engine.ts` — drop cross-dispose, idempotent setChain.
+- **Edit** `src/routes/playground.tsx` — status pill, A/B button.
+- **Edit** `src/lib/mode.ts` — add `learnMode` flag.
+- **Edit** `src/components/Header.tsx` — Classic/Duolingo tab, conditional Duo header (hearts/streak/XP).
+- **Create** `src/routes/learn.tsx` — skill tree home.
+- **Create** `src/routes/lesson.$slug.tsx` — Duo lesson screen (only used in Duo mode).
+- **Create** `src/components/SkillTree.tsx`, `src/components/HeartsBar.tsx`, `src/components/DailyQuest.tsx`, `src/components/Onboarding.tsx`.
+- **Create** `src/components/exercises/{Listen,MultipleChoice,EarPick,MatchPairs,BuildChain,KnobMatch,TapRhythm}.tsx`.
+- **Create** `src/lib/duo.ts` — exercise generator from a `Mission`, gating logic, hearts logic.
+- **Create** `src/content/lesson-duo.ts` — optional hand-authored overlays.
+- **Migration**: `hearts_state`, `daily_quests` tables with own-row RLS.
+
+The brutalist site (`/`, `/worlds`, `/world/$slug`, `/paths`, `/path/$slug`, `/mission/$slug`, `/devices`, `/glossary`, `/playground`, etc.) is **not** touched by Duo work — it keeps rendering exactly as it does today when `learnMode === 'classic'`.
+
+---
+
+## What I need from you to proceed
+
+Two quick choices (everything else has a sensible default):
+
+1. **Which path becomes the marquee Duolingo path** — *First Beat* (recommended, broadest beginner appeal), *Mix a Track*, *Sound Design*, or *Live Performance*?
+2. **Hearts model** — classic Duo (5 hearts, lose on wrong answers, 30-min refill) or generous (always practice, hearts purely cosmetic)?
+
+I'll ask these as a follow-up after you approve the plan, then start with step 1 (audit + chain fix) in the first commit.  
+  
+First beat should be the marquee path. Hearts model is generous., dont call it duolingo or duo mode call it ccd mode. The skills tree should be in brutalist/classic mode too. 

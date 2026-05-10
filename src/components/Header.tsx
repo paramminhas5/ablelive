@@ -4,8 +4,10 @@ import { useProgress } from "@/lib/progress";
 import { ModeToggle } from "./ModeToggle";
 import { useAuth, signOut } from "@/lib/auth";
 import { RankBadge } from "./HomeWidgets";
+import { useLearnMode } from "@/lib/mode";
 
 const PRIMARY = [
+  { to: "/learn", label: "Skill Tree", hover: "hover:bg-hot hover:text-bone" },
   { to: "/worlds", label: "Worlds", hover: "hover:bg-acid" },
   { to: "/devices", label: "Devices", hover: "hover:bg-volt hover:text-bone" },
   { to: "/playground", label: "Workbench", hover: "hover:bg-hot hover:text-bone" },
@@ -23,6 +25,7 @@ const MORE = [
 export function Header() {
   const { progress } = useProgress();
   const { user } = useAuth();
+  const { learnMode, setLearnMode } = useLearnMode();
   const [moreOpen, setMoreOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -67,6 +70,18 @@ export function Header() {
 
         {/* Right cluster — desktop */}
         <div className="hidden md:flex items-center gap-1.5 px-3 font-mono text-xs">
+          <div className="brutal-border flex">
+            <button
+              onClick={() => setLearnMode("classic")}
+              className={`px-2 py-1 ${learnMode === "classic" ? "bg-ink text-bone" : "bg-bone"}`}
+              title="Open, brutalist site"
+            >CLASSIC</button>
+            <button
+              onClick={() => setLearnMode("ccd")}
+              className={`px-2 py-1 ${learnMode === "ccd" ? "bg-hot text-bone" : "bg-bone"}`}
+              title="Gated skill tree, hearts, XP"
+            >CCD</button>
+          </div>
           <ModeToggle />
           <RankBadge compact />
           <span className="brutal-border bg-acid px-2 py-1">XP {progress.xp}</span>

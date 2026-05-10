@@ -46,8 +46,10 @@ export class DeviceEngine {
     this.input.connect(this.dry).connect(this.mix);
     // Mix to output
     this.mix.connect(this.analyserOut).connect(getMaster());
-    // Defensively dispose any previously-active engines so only one is wired to master.
-    ACTIVE_ENGINES.forEach((e) => { if (e !== this) e.dispose(); });
+    // NOTE: previously this constructor disposed all other ACTIVE_ENGINES,
+    // which silently killed the Workbench's chain whenever any sim mounted
+    // its own engine. Each engine now owns its own subgraph; multiple
+    // engines coexist safely because they are independent fan-ins to master.
     ACTIVE_ENGINES.add(this);
   }
 
@@ -69,6 +71,12 @@ export class DeviceEngine {
   // transient click. Single source of truth used by Workbench + DeviceChainSim.
   private chainNodes: DeviceNode[] = [];
   setChain(devices: DeviceNode[]) {
+    // Idempotent: if the chain ref-equals the previous one, do nothing.
+    // Prevents the on-mount [] → [] rewire that ducked the mix on every render.
+    if (devices.length === this.chainNodes.length &&
+        devices.every((d, i) => d === this.chainNodes[i])) {
+      return;
+    }
     const c = this.ctx;
     // Duck the mix during rewire (not the source path) — output stays alive,
     // just briefly silent. This avoids the source-orphan race condition.

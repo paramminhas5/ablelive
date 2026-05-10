@@ -18,6 +18,7 @@ import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as PathsRouteImport } from './routes/paths'
 import { Route as MatchRouteImport } from './routes/match'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as LearnRouteImport } from './routes/learn'
 import { Route as GlossaryRouteImport } from './routes/glossary'
 import { Route as DevicesRouteImport } from './routes/devices'
 import { Route as IndexRouteImport } from './routes/index'
@@ -71,6 +72,11 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GlossaryRoute = GlossaryRouteImport.update({
   id: '/glossary',
   path: '/glossary',
@@ -111,6 +117,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/devices': typeof DevicesRoute
   '/glossary': typeof GlossaryRoute
+  '/learn': typeof LearnRoute
   '/login': typeof LoginRoute
   '/match': typeof MatchRoute
   '/paths': typeof PathsRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/devices': typeof DevicesRoute
   '/glossary': typeof GlossaryRoute
+  '/learn': typeof LearnRoute
   '/login': typeof LoginRoute
   '/match': typeof MatchRoute
   '/paths': typeof PathsRoute
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/devices': typeof DevicesRoute
   '/glossary': typeof GlossaryRoute
+  '/learn': typeof LearnRoute
   '/login': typeof LoginRoute
   '/match': typeof MatchRoute
   '/paths': typeof PathsRoute
@@ -168,6 +177,7 @@ export interface FileRouteTypes {
     | '/'
     | '/devices'
     | '/glossary'
+    | '/learn'
     | '/login'
     | '/match'
     | '/paths'
@@ -186,6 +196,7 @@ export interface FileRouteTypes {
     | '/'
     | '/devices'
     | '/glossary'
+    | '/learn'
     | '/login'
     | '/match'
     | '/paths'
@@ -204,6 +215,7 @@ export interface FileRouteTypes {
     | '/'
     | '/devices'
     | '/glossary'
+    | '/learn'
     | '/login'
     | '/match'
     | '/paths'
@@ -223,6 +235,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DevicesRoute: typeof DevicesRoute
   GlossaryRoute: typeof GlossaryRoute
+  LearnRoute: typeof LearnRoute
   LoginRoute: typeof LoginRoute
   MatchRoute: typeof MatchRoute
   PathsRoute: typeof PathsRoute
@@ -303,6 +316,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/glossary': {
       id: '/glossary'
       path: '/glossary'
@@ -359,6 +379,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DevicesRoute: DevicesRoute,
   GlossaryRoute: GlossaryRoute,
+  LearnRoute: LearnRoute,
   LoginRoute: LoginRoute,
   MatchRoute: MatchRoute,
   PathsRoute: PathsRoute,
