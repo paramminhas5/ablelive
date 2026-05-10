@@ -2,16 +2,37 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AudioUnlock } from "@/components/AudioUnlock";
 import {
-  CHORDS, DRILL_LABELS, DRILL_WHY, EQ_BANDS, INTERVALS, PAN_POSITIONS, REVERB_LENGTHS, TEMPO_OPTIONS,
-  type DrillKey, getLocalDrillStats, playAtTempo, playChord, playCompressedLoop,
-  playEqExcerpt, playInterval, playPanned, playReverbHit, saveDrillScore,
+  CHORDS,
+  DRILL_LABELS,
+  DRILL_WHY,
+  EQ_BANDS,
+  INTERVALS,
+  PAN_POSITIONS,
+  REVERB_LENGTHS,
+  TEMPO_OPTIONS,
+  type DrillKey,
+  getLocalDrillStats,
+  playAtTempo,
+  playChord,
+  playCompressedLoop,
+  playEqExcerpt,
+  playInterval,
+  playPanned,
+  playReverbHit,
+  saveDrillScore,
 } from "@/lib/drills";
 
 export const Route = createFileRoute("/train")({
-  head: () => ({ meta: [
-    { title: "Ear Training — ABLETON.SCHOOL" },
-    { name: "description", content: "Five drills for production ears: intervals, chord quality, EQ cuts, compression, reverb time." },
-  ]}),
+  head: () => ({
+    meta: [
+      { title: "Ear Training — ABLETON.SCHOOL" },
+      {
+        name: "description",
+        content:
+          "Five drills for production ears: intervals, chord quality, EQ cuts, compression, reverb time.",
+      },
+    ],
+  }),
   component: TrainPage,
 });
 
@@ -24,7 +45,9 @@ function TrainPage() {
       <header className="brutal-border bg-hot text-bone p-6 brutal-shadow">
         <div className="font-mono text-xs uppercase">// PRACTICE</div>
         <h1 className="text-5xl md:text-7xl mt-2">EAR TRAINING</h1>
-        <p className="font-mono mt-2">Real producer ears come from drills, not lectures. Pick one and run 10.</p>
+        <p className="font-mono mt-2">
+          Real producer ears come from drills, not lectures. Pick one and run 10.
+        </p>
       </header>
       {!active ? (
         <div className="grid md:grid-cols-2 gap-3">
@@ -32,11 +55,20 @@ function TrainPage() {
             const s = stats[k];
             const meta = DRILL_LABELS[k];
             return (
-              <button key={k} onClick={() => setActive(k)} className="brutal-border bg-card p-4 brutal-shadow brutal-press text-left">
+              <button
+                key={k}
+                onClick={() => setActive(k)}
+                className="brutal-border bg-card p-4 brutal-shadow brutal-press text-left space-y-2"
+              >
                 <div className="text-3xl">{meta.emoji}</div>
                 <div className="font-display text-2xl mt-1">{meta.name}</div>
                 <div className="font-mono text-sm opacity-80">{meta.tagline}</div>
-                <div className="font-mono text-xs uppercase mt-2 opacity-70">
+                {DRILL_WHY[k]?.[0] && (
+                  <div className="border-l-4 border-l-[#CDFF00] pl-3 font-mono text-xs leading-relaxed opacity-80">
+                    {DRILL_WHY[k][0]}
+                  </div>
+                )}
+                <div className="font-mono text-xs uppercase opacity-70">
                   {s ? `Played ${s.played} · Best ${s.best}/10` : "Not played yet"}
                 </div>
               </button>
@@ -46,7 +78,12 @@ function TrainPage() {
       ) : (
         <DrillRunner key={active} drill={active} onExit={() => setActive(null)} />
       )}
-      <Link to="/" className="brutal-border bg-bone px-4 py-2 font-mono text-xs uppercase brutal-press inline-block">← HOME</Link>
+      <Link
+        to="/"
+        className="brutal-border bg-bone px-4 py-2 font-mono text-xs uppercase brutal-press inline-block"
+      >
+        ← HOME
+      </Link>
     </div>
   );
 }
@@ -98,11 +135,33 @@ function DrillRunner({ drill, onExit }: { drill: DrillKey; onExit: () => void })
     return (
       <div className="brutal-border bg-acid p-6 brutal-shadow text-center space-y-3">
         <div className="font-mono text-xs uppercase">DRILL COMPLETE</div>
-        <div className="font-display text-6xl">{score} / {ROUNDS}</div>
-        <div className="font-mono">{pct >= 80 ? "🔥 Solid ears." : pct >= 50 ? "Keep going — repetition wires the brain." : "First runs are always rough. Try again."}</div>
+        <div className="font-display text-6xl">
+          {score} / {ROUNDS}
+        </div>
+        <div className="font-mono">
+          {pct >= 80
+            ? "🔥 Solid ears."
+            : pct >= 50
+              ? "Keep going — repetition wires the brain."
+              : "First runs are always rough. Try again."}
+        </div>
         <div className="flex justify-center gap-2">
-          <button onClick={() => { setRound(0); setScore(0); setDone(false); }} className="brutal-border bg-volt text-bone px-4 py-2 font-mono text-xs uppercase brutal-press">▶ AGAIN</button>
-          <button onClick={onExit} className="brutal-border bg-bone px-4 py-2 font-mono text-xs uppercase brutal-press">← MENU</button>
+          <button
+            onClick={() => {
+              setRound(0);
+              setScore(0);
+              setDone(false);
+            }}
+            className="brutal-border bg-volt text-bone px-4 py-2 font-mono text-xs uppercase brutal-press"
+          >
+            ▶ AGAIN
+          </button>
+          <button
+            onClick={onExit}
+            className="brutal-border bg-bone px-4 py-2 font-mono text-xs uppercase brutal-press"
+          >
+            ← MENU
+          </button>
         </div>
       </div>
     );
@@ -111,34 +170,57 @@ function DrillRunner({ drill, onExit }: { drill: DrillKey; onExit: () => void })
   return (
     <div className="space-y-3">
       <div className="brutal-border bg-card p-3 flex justify-between font-mono text-xs uppercase">
-        <span>{DRILL_LABELS[drill].emoji} {DRILL_LABELS[drill].name}</span>
-        <span>ROUND {round + 1}/{ROUNDS} · SCORE {score}</span>
-        <button onClick={onExit} className="underline">QUIT</button>
+        <span>
+          {DRILL_LABELS[drill].emoji} {DRILL_LABELS[drill].name}
+        </span>
+        <span>
+          ROUND {round + 1}/{ROUNDS} · SCORE {score}
+        </span>
+        <button onClick={onExit} className="underline">
+          QUIT
+        </button>
       </div>
       <div className="brutal-border bg-bone p-3">
         <div className="font-mono text-[10px] uppercase font-bold mb-1">▸ WHY THIS DRILL</div>
         <ul className="font-mono text-[11px] space-y-0.5">
-          {DRILL_WHY[drill].map((w, i) => <li key={i}>▸ {w}</li>)}
+          {DRILL_WHY[drill].map((w, i) => (
+            <li key={i}>▸ {w}</li>
+          ))}
         </ul>
       </div>
       <div className="brutal-border bg-sun p-6 brutal-shadow">
         <div className="font-mono text-xs uppercase mb-2">{question.prompt}</div>
-        <button onClick={replay} className="brutal-border bg-bone px-3 py-2 font-mono text-xs uppercase brutal-press">▶ REPLAY</button>
+        <button
+          onClick={replay}
+          className="brutal-border bg-bone px-3 py-2 font-mono text-xs uppercase brutal-press"
+        >
+          ▶ REPLAY
+        </button>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
         {question.options.map((o) => {
           const isAns = feedback && o.id === question.answerId;
-          const tone = !feedback ? "bg-card hover:bg-acid" : isAns ? "bg-acid" : "bg-card opacity-60";
+          const tone = !feedback
+            ? "bg-card hover:bg-acid"
+            : isAns
+              ? "bg-acid"
+              : "bg-card opacity-60";
           return (
-            <button key={o.id} onClick={() => choose(o.id)} disabled={!!feedback}
-              className={`brutal-border ${tone} p-3 font-mono text-sm brutal-press text-left`}>
+            <button
+              key={o.id}
+              onClick={() => choose(o.id)}
+              disabled={!!feedback}
+              className={`brutal-border ${tone} p-3 font-mono text-sm brutal-press text-left`}
+            >
               {o.label}
             </button>
           );
         })}
       </div>
       {feedback && (
-        <div className={`brutal-border p-3 font-mono text-sm ${feedback.ok ? "bg-acid" : "bg-hot text-bone"}`}>
+        <div
+          className={`brutal-border p-3 font-mono text-sm ${feedback.ok ? "bg-acid" : "bg-hot text-bone"}`}
+        >
           {feedback.ok ? "✓ Correct" : `✗ Was: ${feedback.correct}`}
         </div>
       )}
@@ -146,7 +228,13 @@ function DrillRunner({ drill, onExit }: { drill: DrillKey; onExit: () => void })
   );
 }
 
-type Question = { prompt: string; options: { id: string; label: string }[]; answerId: string; answerLabel: string; payload: any };
+type Question = {
+  prompt: string;
+  options: { id: string; label: string }[];
+  answerId: string;
+  answerLabel: string;
+  payload: any;
+};
 
 function buildQuestion(drill: DrillKey): Question {
   const pick = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
@@ -162,7 +250,9 @@ function buildQuestion(drill: DrillKey): Question {
     return {
       prompt: "Two notes played. Name the interval.",
       options: opts.map((o) => ({ id: String(o.semis), label: o.name })),
-      answerId: String(ans.semis), answerLabel: ans.name, payload: ans.semis,
+      answerId: String(ans.semis),
+      answerLabel: ans.name,
+      payload: ans.semis,
     };
   }
   if (drill === "chord") {
@@ -171,7 +261,9 @@ function buildQuestion(drill: DrillKey): Question {
     return {
       prompt: "What kind of chord did you hear?",
       options: opts.map((o) => ({ id: o.id, label: o.name })),
-      answerId: ans.id, answerLabel: ans.name, payload: ans.offsets,
+      answerId: ans.id,
+      answerLabel: ans.name,
+      payload: ans.offsets,
     };
   }
   if (drill === "eq-cut") {
@@ -180,7 +272,9 @@ function buildQuestion(drill: DrillKey): Question {
     return {
       prompt: "Pink noise has a deep notch. Where is the cut?",
       options: opts.map((o) => ({ id: String(o.hz), label: o.name })),
-      answerId: String(ans.hz), answerLabel: ans.name, payload: ans.hz,
+      answerId: String(ans.hz),
+      answerLabel: ans.name,
+      payload: ans.hz,
     };
   }
   if (drill === "compression") {
@@ -192,7 +286,9 @@ function buildQuestion(drill: DrillKey): Question {
         { id: "light", label: "Light (3:1, gentle)" },
         { id: "heavy", label: "Heavy (smashed)" },
       ],
-      answerId: ans, answerLabel: ans, payload: ans,
+      answerId: ans,
+      answerLabel: ans,
+      payload: ans,
     };
   }
   if (drill === "reverb") {
@@ -201,7 +297,9 @@ function buildQuestion(drill: DrillKey): Question {
     return {
       prompt: "Listen to the tail. How long is the reverb?",
       options: opts.map((o) => ({ id: String(o.sec), label: o.name })),
-      answerId: String(ans.sec), answerLabel: ans.name, payload: ans.sec,
+      answerId: String(ans.sec),
+      answerLabel: ans.name,
+      payload: ans.sec,
     };
   }
   if (drill === "panning") {
@@ -210,7 +308,9 @@ function buildQuestion(drill: DrillKey): Question {
     return {
       prompt: "Where in the stereo field is this drum loop?",
       options: opts.map((o) => ({ id: o.id, label: o.name })),
-      answerId: ans.id, answerLabel: ans.name, payload: ans.val,
+      answerId: ans.id,
+      answerLabel: ans.name,
+      payload: ans.val,
     };
   }
   // tempo
@@ -219,13 +319,21 @@ function buildQuestion(drill: DrillKey): Question {
   return {
     prompt: "What tempo is this loop running at?",
     options: opts.map((o) => ({ id: String(o), label: `${o} BPM` })),
-    answerId: String(ans), answerLabel: `${ans} BPM`, payload: ans,
+    answerId: String(ans),
+    answerLabel: `${ans} BPM`,
+    payload: ans,
   };
 }
 
 function playQuestion(drill: DrillKey, q: Question): { stop: () => void } | undefined {
-  if (drill === "interval") { playInterval(q.payload); return; }
-  if (drill === "chord") { playChord(q.payload); return; }
+  if (drill === "interval") {
+    playInterval(q.payload);
+    return;
+  }
+  if (drill === "chord") {
+    playChord(q.payload);
+    return;
+  }
   if (drill === "eq-cut") return playEqExcerpt(q.payload);
   if (drill === "compression") return playCompressedLoop(q.payload);
   if (drill === "reverb") return playReverbHit(q.payload);

@@ -38,7 +38,8 @@ export type QuizQ = {
   q: string;
   options: string[];
   answer: number; // index
-  explain?: string;
+  explain?: string; // shown after submitting — reinforces the correct answer
+  hint?: string; // shown on demand before submitting — doesn't reveal the answer
 };
 
 export type ExplainerBlock =
@@ -52,11 +53,11 @@ export type ExplainerBlock =
 export type Mission = {
   slug: string;
   world: WorldSlug;
-  number: number;          // global mission number
+  number: number; // global mission number
   title: string;
   tagline: string;
   xp: number;
-  tier?: "core" | "deep";  // beginner mode shows only "core"
+  tier?: "core" | "deep"; // beginner mode shows only "core"
   badge?: { slug: string; name: string };
   explainer: ExplainerBlock[];
   sim: { type: SimType; preset?: Record<string, unknown> };
@@ -66,24 +67,27 @@ export type Mission = {
 // Long-form lesson content overlay. Optional per-slug. Lets us deepen
 // missions without rewriting the entire missions.ts file.
 export type LessonDeep = {
-  hook?: string;                    // 1-line "why this matters"
-  definition?: string[];            // 2-3 plain-English paragraphs
-  mechanism?: string;               // how it actually works
-  flow?: string;                    // SignalFlowSVG string e.g. "A → B → C"
+  hook?: string; // 1-line "why this matters"
+  definition?: string[]; // 2-3 plain-English paragraphs
+  mechanism?: string; // how it actually works
+  flow?: string; // SignalFlowSVG string e.g. "A → B → C"
   walkthrough?: { do: string; listen: string }[];
   listenFor?: string[];
   mistakes?: string[];
   proMoves?: string[];
   related?: { kind: "mission" | "device" | "glossary"; slug: string; label: string }[];
-  workbenchPreset?: { source: "drum-loop" | "bass-loop" | "chord-pad" | "vox-chop" | "full-mix"; chain: string[] };
+  workbenchPreset?: {
+    source: "drum-loop" | "bass-loop" | "chord-pad" | "vox-chop" | "full-mix";
+    chain: string[];
+  };
   // Two-track content (NEW)
   beginner?: {
-    what: string[];      // 2-3 plain-English paragraphs
-    why: string[];       // musical outcomes
-    analogy?: string;    // one fun analogy
+    what: string[]; // 2-3 plain-English paragraphs
+    why: string[]; // musical outcomes
+    analogy?: string; // one fun analogy
   };
   advanced?: {
-    what: string[];      // 2-3 manual-grade paragraphs
+    what: string[]; // 2-3 manual-grade paragraphs
     edgeCases?: string[];
     engineerNotes?: string[];
   };
