@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { LESSONS } from "@/content/lesson-deep";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
 import { useMode } from "@/lib/mode";
+import { ModeToggle } from "@/components/ModeToggle";
 
 export const Route = createFileRoute("/mission/$slug")({
   head: ({ params }) => {
