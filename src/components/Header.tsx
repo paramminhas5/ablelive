@@ -80,7 +80,6 @@ export function Header() {
               title="Gated skill tree, hearts, XP"
             >CCD</button>
           </div>
-          </div>
           {/* ModeToggle removed — now contextual (per mission/device) */}
           <RankBadge compact />
           <span className="brutal-border bg-acid px-2 py-1">XP {progress.xp}</span>
@@ -124,7 +123,6 @@ export function Header() {
                 </Link>
               ))}
               <div className="p-3 flex flex-col gap-2">
-                <ModeToggle />
                 {user ? (
                   <button onClick={() => { signOut(); setDrawerOpen(false); }} className="brutal-border bg-bone px-3 py-2 brutal-press text-left">Sign out</button>
                 ) : (
