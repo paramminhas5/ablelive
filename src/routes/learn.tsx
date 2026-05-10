@@ -4,6 +4,7 @@ import { missionBySlug } from "@/content/missions";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { useState } from "react";
+import { JourneyMap } from "@/components/JourneyMap";
 
 export const Route = createFileRoute("/learn")({
   head: () => ({ meta: [
