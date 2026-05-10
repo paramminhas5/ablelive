@@ -27,8 +27,15 @@ function MissionPage() {
   const { mode } = useMode();
   const advanced = mode === "advanced";
   const { progress, completeMission } = useProgress();
-  const [completed, setCompleted] = useState(!!progress.completedMissions[slug]);
+  const [completed, setCompleted] = useState(false);
   const [flowKey, setFlowKey] = useState(0);
+  // Reset transient state whenever we navigate to a different mission.
+  // Without this, Quiz/Simulator keep stale state from the previous slug.
+  useEffect(() => {
+    setCompleted(!!progress.completedMissions[slug]);
+    setFlowKey(0);
+    if (typeof window !== "undefined") window.scrollTo({ top: 0 });
+  }, [slug, progress.completedMissions]);
   const next = nextMission(slug);
   const prev = prevMission(slug);
   const colorClass = { acid: "bg-acid", hot: "bg-hot text-bone", volt: "bg-volt text-bone", sun: "bg-sun", bone: "bg-bone", ink: "bg-ink text-bone" }[w.color];
