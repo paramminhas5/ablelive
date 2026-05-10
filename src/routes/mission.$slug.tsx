@@ -60,12 +60,17 @@ function MissionPage() {
     <div className="max-w-5xl mx-auto p-4 md:p-12 space-y-6 animate-fade-in">
       <Link to="/world/$slug" params={{ slug: m.world }} className="font-mono text-xs uppercase underline">← {w.title}</Link>
 
-      <nav className="sticky top-[60px] z-30 brutal-border bg-bone p-2 flex flex-wrap gap-1 font-mono text-[10px] uppercase">
+      <nav className="sticky top-[60px] z-30 brutal-border bg-bone p-2 flex flex-wrap gap-1 font-mono text-[10px] uppercase items-center">
         <a href="#hook" className="brutal-border px-2 py-1 bg-acid">Hook</a>
         <a href="#play" className="brutal-border px-2 py-1 bg-sun">Play</a>
         <a href="#how" className="brutal-border px-2 py-1 bg-volt text-bone">How</a>
         <a href="#quiz" className="brutal-border px-2 py-1 bg-hot text-bone">Quiz</a>
-        <span className="ml-auto opacity-60 self-center">M{m.number}/{MISSIONS.length} · {mode.toUpperCase()}</span>
+        {/* Beginner/Advanced toggle — only when content actually differs */}
+        {(deep?.beginner && deep?.advanced) || (deep?.quizEasy && deep?.quizHard) ? (
+          <span className="ml-auto"><ModeToggle /></span>
+        ) : (
+          <span className="ml-auto opacity-60 self-center">M{m.number}/{MISSIONS.length}</span>
+        )}
       </nav>
 
       <header id="hook" className={`${colorClass} brutal-border p-4 md:p-6 brutal-shadow`}>
