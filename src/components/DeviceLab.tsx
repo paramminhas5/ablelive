@@ -303,6 +303,9 @@ export function DeviceLab({
           </div>
         </div>
       </div>
+
+      {/* Signal flow — collapsed by default at the bottom */}
+      <SignalFlowSVG flow={signalFlow} defaultOpen={false} />
     </div>
   );
 }
