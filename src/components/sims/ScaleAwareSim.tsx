@@ -1,6 +1,7 @@
 // ScaleAwareSim — set a scale + root, toggle Scale Awareness on/off,
-// see out-of-scale notes get folded.
+// see out-of-scale notes get folded. Audition the result.
 import { useMemo, useState } from "react";
+import { getCtx, getMaster, midiToFreq, playTone } from "@/lib/audio";
 
 const ROOTS = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 type ScaleId = "major" | "minor" | "dorian" | "phrygian" | "lydian" | "mixolydian" | "harmonic-minor" | "pentatonic";
@@ -36,6 +37,13 @@ export function ScaleAwareSim() {
 
   const scale = SCALES[scaleId];
   const folded = useMemo(() => SEED.map((p) => fold(p, root, scale)), [root, scale]);
+
+  const audition = async () => {
+    const c = getCtx(); if (!c) return;
+    if (c.state !== "running") { try { await c.resume(); } catch {} }
+    const pitches = aware ? folded : SEED;
+    pitches.forEach((p, i) => playTone(midiToFreq(p), i * 0.25, 0.3, "triangle", 0.18, getMaster()));
+  };
 
   return (
     <div className="space-y-3">
