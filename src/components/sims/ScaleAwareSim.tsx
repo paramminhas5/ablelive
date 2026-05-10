@@ -61,9 +61,10 @@ export function ScaleAwareSim() {
           </select>
         </label>
         <button onClick={() => setAware((a) => !a)}
-          className={`brutal-border px-3 py-1.5 font-mono text-xs uppercase brutal-press ml-auto ${aware ? "bg-acid text-ink" : "bg-bone text-ink"}`}>
+          className={`brutal-border px-3 py-1.5 font-mono text-xs uppercase brutal-press ${aware ? "bg-acid text-ink" : "bg-bone text-ink"}`}>
           SCALE AWARE: {aware ? "ON" : "OFF"}
         </button>
+        <button onClick={audition} className="brutal-border bg-hot text-bone px-3 py-1.5 font-mono text-xs uppercase brutal-press ml-auto">▶ AUDITION</button>
       </div>
 
       <Keyboard root={root} scale={scale} active={aware ? folded : SEED} />
