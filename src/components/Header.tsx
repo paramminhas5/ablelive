@@ -1,20 +1,18 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useProgress } from "@/lib/progress";
-import { ModeToggle } from "./ModeToggle";
 import { useAuth, signOut } from "@/lib/auth";
 import { RankBadge } from "./HomeWidgets";
 import { useLearnMode } from "@/lib/mode";
 
 const PRIMARY = [
-  { to: "/learn", label: "Skill Tree", hover: "hover:bg-hot hover:text-bone" },
+  { to: "/learn", label: "Learn", hover: "hover:bg-hot hover:text-bone" },
   { to: "/worlds", label: "Worlds", hover: "hover:bg-acid" },
   { to: "/devices", label: "Devices", hover: "hover:bg-volt hover:text-bone" },
   { to: "/playground", label: "Workbench", hover: "hover:bg-hot hover:text-bone" },
 ] as const;
 
 const MORE = [
-  { to: "/paths", label: "Paths" },
   { to: "/train", label: "Train" },
   { to: "/match", label: "Match" },
   { to: "/glossary", label: "Glossary" },
@@ -82,7 +80,8 @@ export function Header() {
               title="Gated skill tree, hearts, XP"
             >CCD</button>
           </div>
-          <ModeToggle />
+          </div>
+          {/* ModeToggle removed — now contextual (per mission/device) */}
           <RankBadge compact />
           <span className="brutal-border bg-acid px-2 py-1">XP {progress.xp}</span>
           <span className="brutal-border bg-hot text-bone px-2 py-1">🔥 {progress.streakDays}</span>
