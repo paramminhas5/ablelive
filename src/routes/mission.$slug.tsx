@@ -4,7 +4,7 @@ import { WORLDS } from "@/content/worlds";
 import { Simulator } from "@/components/sims/Simulator";
 import { Quiz } from "@/components/Quiz";
 import { useProgress } from "@/lib/progress";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LESSONS } from "@/content/lesson-deep";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
 import { useMode } from "@/lib/mode";
@@ -107,7 +107,7 @@ function MissionPage() {
 
       <section id="play">
         <h2 className="text-2xl mb-2">// SEE & HEAR IT</h2>
-        <Simulator type={m.sim.type} preset={m.sim.preset} />
+        <Simulator key={slug} type={m.sim.type} preset={m.sim.preset} />
       </section>
 
       {(deep?.mechanism || deep?.flow) && (
@@ -215,7 +215,7 @@ function MissionPage() {
 
       <section id="quiz">
         <h2 className="text-2xl mb-2">// QUIZ {advanced ? "(PRO)" : "(QUICK)"}</h2>
-        <Quiz qs={quizQs} onComplete={onQuizDoneAdj} />
+        <Quiz key={slug} qs={quizQs} onComplete={onQuizDoneAdj} />
       </section>
 
       {advanced && deep?.sources && deep.sources.length > 0 && (
