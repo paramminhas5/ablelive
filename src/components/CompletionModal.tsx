@@ -2,6 +2,7 @@
 // Celebrates with an animated XP counter, badge reveal, streak update,
 // and a one-tap share prompt. Duolingo-style dopamine hit.
 import { useEffect, useRef, useState } from "react";
+import { playFanfare } from "@/lib/audio";
 import { Link } from "@tanstack/react-router";
 import { useProgress } from "@/lib/progress";
 import { rankFor } from "@/lib/ranks";
@@ -86,7 +87,10 @@ export function CompletionModal({ mission, xpEarned, score, badgeName, nextSlug,
 
   // Mount animation
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 30);
+    const t = setTimeout(() => {
+      setVisible(true);
+      playFanfare();
+    }, 30);
     return () => clearTimeout(t);
   }, []);
 

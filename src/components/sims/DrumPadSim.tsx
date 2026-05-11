@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { useMidi } from "@/lib/midi";
 import { getCtx, playKick, playSnare, playHat, playClap, midiToFreq, playTone } from "@/lib/audio";
 
 const PADS: { name: string; color: string; play: () => void }[] = [
@@ -149,6 +150,29 @@ export function DrumPadSim() {
       }
     };
   }, [playing, tick, drawLoop]);
+
+  // --- Web MIDI — plug in your controller to trigger pads ---
+  const midiNoteMap: Record<number, number> = {
+    36: 0,
+    38: 1,
+    42: 2,
+    46: 3,
+    37: 4,
+    41: 5,
+    45: 6,
+    48: 7,
+  };
+  const { connected: midiConnected, inputNames: midiNames } = useMidi({
+    onNoteOn: (note, _vel) => {
+      const padIdx = midiNoteMap[note] ?? note % PADS.length;
+      const pad = PADS[padIdx];
+      if (pad) {
+        pad.play();
+        setPadFlash(padIdx);
+        setTimeout(() => setPadFlash((f) => (f === padIdx ? null : f)), 100);
+      }
+    },
+  });
 
   const toggle = (r: number, c: number) => {
     setSteps((prev) =>

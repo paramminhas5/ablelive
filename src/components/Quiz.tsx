@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { playCorrect, playWrong } from "@/lib/audio";
 import type { QuizQ } from "@/content/types";
 
 interface Props {
@@ -23,7 +24,11 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
     const pass = picked === q.answer;
     setRevealed(true);
     setResults((r) => [...r, pass]);
-    if (!pass) onWrongAnswer?.();
+    if (pass) playCorrect();
+    else {
+      playWrong();
+      onWrongAnswer?.();
+    }
   };
 
   const next = () => {

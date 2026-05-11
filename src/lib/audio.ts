@@ -5,7 +5,10 @@ let unlocked = false;
 const unlockListeners = new Set<() => void>();
 
 export const onAudioUnlocked = (cb: () => void) => {
-  if (unlocked) { cb(); return () => {}; }
+  if (unlocked) {
+    cb();
+    return () => {};
+  }
   unlockListeners.add(cb);
   return () => unlockListeners.delete(cb);
 };
@@ -19,15 +22,20 @@ export const getCtx = () => {
       masterGain = ctx.createGain();
       masterGain.gain.value = 0.8;
       masterGain.connect(ctx.destination);
-    } catch { return null; }
+    } catch {
+      return null;
+    }
   }
   if (ctx.state === "suspended") {
-    ctx.resume().then(() => {
-      if (ctx?.state === "running" && !unlocked) {
-        unlocked = true;
-        unlockListeners.forEach((cb) => cb());
-      }
-    }).catch(() => {});
+    ctx
+      .resume()
+      .then(() => {
+        if (ctx?.state === "running" && !unlocked) {
+          unlocked = true;
+          unlockListeners.forEach((cb) => cb());
+        }
+      })
+      .catch(() => {});
   } else if (ctx.state === "running" && !unlocked) {
     unlocked = true;
     unlockListeners.forEach((cb) => cb());
@@ -69,55 +77,93 @@ const env = (g: GainNode, t: number, attack: number, decay: number, peak = 1) =>
 };
 
 export const playKick = (when = 0, dest?: AudioNode) => {
-  const c = getCtx(); if (!c) return;
+  const c = getCtx();
+  if (!c) return;
   const t = Math.max(c.currentTime + 0.05, c.currentTime + when);
-  const o = c.createOscillator(); const g = c.createGain();
+  const o = c.createOscillator();
+  const g = c.createGain();
   o.frequency.setValueAtTime(150, t);
   o.frequency.exponentialRampToValueAtTime(40, t + 0.18);
   env(g, t, 0.005, 0.4, 1);
-  o.connect(g).connect(dest ?? getMaster()); o.start(t); o.stop(t + 0.5);
+  o.connect(g).connect(dest ?? getMaster());
+  o.start(t);
+  o.stop(t + 0.5);
 };
 
 export const playSnare = (when = 0, dest?: AudioNode) => {
-  const c = getCtx(); if (!c) return;
+  const c = getCtx();
+  if (!c) return;
   const t = Math.max(c.currentTime + 0.05, c.currentTime + when);
   const noise = c.createBufferSource();
   const buf = c.createBuffer(1, c.sampleRate * 0.2, c.sampleRate);
   const d = buf.getChannelData(0);
   for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   noise.buffer = buf;
-  const hp = c.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 1500;
-  const g = c.createGain(); env(g, t, 0.002, 0.18, 0.6);
-  noise.connect(hp).connect(g).connect(dest ?? getMaster()); noise.start(t); noise.stop(t + 0.25);
+  const hp = c.createBiquadFilter();
+  hp.type = "highpass";
+  hp.frequency.value = 1500;
+  const g = c.createGain();
+  env(g, t, 0.002, 0.18, 0.6);
+  noise
+    .connect(hp)
+    .connect(g)
+    .connect(dest ?? getMaster());
+  noise.start(t);
+  noise.stop(t + 0.25);
 };
 
 export const playHat = (when = 0, open = false, dest?: AudioNode) => {
-  const c = getCtx(); if (!c) return;
+  const c = getCtx();
+  if (!c) return;
   const t = Math.max(c.currentTime + 0.05, c.currentTime + when);
   const noise = c.createBufferSource();
   const buf = c.createBuffer(1, c.sampleRate * 0.1, c.sampleRate);
   const d = buf.getChannelData(0);
   for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   noise.buffer = buf;
-  const hp = c.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 7000;
-  const g = c.createGain(); env(g, t, 0.001, open ? 0.25 : 0.05, 0.3);
-  noise.connect(hp).connect(g).connect(dest ?? getMaster()); noise.start(t); noise.stop(t + 0.3);
+  const hp = c.createBiquadFilter();
+  hp.type = "highpass";
+  hp.frequency.value = 7000;
+  const g = c.createGain();
+  env(g, t, 0.001, open ? 0.25 : 0.05, 0.3);
+  noise
+    .connect(hp)
+    .connect(g)
+    .connect(dest ?? getMaster());
+  noise.start(t);
+  noise.stop(t + 0.3);
 };
 
 export const playClap = (when = 0, dest?: AudioNode) => {
   for (let i = 0; i < 3; i++) playSnare(when + i * 0.012, dest);
 };
 
-export const playTone = (freq: number, when = 0, dur = 0.5, type: OscillatorType = "sawtooth", peak = 0.2, dest?: AudioNode) => {
-  const c = getCtx(); if (!c) return;
+export const playTone = (
+  freq: number,
+  when = 0,
+  dur = 0.5,
+  type: OscillatorType = "sawtooth",
+  peak = 0.2,
+  dest?: AudioNode,
+) => {
+  const c = getCtx();
+  if (!c) return;
   if (!isFinite(freq) || freq <= 0) return;
   const t = Math.max(c.currentTime + 0.05, c.currentTime + when);
-  const o = c.createOscillator(); const g = c.createGain(); const f = c.createBiquadFilter();
-  o.type = type; o.frequency.value = freq;
-  f.type = "lowpass"; f.frequency.value = 2000; f.Q.value = 4;
+  const o = c.createOscillator();
+  const g = c.createGain();
+  const f = c.createBiquadFilter();
+  o.type = type;
+  o.frequency.value = freq;
+  f.type = "lowpass";
+  f.frequency.value = 2000;
+  f.Q.value = 4;
   env(g, t, 0.01, dur, peak);
-  o.connect(f).connect(g).connect(dest ?? getMaster());
-  o.start(t); o.stop(t + dur + 0.1);
+  o.connect(f)
+    .connect(g)
+    .connect(dest ?? getMaster());
+  o.start(t);
+  o.stop(t + dur + 0.1);
 };
 
 export const midiToFreq = (n: number) => 440 * Math.pow(2, (n - 69) / 12);
@@ -128,11 +174,27 @@ export const midiToFreq = (n: number) => 440 * Math.pow(2, (n - 69) / 12);
 export type LoopHandle = { stop: () => void; bpm: number };
 
 const noteNames: Record<string, number> = {
-  C: 0, "C#": 1, Db: 1, D: 2, "D#": 3, Eb: 3, E: 4, F: 5, "F#": 6, Gb: 6,
-  G: 7, "G#": 8, Ab: 8, A: 9, "A#": 10, Bb: 10, B: 11,
+  C: 0,
+  "C#": 1,
+  Db: 1,
+  D: 2,
+  "D#": 3,
+  Eb: 3,
+  E: 4,
+  F: 5,
+  "F#": 6,
+  Gb: 6,
+  G: 7,
+  "G#": 8,
+  Ab: 8,
+  A: 9,
+  "A#": 10,
+  Bb: 10,
+  B: 11,
 };
 export const noteToMidi = (n: string) => {
-  const m = n.match(/^([A-G][#b]?)(-?\d)$/); if (!m) return 60;
+  const m = n.match(/^([A-G][#b]?)(-?\d)$/);
+  if (!m) return 60;
   return (parseInt(m[2]) + 1) * 12 + noteNames[m[1]];
 };
 
@@ -140,7 +202,8 @@ export const noteToMidi = (n: string) => {
 export type SampleName = "drum-loop" | "bass-loop" | "chord-pad" | "vox-chop" | "full-mix";
 
 export const startLoop = (name: SampleName, bpm = 100, dest?: AudioNode): LoopHandle => {
-  const c = getCtx(); if (!c) return { stop: () => {}, bpm };
+  const c = getCtx();
+  if (!c) return { stop: () => {}, bpm };
   const out = dest ?? getMaster();
   const beat = 60 / bpm; // sec per beat
   const bar = beat * 4;
@@ -186,7 +249,13 @@ export const startLoop = (name: SampleName, bpm = 100, dest?: AudioNode): LoopHa
     while (nextBar < c.currentTime + 0.3) {
       if (!firstScheduleLogged) {
         // eslint-disable-next-line no-console
-        console.log("[audio] first scheduleBar", { name, bpm, t: nextBar, ctx: c.currentTime, ctxState: c.state });
+        console.log("[audio] first scheduleBar", {
+          name,
+          bpm,
+          t: nextBar,
+          ctx: c.currentTime,
+          ctxState: c.state,
+        });
         firstScheduleLogged = true;
       }
       scheduleBar(nextBar);
@@ -196,5 +265,73 @@ export const startLoop = (name: SampleName, bpm = 100, dest?: AudioNode): LoopHa
   };
   tick();
 
-  return { stop: () => { stopped = true; }, bpm };
+  return {
+    stop: () => {
+      stopped = true;
+    },
+    bpm,
+  };
+};
+
+// --- UI feedback sounds -----------------------------------------------------
+// Correct answer: clean bell ding
+export const playCorrect = () => {
+  const c = getCtx();
+  if (!c) return;
+  const t = c.currentTime + 0.02;
+  [880, 1320].forEach((freq, i) => {
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = "sine";
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(0.0001, t + i * 0.06);
+    g.gain.exponentialRampToValueAtTime(0.18, t + i * 0.06 + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.06 + 0.22);
+    o.connect(g).connect(getMaster());
+    o.start(t + i * 0.06);
+    o.stop(t + i * 0.06 + 0.3);
+  });
+};
+
+// Wrong answer: low buzz
+export const playWrong = () => {
+  const c = getCtx();
+  if (!c) return;
+  const t = c.currentTime + 0.02;
+  const o = c.createOscillator();
+  const g = c.createGain();
+  o.type = "sawtooth";
+  o.frequency.value = 160;
+  o.detune.setValueAtTime(0, t);
+  o.detune.linearRampToValueAtTime(-80, t + 0.15);
+  g.gain.setValueAtTime(0.0001, t);
+  g.gain.exponentialRampToValueAtTime(0.22, t + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+  const lp = c.createBiquadFilter();
+  lp.type = "lowpass";
+  lp.frequency.value = 400;
+  o.connect(lp).connect(g).connect(getMaster());
+  o.start(t);
+  o.stop(t + 0.3);
+};
+
+// Completion fanfare
+export const playFanfare = () => {
+  const c = getCtx();
+  if (!c) return;
+  const t = c.currentTime + 0.05;
+  const melody = [523, 659, 784, 1047];
+  melody.forEach((freq, i) => {
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = "triangle";
+    o.frequency.value = freq;
+    const st = t + i * 0.12;
+    g.gain.setValueAtTime(0.0001, st);
+    g.gain.exponentialRampToValueAtTime(0.2, st + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001, st + 0.18);
+    o.connect(g).connect(getMaster());
+    o.start(st);
+    o.stop(st + 0.25);
+  });
 };

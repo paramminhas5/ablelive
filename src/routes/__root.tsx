@@ -24,7 +24,12 @@ function NotFoundComponent() {
         <h2 className="mt-4 text-xl font-display">SIGNAL LOST</h2>
         <p className="mt-2 text-sm font-mono">This route is not on the grid.</p>
         <div className="mt-6">
-          <Link to="/" className="inline-flex brutal-border bg-acid px-4 py-2 font-mono uppercase brutal-press">Go home</Link>
+          <Link
+            to="/"
+            className="inline-flex brutal-border bg-acid px-4 py-2 font-mono uppercase brutal-press"
+          >
+            Go home
+          </Link>
         </div>
       </div>
     </div>
@@ -72,22 +77,48 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "ABLETON.SCHOOL — Learn Ableton Live 12, Brutally Interactive" },
-      { name: "description", content: "A gamified, interactive learning system for Ableton Live 12. Missions, simulators, XP. Cover the entire manual." },
+      {
+        name: "description",
+        content:
+          "A gamified, interactive learning system for Ableton Live 12. Missions, simulators, XP. Cover the entire manual.",
+      },
       { name: "author", content: "ABLETON.SCHOOL" },
-      { property: "og:title", content: "ABLETON.SCHOOL — Learn Ableton Live 12, Brutally Interactive" },
-      { property: "og:description", content: "A gamified, interactive learning system for Ableton Live 12. Missions, simulators, XP. Cover the entire manual." },
+      {
+        property: "og:title",
+        content: "ABLETON.SCHOOL — Learn Ableton Live 12, Brutally Interactive",
+      },
+      {
+        property: "og:description",
+        content:
+          "A gamified, interactive learning system for Ableton Live 12. Missions, simulators, XP. Cover the entire manual.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
-      { name: "twitter:title", content: "ABLETON.SCHOOL — Learn Ableton Live 12, Brutally Interactive" },
-      { name: "twitter:description", content: "A gamified, interactive learning system for Ableton Live 12. Missions, simulators, XP. Cover the entire manual." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/c50e31e5-eb8c-4cc9-ad9a-bc948d5719c2" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/c50e31e5-eb8c-4cc9-ad9a-bc948d5719c2" },
+      {
+        name: "twitter:title",
+        content: "ABLETON.SCHOOL — Learn Ableton Live 12, Brutally Interactive",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "A gamified, interactive learning system for Ableton Live 12. Missions, simulators, XP. Cover the entire manual.",
+      },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/c50e31e5-eb8c-4cc9-ad9a-bc948d5719c2",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/c50e31e5-eb8c-4cc9-ad9a-bc948d5719c2",
+      },
+      { name: "theme-color", content: "#CDFF00" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
+      { rel: "manifest", href: "/manifest.json" },
+      { rel: "apple-touch-icon", href: "/icon-192.png" },
     ],
   }),
   shellComponent: RootShell,
@@ -118,7 +149,9 @@ function RootComponent() {
       <QueryClientProvider client={queryClient}>
         <div className="min-h-screen flex flex-col bg-bone text-ink pb-24">
           <Header />
-          <main className="flex-1"><Outlet /></main>
+          <main className="flex-1">
+            <Outlet />
+          </main>
           <footer className="brutal-border border-x-0 border-b-0 bg-ink text-bone p-6 font-mono text-xs uppercase tracking-widest">
             ABLETON.SCHOOL — UNOFFICIAL · BUILT FOR THE GRID · 2026
           </footer>

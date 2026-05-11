@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
+import { useProgress, DAILY_GOAL_XP, MAX_HEARTS, HEART_REFILL_SECS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
 import { RankBadge } from "./HomeWidgets";
 import { useLearnMode } from "@/lib/mode";
@@ -21,6 +21,19 @@ const MORE = [
   { to: "/shortcuts", label: "Shortcuts" },
   { to: "/profile", label: "Profile" },
 ] as const;
+
+// --- Dark mode hook ---
+function useDarkMode() {
+  const [dark, setDark] = useState(() => {
+    if (typeof localStorage === "undefined") return false;
+    return localStorage.getItem("ableton.school.dark") === "1";
+  });
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+    localStorage.setItem("ableton.school.dark", dark ? "1" : "0");
+  }, [dark]);
+  return { dark, toggle: () => setDark((d) => !d) };
+}
 
 // --- Daily goal ring — 24px SVG circle progress ---
 function GoalRing({ pct, done }: { pct: number; done: boolean }) {
@@ -64,21 +77,38 @@ function GoalRing({ pct, done }: { pct: number; done: boolean }) {
   );
 }
 
-// --- Hearts display (CCD mode) ---
-function Hearts({ count }: { count: number }) {
+// --- Hearts display with live countdown timer ---
+function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number }) {
+  const [secs, setSecs] = useState(refillSeconds);
+  useEffect(() => {
+    setSecs(refillSeconds);
+  }, [refillSeconds]);
+  useEffect(() => {
+    if (count >= MAX_HEARTS || secs <= 0) return;
+    const id = setInterval(() => setSecs((s) => Math.max(0, s - 1)), 1000);
+    return () => clearInterval(id);
+  }, [count, secs]);
+  const mm = String(Math.floor(secs / 60)).padStart(2, "0");
+  const ss = String(secs % 60).padStart(2, "0");
   return (
-    <div className="flex gap-0.5 items-center" aria-label={`${count} hearts remaining`}>
+    <div className="flex items-center gap-1" aria-label={`${count} hearts remaining`}>
       {Array.from({ length: MAX_HEARTS }).map((_, i) => (
         <span key={i} className={`text-base leading-none ${i < count ? "text-hot" : "opacity-20"}`}>
           ♥
         </span>
       ))}
+      {count < MAX_HEARTS && secs > 0 && (
+        <span className="font-mono text-[9px] opacity-60 ml-0.5">
+          +♥ {mm}:{ss}
+        </span>
+      )}
     </div>
   );
 }
 
 export function Header() {
-  const { progress, dailyGoalPct, dailyGoalDone } = useProgress();
+  const { progress, dailyGoalPct, dailyGoalDone, heartRefillSeconds } = useProgress();
+  const { dark, toggle: toggleDark } = useDarkMode();
   const { user } = useAuth();
   const { learnMode, setLearnMode } = useLearnMode();
   const [moreOpen, setMoreOpen] = useState(false);
@@ -158,6 +188,16 @@ export function Header() {
             ⌘K
           </button>
 
+          {/* Dark mode toggle */}
+          <button
+            onClick={toggleDark}
+            className="brutal-border bg-bone px-2 py-1 hover:bg-sun"
+            title="Toggle dark mode"
+            aria-label="Toggle dark mode"
+          >
+            {dark ? "☀" : "☾"}
+          </button>
+
           {/* Mode toggle */}
           <div className="brutal-border flex">
             <button
@@ -177,7 +217,9 @@ export function Header() {
           </div>
 
           {/* CCD hearts */}
-          {learnMode === "ccd" && <Hearts count={progress.hearts} />}
+          {learnMode === "ccd" && (
+            <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
+          )}
 
           {/* Daily goal ring */}
           <div
@@ -211,7 +253,9 @@ export function Header() {
 
         {/* Mobile compact row */}
         <div className="md:hidden flex items-center gap-1.5 px-2">
-          {learnMode === "ccd" && <Hearts count={progress.hearts} />}
+          {learnMode === "ccd" && (
+            <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
+          )}
           <div title={`Daily goal: ${progress.dailyXp}/${DAILY_GOAL_XP} XP`}>
             <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
           </div>
@@ -288,6 +332,14 @@ export function Header() {
             </nav>
 
             <div className="p-3 space-y-2">
+              {/* Dark mode */}
+              <button
+                onClick={toggleDark}
+                className="w-full brutal-border bg-bone px-3 py-2 font-mono text-xs uppercase text-left"
+              >
+                {dark ? "☀ Light Mode" : "☾ Dark Mode"}
+              </button>
+
               {/* Mode toggle in drawer */}
               <div className="brutal-border flex font-mono text-xs">
                 <button
