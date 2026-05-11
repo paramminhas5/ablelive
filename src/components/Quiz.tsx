@@ -1,36 +1,173 @@
 import { useEffect, useRef, useState } from "react";
-import { playCorrect, playWrong } from "@/lib/audio";
+import { playCorrect, playWrong, playFanfare } from "@/lib/audio";
 import type { QuizQ } from "@/content/types";
+
+export interface QuizMeta {
+  missionTitle: string;
+  missionNumber: number;
+  xpEarned: number; // 0 if already completed
+  badgeName?: string;
+  nextSlug?: string;
+  onNavigateNext?: () => void;
+}
 
 interface Props {
   qs: QuizQ[];
+  meta?: QuizMeta; // optional — shows XP/share if provided
   onComplete: (score: number) => void;
   onWrongAnswer?: () => void;
 }
 
 type Phase = "picking" | "feedback" | "done";
 
-// Scroll so element top sits just below the sticky header
 function scrollToTop(el: HTMLElement | null) {
   if (!el) return;
   const rect = el.getBoundingClientRect();
   window.scrollTo({ top: rect.top + window.scrollY - 88, behavior: "smooth" });
 }
 
-// Scroll so element is vertically centered in the viewport
 function scrollToCenter(el: HTMLElement | null) {
   if (!el) return;
   const rect = el.getBoundingClientRect();
-  const elementMid = rect.top + window.scrollY + rect.height / 2;
-  const viewportMid = window.innerHeight / 2;
-  window.scrollTo({ top: elementMid - viewportMid, behavior: "smooth" });
+  const mid = rect.top + window.scrollY + rect.height / 2;
+  window.scrollTo({ top: mid - window.innerHeight / 2, behavior: "smooth" });
 }
 
-export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
+// Pure-CSS confetti — no library, no canvas. 28 pieces, random positions.
+function Confetti() {
+  const pieces = Array.from({ length: 28 }, (_, i) => ({
+    left: `${(i / 28) * 100 + (Math.random() - 0.5) * 8}%`,
+    delay: `${(i * 0.04).toFixed(2)}s`,
+    dur: `${(0.7 + Math.random() * 0.5).toFixed(2)}s`,
+    color: ["#CDFF00", "#FF2D2D", "#7B2FFF", "#FFB800", "#111111"][i % 5],
+    size: `${6 + Math.round(Math.random() * 6)}px`,
+    rot: `${Math.round(Math.random() * 720)}deg`,
+  }));
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
+      <style>{`
+        @keyframes confetti-fall {
+          0%   { transform: translateY(-16px) rotate(0deg); opacity: 1; }
+          100% { transform: translateY(340px) rotate(var(--rot)); opacity: 0; }
+        }
+      `}</style>
+      {pieces.map((p, i) => (
+        <div
+          key={i}
+          style={
+            {
+              position: "absolute",
+              left: p.left,
+              top: 0,
+              width: p.size,
+              height: p.size,
+              background: p.color,
+              "--rot": p.rot,
+              animation: `confetti-fall ${p.dur} ${p.delay} ease-in forwards`,
+            } as React.CSSProperties
+          }
+        />
+      ))}
+    </div>
+  );
+}
+
+// Inline share card — generates a PNG and shows a download link
+function ShareCard({
+  meta,
+  pct,
+  passed,
+  total,
+}: {
+  meta: QuizMeta;
+  pct: number;
+  passed: number;
+  total: number;
+}) {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [url, setUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const c = canvasRef.current;
+    if (!c) return;
+    const ctx = c.getContext("2d");
+    if (!ctx) return;
+    const W = 1200,
+      H = 630;
+    c.width = W;
+    c.height = H;
+
+    // Background
+    ctx.fillStyle = pct === 100 ? "#CDFF00" : "#0B0B0B";
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = pct === 100 ? "#0B0B0B" : "#F5F0E8";
+
+    // Site name
+    ctx.font = "bold 28px monospace";
+    ctx.globalAlpha = 0.5;
+    ctx.fillText("CCD.SCHOOL", 60, 70);
+    ctx.globalAlpha = 1;
+
+    // Mission
+    ctx.font = "bold 52px sans-serif";
+    ctx.fillText(`#${meta.missionNumber} ${meta.missionTitle}`, 60, 160);
+
+    // Score
+    ctx.font = `bold 120px sans-serif`;
+    ctx.fillStyle = pct === 100 ? "#7B2FFF" : "#CDFF00";
+    ctx.fillText(`${pct}%`, 60, 320);
+
+    ctx.fillStyle = pct === 100 ? "#0B0B0B" : "#F5F0E8";
+    ctx.font = "bold 36px monospace";
+    ctx.fillText(`${passed}/${total} correct`, 60, 380);
+
+    if (meta.xpEarned > 0) {
+      ctx.font = "bold 48px sans-serif";
+      ctx.fillStyle = "#FF2D2D";
+      ctx.fillText(`+${meta.xpEarned} XP`, 60, 460);
+    }
+
+    if (meta.badgeName) {
+      ctx.font = "32px monospace";
+      ctx.fillStyle = pct === 100 ? "#0B0B0B" : "#F5F0E8";
+      ctx.fillText(`🏅 ${meta.badgeName}`, 60, 520);
+    }
+
+    ctx.font = "20px monospace";
+    ctx.globalAlpha = 0.4;
+    ctx.fillStyle = pct === 100 ? "#0B0B0B" : "#F5F0E8";
+    ctx.fillText("ccd.school", 60, H - 40);
+    ctx.globalAlpha = 1;
+
+    setUrl(c.toDataURL("image/png"));
+  }, [meta, pct, passed, total]);
+
+  return (
+    <div className="space-y-3">
+      <canvas
+        ref={canvasRef}
+        className="w-full brutal-border"
+        style={{ aspectRatio: "1200/630" }}
+      />
+      {url && (
+        <a
+          href={url}
+          download={`ccd-school-${meta.missionNumber}.png`}
+          className="brutal-border bg-acid text-ink px-5 py-3 font-display text-xl brutal-press block text-center"
+        >
+          ⬇ Download Card
+        </a>
+      )}
+    </div>
+  );
+}
+
+export function Quiz({ qs, meta, onComplete, onWrongAnswer }: Props) {
   const [qIdx, setQIdx] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
   const [hintShown, setHint] = useState(false);
   const [phase, setPhase] = useState<Phase>("picking");
+  const [showShare, setShowShare] = useState(false);
 
   const resultsRef = useRef<boolean[]>([]);
   const autoRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -38,13 +175,13 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
   const doneRef = useRef<HTMLDivElement>(null);
   const quizTopRef = useRef<HTMLDivElement>(null);
 
-  // Reset when mission changes
   useEffect(() => {
     resultsRef.current = [];
     setQIdx(0);
     setPicked(null);
     setHint(false);
     setPhase("picking");
+    setShowShare(false);
     if (autoRef.current) clearTimeout(autoRef.current);
   }, [qs]);
 
@@ -72,10 +209,7 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
       playWrong();
       onWrongAnswer?.();
     }
-
-    // Scroll explanation into view — wait two frames for React to paint it
     requestAnimationFrame(() => requestAnimationFrame(() => scrollToCenter(explainRef.current)));
-
     const delay = q.explain ? 3500 : 1400;
     autoRef.current = setTimeout(() => advance(), delay);
   };
@@ -89,7 +223,9 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
       const score = resultsRef.current.filter(Boolean).length / qs.length;
       setPhase("done");
       onComplete(score);
-      // Scroll to results — two frames after state update paints the done screen
+      const passed = resultsRef.current.filter(Boolean).length;
+      if (passed === qs.length) playFanfare();
+      // Scroll done card into center — wait for it to paint
       requestAnimationFrame(() => requestAnimationFrame(() => scrollToCenter(doneRef.current)));
     } else {
       setQIdx((i) => i + 1);
@@ -100,29 +236,61 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
     }
   };
 
-  // ── Done screen ──────────────────────────────────────────────────────────
+  // ── Done screen — inline, no modal overlay ────────────────────────────────
   if (phase === "done") {
     const results = resultsRef.current;
     const passed = results.filter(Boolean).length;
     const pct = Math.round((passed / qs.length) * 100);
-    const grade =
-      pct === 100
-        ? { label: "PERFECT 🎉", color: "bg-acid text-ink" }
-        : pct >= 70
-          ? { label: "SOLID ✓", color: "bg-volt text-bone" }
-          : { label: "RETRY", color: "bg-hot text-bone" };
+    const perfect = pct === 100;
+    const grade = perfect
+      ? { label: "PERFECT 🎉", color: "bg-acid text-ink" }
+      : pct >= 70
+        ? { label: "SOLID ✓", color: "bg-volt text-bone" }
+        : { label: "RETRY", color: "bg-hot text-bone" };
+
     return (
-      <div ref={doneRef} className="space-y-3" style={{ scrollMarginTop: "88px" }}>
+      <div ref={doneRef} className="space-y-4 relative">
+        {/* Confetti on perfect */}
+        {perfect && <Confetti />}
+
         {/* Grade banner */}
-        <div className={`${grade.color} brutal-border p-5`}>
+        <div className={`${grade.color} brutal-border p-5 relative overflow-hidden`}>
           <div className="font-mono text-[10px] uppercase opacity-70">Quiz complete</div>
           <div className="font-display text-5xl mt-1">{grade.label}</div>
-          <div className="font-mono text-sm mt-2">
-            {passed} / {qs.length} correct · {pct}%
+          <div className="font-mono text-sm mt-2 flex items-center gap-3 flex-wrap">
+            <span>
+              {passed} / {qs.length} correct · {pct}%
+            </span>
+            {meta && meta.xpEarned > 0 && (
+              <span className="brutal-border bg-bone text-ink px-2 py-1 font-mono text-xs">
+                +{meta.xpEarned} XP
+              </span>
+            )}
+            {meta?.badgeName && (
+              <span className="brutal-border bg-ink text-bone px-2 py-1 font-mono text-xs">
+                🏅 {meta.badgeName}
+              </span>
+            )}
           </div>
         </div>
 
-        {/* Per-question recap with explanations */}
+        {/* Share card — only on perfect or high score */}
+        {pct >= 70 && meta && (
+          <div className="space-y-2">
+            {!showShare ? (
+              <button
+                onClick={() => setShowShare(true)}
+                className="brutal-border bg-volt text-bone px-5 py-3 font-display text-xl brutal-press"
+              >
+                {perfect ? "🎉 Share your result" : "Share result"}
+              </button>
+            ) : (
+              <ShareCard meta={meta} pct={pct} passed={passed} total={qs.length} />
+            )}
+          </div>
+        )}
+
+        {/* Per-question recap */}
         <div className="space-y-2">
           {qs.map((question, i) => (
             <div
@@ -147,32 +315,44 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
           ))}
         </div>
 
-        {pct < 70 && (
-          <button
-            onClick={() => {
-              resultsRef.current = [];
-              setQIdx(0);
-              setPicked(null);
-              setHint(false);
-              setPhase("picking");
-              requestAnimationFrame(() =>
-                requestAnimationFrame(() => scrollToTop(quizTopRef.current)),
-              );
-            }}
-            className="brutal-border bg-ink text-bone px-5 py-3 font-display text-xl brutal-press"
-          >
-            ↺ RETRY
-          </button>
-        )}
+        {/* Actions */}
+        <div className="flex gap-3 flex-wrap">
+          {pct < 70 && (
+            <button
+              onClick={() => {
+                resultsRef.current = [];
+                setQIdx(0);
+                setPicked(null);
+                setHint(false);
+                setPhase("picking");
+                setShowShare(false);
+                requestAnimationFrame(() =>
+                  requestAnimationFrame(() => scrollToTop(quizTopRef.current)),
+                );
+              }}
+              className="brutal-border bg-ink text-bone px-5 py-3 font-display text-xl brutal-press"
+            >
+              ↺ RETRY
+            </button>
+          )}
+          {meta?.nextSlug && (
+            <a
+              href={`/mission/${meta.nextSlug}`}
+              className="brutal-border bg-acid text-ink px-5 py-3 font-display text-xl brutal-press"
+            >
+              NEXT MISSION →
+            </a>
+          )}
+        </div>
       </div>
     );
   }
 
-  // ── Active question ──────────────────────────────────────────────────────
+  // ── Active question ───────────────────────────────────────────────────────
   const progressPct = Math.round((resultsRef.current.length / qs.length) * 100);
 
   return (
-    <div ref={quizTopRef} className="space-y-4" style={{ scrollMarginTop: "88px" }}>
+    <div ref={quizTopRef} className="space-y-4">
       {/* Progress */}
       <div className="space-y-1">
         <div className="flex justify-between font-mono text-[10px] uppercase opacity-60">
@@ -220,7 +400,7 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
         })}
       </div>
 
-      {/* Hint — only before answering */}
+      {/* Hint */}
       {phase === "picking" && q.hint && (
         <div>
           {!hintShown ? (
@@ -239,10 +419,9 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
         </div>
       )}
 
-      {/* ─── EXPLANATION — always visible immediately after answering ─── */}
+      {/* Explanation — shown immediately after answering */}
       {phase === "feedback" && (
-        <div ref={explainRef} style={{ scrollMarginTop: "88px" }}>
-          {/* Big coloured result bar — impossible to miss */}
+        <div ref={explainRef}>
           <div
             className={`brutal-border px-4 py-4 ${correct ? "bg-volt text-bone" : "bg-ink text-bone"}`}
           >
@@ -258,8 +437,6 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
               </div>
             )}
           </div>
-
-          {/* Skip wait */}
           <button
             onClick={() => advance()}
             className="mt-2 font-mono text-[10px] uppercase opacity-40 hover:opacity-80 underline underline-offset-2 block transition-opacity"

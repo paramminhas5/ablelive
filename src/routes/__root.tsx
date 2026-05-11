@@ -159,12 +159,11 @@ function RootComponent() {
   return (
     <TransportProvider>
       <QueryClientProvider client={queryClient}>
-        <div className="min-h-screen flex flex-col bg-bone text-ink pb-16">
+        <div className="min-h-screen flex flex-col bg-bone text-ink">
           <Header />
           <AnimatedOutlet />
-          <footer className="brutal-border border-x-0 border-b-0 bg-ink text-bone px-4 py-2 font-mono text-[10px] uppercase tracking-widest opacity-60 flex items-center justify-between">
-            <span>CCD.SCHOOL · CATSCANDANCE</span>
-            <span>2026</span>
+          <footer className="brutal-border border-x-0 border-b-0 bg-ink text-bone px-4 py-2 font-mono text-[10px] uppercase tracking-widest">
+            CCD.SCHOOL · CATSCANDANCE · 2026
           </footer>
         </div>
         <MasterTransportBar />

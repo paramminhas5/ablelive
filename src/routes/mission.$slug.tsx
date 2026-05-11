@@ -2,7 +2,7 @@ import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { missionBySlug, nextMission, prevMission, MISSIONS } from "@/content/missions";
 import { WORLDS } from "@/content/worlds";
 import { Simulator } from "@/components/sims/Simulator";
-import { Quiz } from "@/components/Quiz";
+import { Quiz, type QuizMeta } from "@/components/Quiz";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { useEffect, useState } from "react";
@@ -85,8 +85,7 @@ function MissionPage() {
     setEarnedScore(score);
     setEarnedBadge(badge ? m.badge?.name : undefined);
     setCompleted(true);
-    // Delay so user can read quiz results before modal overlays
-    setTimeout(() => setShowModal(true), 1800);
+    // Results shown inline in Quiz — modal no longer auto-triggers
   };
 
   return (
@@ -350,6 +349,13 @@ function MissionPage() {
         <Quiz
           key={slug}
           qs={quizQs}
+          meta={{
+            missionTitle: m.title,
+            missionNumber: m.number,
+            xpEarned: earnedXp,
+            badgeName: earnedBadge,
+            nextSlug: next?.slug,
+          }}
           onComplete={onQuizDone}
           onWrongAnswer={learnMode === "ccd" ? loseHeart : undefined}
         />
