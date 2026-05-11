@@ -177,7 +177,7 @@ export function TempoCompareSim() {
       {/* Result */}
       {reveal && (
         <div
-          className={`brutal-border p-4 animate-pop-in ${correct ? "bg-acid text-ink" : "bg-hot text-bone"}`}
+          className={`brutal-border p-4 animate-fade-in ${correct ? "bg-acid text-ink" : "bg-hot text-bone"}`}
         >
           <div className="font-display text-2xl">{correct ? "✓ CORRECT" : "✗ WRONG"}</div>
           <div className="font-mono text-xs mt-1">

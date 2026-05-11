@@ -151,7 +151,7 @@ export function Onboarding() {
   const s = steps[step];
   return (
     <div className="fixed inset-0 z-[90] bg-ink/70 flex items-center justify-center p-4">
-      <div className="brutal-border bg-bone p-6 max-w-md w-full brutal-shadow-lg animate-pop-in">
+      <div className="brutal-border bg-bone p-6 max-w-md w-full brutal-shadow-lg animate-fade-in">
         <div className="font-mono text-xs uppercase">
           // {step + 1} / {steps.length}
         </div>

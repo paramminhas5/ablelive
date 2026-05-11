@@ -83,8 +83,8 @@ function MissionPage() {
     setEarnedScore(score);
     setEarnedBadge(badge ? m.badge?.name : undefined);
     setCompleted(true);
-    // Delay so quiz results screen is visible before modal appears
-    setTimeout(() => setShowModal(true), 400);
+    // Delay so user can read quiz results before modal overlays
+    setTimeout(() => setShowModal(true), 1800);
   };
 
   return (

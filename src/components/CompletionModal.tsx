@@ -171,7 +171,7 @@ export function CompletionModal({ mission, xpEarned, score, badgeName, nextSlug,
       <div
         className={[
           "brutal-border bg-bone w-full max-w-lg brutal-shadow-lg relative overflow-hidden",
-          "transition-transform duration-300",
+          "transition-all duration-300 ease-out",
           visible ? "scale-100" : "scale-95 opacity-0",
         ].join(" ")}
         onClick={(e) => e.stopPropagation()}

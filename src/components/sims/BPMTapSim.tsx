@@ -105,7 +105,7 @@ export function BPMTapSim() {
       </div>
 
       {tappedBpm !== null && (
-        <div className={`brutal-border p-4 animate-pop-in ${accentColor}`}>
+        <div className={`brutal-border p-4 animate-fade-in ${accentColor}`}>
           <div className="font-mono text-[10px] uppercase opacity-70">Your BPM ({taps} taps)</div>
           <div className="font-display text-5xl">{tappedBpm}</div>
           <div className="font-mono text-sm mt-1">
