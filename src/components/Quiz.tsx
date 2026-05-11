@@ -1,52 +1,93 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { playCorrect, playWrong } from "@/lib/audio";
 import type { QuizQ } from "@/content/types";
 
 interface Props {
   qs: QuizQ[];
   onComplete: (score: number) => void;
-  onWrongAnswer?: () => void; // CCD mode: called on each wrong submission
+  onWrongAnswer?: () => void;
 }
+
+type Phase = "picking" | "feedback" | "done";
 
 export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
   const [qIdx, setQIdx] = useState(0);
   const [picked, setPicked] = useState<number | null>(null);
-  const [revealed, setRevealed] = useState(false);
-  const [hintShown, setHintShown] = useState(false);
-  const [results, setResults] = useState<boolean[]>([]);
-  const [done, setDone] = useState(false);
+  const [hintShown, setHint] = useState(false);
+  const [phase, setPhase] = useState<Phase>("picking");
+
+  // Use a ref for results so the score calc in the completion handler
+  // always reads the current accumulated values, never stale closures.
+  const resultsRef = useRef<boolean[]>([]);
+  const [resultsLen, setResultsLen] = useState(0); // just to trigger re-renders
+
+  const autoRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Reset fully when the question set changes (new mission)
+  useEffect(() => {
+    resultsRef.current = [];
+    setResultsLen(0);
+    setQIdx(0);
+    setPicked(null);
+    setHint(false);
+    setPhase("picking");
+    if (autoRef.current) clearTimeout(autoRef.current);
+  }, [qs]);
+
+  // Clean up timer on unmount
+  useEffect(
+    () => () => {
+      if (autoRef.current) clearTimeout(autoRef.current);
+    },
+    [],
+  );
 
   const q = qs[qIdx];
-  const correct = revealed ? picked === q.answer : null;
+  if (!q) return null;
 
-  const submit = () => {
-    if (picked === null || revealed) return;
-    const pass = picked === q.answer;
-    setRevealed(true);
-    setResults((r) => [...r, pass]);
-    if (pass) playCorrect();
+  const isLast = qIdx === qs.length - 1;
+  const pass = picked !== null ? picked === q.answer : null;
+  const correct = phase === "feedback" ? pass : null;
+
+  // --- Pick an answer → immediately show feedback ---
+  const pick = (optIdx: number) => {
+    if (phase !== "picking") return;
+    setPicked(optIdx);
+
+    const isPass = optIdx === q.answer;
+    const newResults = [...resultsRef.current, isPass];
+    resultsRef.current = newResults;
+    setResultsLen(newResults.length);
+
+    setPhase("feedback");
+
+    if (isPass) playCorrect();
     else {
       playWrong();
       onWrongAnswer?.();
     }
+
+    // Auto-advance after 1400ms (enough to read explanation)
+    autoRef.current = setTimeout(() => advance(newResults), 1400);
   };
 
-  const next = () => {
-    const isLast = qIdx === qs.length - 1;
+  const advance = (results: boolean[]) => {
+    if (autoRef.current) clearTimeout(autoRef.current);
     if (isLast) {
-      const score = [...results].filter(Boolean).length / qs.length;
-      setDone(true);
+      const score = results.filter(Boolean).length / qs.length;
+      setPhase("done");
       onComplete(score);
     } else {
       setQIdx((i) => i + 1);
       setPicked(null);
-      setRevealed(false);
-      setHintShown(false);
+      setHint(false);
+      setPhase("picking");
     }
   };
 
-  // --- Results screen ---
-  if (done) {
+  // --- Done screen ---
+  if (phase === "done") {
+    const results = resultsRef.current;
     const passed = results.filter(Boolean).length;
     const pct = Math.round((passed / qs.length) * 100);
     const grade =
@@ -54,31 +95,39 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
         ? { label: "PERFECT", color: "bg-acid text-ink" }
         : pct >= 70
           ? { label: "SOLID", color: "bg-volt text-bone" }
-          : { label: "RETRY?", color: "bg-hot text-bone" };
+          : { label: "RETRY", color: "bg-hot text-bone" };
 
     return (
-      <div className="brutal-border p-6 space-y-4">
-        <div className={`${grade.color} brutal-border p-4`}>
-          <div className="font-mono text-[10px] uppercase mb-1">Quiz complete</div>
-          <div className="font-display text-5xl">{grade.label}</div>
+      <div className="space-y-3">
+        {/* Grade card */}
+        <div className={`${grade.color} brutal-border p-5`}>
+          <div className="font-mono text-[10px] uppercase opacity-80">Quiz complete</div>
+          <div className="font-display text-5xl mt-1">{grade.label}</div>
           <div className="font-mono text-sm mt-1">
             {passed} / {qs.length} correct · {pct}%
           </div>
         </div>
 
-        <div className="space-y-2">
+        {/* Per-question recap */}
+        <div className="space-y-1">
           {qs.map((question, i) => (
             <div
               key={i}
-              className={`brutal-border p-3 flex items-start gap-3 ${results[i] ? "bg-acid/20" : "bg-hot/10"}`}
+              className={`brutal-border p-3 flex items-start gap-3 ${
+                results[i] ? "bg-acid/20" : "bg-hot/10"
+              }`}
             >
-              <span className="font-display text-xl shrink-0">{results[i] ? "✓" : "✗"}</span>
-              <div>
-                <div className="font-mono text-xs">{question.q}</div>
-                {!results[i] && (
-                  <div className="font-mono text-[10px] opacity-70 mt-1">
-                    Correct: {question.options[question.answer]}
-                    {question.explain && <> — {question.explain}</>}
+              <span className="font-display text-lg shrink-0 mt-0.5">{results[i] ? "✓" : "✗"}</span>
+              <div className="min-w-0">
+                <div className="font-mono text-xs leading-relaxed">{question.q}</div>
+                <div className="font-mono text-[10px] opacity-70 mt-0.5">
+                  {results[i]
+                    ? question.options[question.answer]
+                    : `Correct: ${question.options[question.answer]}`}
+                </div>
+                {!results[i] && question.explain && (
+                  <div className="font-mono text-[10px] opacity-60 mt-0.5 leading-relaxed">
+                    {question.explain}
                   </div>
                 )}
               </div>
@@ -89,24 +138,24 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
         {pct < 70 && (
           <button
             onClick={() => {
+              resultsRef.current = [];
+              setResultsLen(0);
               setQIdx(0);
               setPicked(null);
-              setRevealed(false);
-              setHintShown(false);
-              setResults([]);
-              setDone(false);
+              setHint(false);
+              setPhase("picking");
             }}
             className="brutal-border bg-ink text-bone px-5 py-3 font-display text-xl brutal-press"
           >
-            ↺ RETRY QUIZ
+            ↺ RETRY
           </button>
         )}
       </div>
     );
   }
 
-  // --- Single question ---
-  const progressPct = Math.round((qIdx / qs.length) * 100);
+  // --- Active question ---
+  const progressPct = Math.round((resultsLen / qs.length) * 100);
 
   return (
     <div className="space-y-4">
@@ -114,113 +163,92 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
       <div className="space-y-1">
         <div className="flex justify-between font-mono text-[10px] uppercase opacity-60">
           <span>
-            Question {qIdx + 1} of {qs.length}
+            Question {qIdx + 1} / {qs.length}
           </span>
-          <span>{results.filter(Boolean).length} correct so far</span>
+          <span>{resultsRef.current.filter(Boolean).length} correct</span>
         </div>
         <div className="h-2 brutal-border bg-bone overflow-hidden">
           <div
-            className="h-full bg-acid transition-all duration-300"
+            className="h-full bg-acid transition-all duration-500"
             style={{ width: `${progressPct}%` }}
           />
         </div>
       </div>
 
-      {/* Question */}
-      <div className="brutal-border bg-card p-5 brutal-shadow-sm space-y-4">
-        <div className="font-display text-xl leading-snug">{q.q}</div>
+      {/* Question text */}
+      <div className="font-display text-xl md:text-2xl leading-snug">{q.q}</div>
 
-        <div className="grid sm:grid-cols-2 gap-2">
-          {q.options.map((opt, oi) => {
-            const isPicked = picked === oi;
-            const isRight = revealed && oi === q.answer;
-            const isWrong = revealed && isPicked && oi !== q.answer;
-            const isMissed = revealed && !isPicked && oi === q.answer;
-            return (
-              <button
-                key={oi}
-                disabled={revealed}
-                onClick={() => setPicked(oi)}
-                className={[
-                  "brutal-border px-3 py-3 text-left font-mono text-sm transition-colors",
-                  isRight || isMissed
-                    ? "bg-acid text-ink font-bold"
-                    : isWrong
-                      ? "bg-hot text-bone"
-                      : isPicked
-                        ? "bg-sun text-ink"
-                        : "bg-bone hover:bg-sun/30",
-                  revealed ? "cursor-default" : "brutal-press",
-                ].join(" ")}
-                aria-pressed={isPicked}
-              >
-                <span className="opacity-50 mr-2">{String.fromCharCode(65 + oi)}.</span>
-                {opt}
-                {isRight && <span className="ml-2">✓</span>}
-                {isWrong && <span className="ml-2">✗</span>}
-                {isMissed && !isPicked && <span className="ml-2 opacity-70">← correct</span>}
-              </button>
-            );
-          })}
+      {/* Options — clicking one IS the submission */}
+      <div className="grid sm:grid-cols-2 gap-2">
+        {q.options.map((opt, oi) => {
+          const isPicked = picked === oi;
+          const isRight = phase === "feedback" && oi === q.answer;
+          const isWrong = phase === "feedback" && isPicked && oi !== q.answer;
+          const isMissed = phase === "feedback" && !isPicked && oi === q.answer;
+
+          let bg = "bg-bone hover:bg-sun/40 brutal-press";
+          if (isRight || isMissed) bg = "bg-acid text-ink font-bold";
+          else if (isWrong) bg = "bg-hot text-bone";
+          else if (phase === "feedback") bg = "bg-bone opacity-60";
+
+          return (
+            <button
+              key={oi}
+              onClick={() => pick(oi)}
+              disabled={phase === "feedback"}
+              className={`brutal-border px-4 py-3 text-left font-mono text-sm transition-colors ${bg}`}
+              aria-pressed={isPicked}
+            >
+              <span className="opacity-40 mr-2">{String.fromCharCode(65 + oi)}.</span>
+              {opt}
+              {isRight && <span className="ml-2 text-ink">✓</span>}
+              {isWrong && <span className="ml-2">✗</span>}
+              {isMissed && <span className="ml-2 opacity-70 text-ink">← correct</span>}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Hint — only shown before answering */}
+      {phase === "picking" && q.hint && (
+        <div>
+          {!hintShown ? (
+            <button
+              onClick={() => setHint(true)}
+              className="font-mono text-[10px] uppercase opacity-40 hover:opacity-80 underline underline-offset-2 transition-opacity"
+            >
+              Stuck? See a hint
+            </button>
+          ) : (
+            <div className="brutal-border bg-sun/30 px-4 py-3 font-mono text-xs leading-relaxed">
+              <span className="uppercase font-bold mr-2 opacity-60">Hint</span>
+              {q.hint}
+            </div>
+          )}
         </div>
+      )}
 
-        {/* Hint */}
-        {!revealed && q.hint && (
-          <div>
-            {!hintShown ? (
-              <button
-                onClick={() => setHintShown(true)}
-                className="font-mono text-[10px] uppercase opacity-50 hover:opacity-100 underline underline-offset-2"
-              >
-                Stuck? See a hint
-              </button>
-            ) : (
-              <div className="brutal-border bg-sun/40 p-3 font-mono text-xs leading-relaxed">
-                <span className="uppercase font-bold mr-2">Hint:</span>
-                {q.hint}
-              </div>
-            )}
-          </div>
-        )}
+      {/* Explanation — appears instantly after answering */}
+      {phase === "feedback" && q.explain && (
+        <div
+          className={`brutal-border px-4 py-3 font-mono text-xs leading-relaxed ${
+            correct ? "bg-volt text-bone" : "bg-ink text-bone"
+          }`}
+        >
+          <span className="uppercase font-bold mr-2 opacity-70">{correct ? "✓" : "✗"}</span>
+          {q.explain}
+        </div>
+      )}
 
-        {/* Explanation */}
-        {revealed && q.explain && (
-          <div
-            className={`brutal-border p-3 font-mono text-xs leading-relaxed ${correct ? "bg-volt text-bone" : "bg-ink text-bone"}`}
-          >
-            <span className="uppercase font-bold mr-2">▸</span>
-            {q.explain}
-          </div>
-        )}
-      </div>
-
-      {/* Actions */}
-      <div className="flex gap-3 items-center">
-        {!revealed ? (
-          <button
-            onClick={submit}
-            disabled={picked === null}
-            className="brutal-border bg-acid px-5 py-3 font-display text-xl brutal-press disabled:opacity-40"
-          >
-            SUBMIT
-          </button>
-        ) : (
-          <button
-            onClick={next}
-            className="brutal-border bg-ink text-bone px-5 py-3 font-display text-xl brutal-press"
-          >
-            {qIdx === qs.length - 1 ? "SEE RESULTS →" : "NEXT QUESTION →"}
-          </button>
-        )}
-
-        {revealed && (
-          <div
-            className={`brutal-border px-4 py-2 font-mono text-sm uppercase ${correct ? "bg-acid text-ink" : "bg-hot text-bone"}`}
-          >
-            {correct ? "✓ Correct" : "✗ Wrong"}
-          </div>
-        )}
-      </div>
+      {/* Manual next button — safety valve if user doesn't want to wait */}
+      {phase === "feedback" && (
+        <button
+          onClick={() => advance(resultsRef.current)}
+          className="font-mono text-[10px] uppercase opacity-40 hover:opacity-80 underline underline-offset-2 transition-opacity"
+        >
+          {isLast ? "See results →" : "Next →"}
+        </button>
+      )}
     </div>
   );
 }

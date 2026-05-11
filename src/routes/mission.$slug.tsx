@@ -44,11 +44,16 @@ function MissionPage() {
   const [earnedXp, setEarnedXp] = useState(0);
   const [earnedBadge, setEarnedBadge] = useState<string | undefined>();
 
+  // Scroll to top ONLY when navigating to a different mission slug
   useEffect(() => {
-    setCompleted(!!progress.completedMissions[slug]);
     setFlowKey(0);
     setShowModal(false);
-    if (typeof window !== "undefined") window.scrollTo({ top: 0 });
+    if (typeof window !== "undefined") window.scrollTo({ top: 0, behavior: "instant" });
+  }, [slug]);
+
+  // Track completion separately — doesn't scroll
+  useEffect(() => {
+    setCompleted(!!progress.completedMissions[slug]);
   }, [slug, progress.completedMissions]);
 
   const next = nextMission(slug);
@@ -76,7 +81,8 @@ function MissionPage() {
     setEarnedXp(xp);
     setEarnedBadge(badge ? m.badge?.name : undefined);
     setCompleted(true);
-    setShowModal(true);
+    // Small delay so the quiz results screen renders before modal appears
+    setTimeout(() => setShowModal(true), 300);
   };
 
   return (
