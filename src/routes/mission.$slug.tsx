@@ -71,7 +71,9 @@ function MissionPage() {
   const fallbackWhat = m.explainer.find((b) => b.kind === "lead" || b.kind === "para");
   const track = advanced ? deep?.advanced : deep?.beginner;
   const whatParas = track?.what ?? deep?.definition;
-  const quizQs = advanced ? (deep?.quizHard ?? m.quiz) : (deep?.quizEasy ?? m.quiz.slice(0, 3));
+  // Always use m.quiz — it has explain + hint on every question.
+  // deep.quizEasy/quizHard are unenriched and would shadow the explanations.
+  const quizQs = advanced ? m.quiz : m.quiz.slice(0, 4);
   const passThreshold = advanced ? 0.6 : 0.5;
 
   const onQuizDone = (score: number) => {
