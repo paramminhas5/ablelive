@@ -136,7 +136,7 @@ export function Onboarding() {
   };
   const steps = [
     {
-      title: "Welcome to ABLETON.SCHOOL",
+      title: "Welcome to CCD.SCHOOL",
       body: "116 missions across 6 worlds. 23 interactive simulators. Ear training drills, a mix-match game, a workbench. No fluff.",
     },
     {

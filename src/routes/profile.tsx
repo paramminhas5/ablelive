@@ -6,7 +6,7 @@ import { RankBadge } from "@/components/HomeWidgets";
 import { ShareCard } from "@/components/ShareCard";
 
 export const Route = createFileRoute("/profile")({
-  head: () => ({ meta: [{ title: "Profile — ABLETON.SCHOOL" }, { name: "description", content: "Your XP, badges, streak and completed missions." }]}),
+  head: () => ({ meta: [{ title: "Profile — CCD.SCHOOL" }, { name: "description", content: "Your XP, badges, streak and completed missions." }]}),
   component: Profile,
 });
 

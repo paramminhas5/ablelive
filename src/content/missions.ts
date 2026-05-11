@@ -199,7 +199,7 @@ const w1: Mission[] = [
         text: "Buffer too low → audio glitches. Too high → noticeable input latency. 256 samples is a safe default for most.",
       },
     ],
-    sim: { type: "knob-trainer", preset: { mode: "buffer" } },
+    sim: { type: "none", preset: { mode: "buffer" } },
     quiz: [
       {
         q: "Lower buffer size means…",
@@ -254,7 +254,7 @@ const w1: Mission[] = [
         text: "Name tracks and clips as you work. Future-you will thank present-you.",
       },
     ],
-    sim: { type: "none" },
+    sim: { type: "browser-tour" },
     quiz: [
       {
         q: "A Live Set extension is…",
@@ -925,7 +925,7 @@ const w4: Mission[] = [
         ],
       },
     ],
-    sim: { type: "knob-trainer", preset: { synth: "wavetable" } },
+    sim: { type: "none", preset: { synth: "wavetable" } },
     quiz: [
       {
         q: "Meld is what kind of synth?",
@@ -1274,7 +1274,7 @@ const w4: Mission[] = [
         ],
       },
     ],
-    sim: { type: "device-lab", preset: { device: "reverb" } },
+    sim: { type: "send-return", preset: { device: "reverb" } },
     quiz: [
       {
         q: "Hybrid Reverb arrived in…",
@@ -2374,7 +2374,7 @@ const wExtra: Mission[] = [
         text: "Even without an MPE controller, Meld's two-engine layering makes great evolving pads.",
       },
     ],
-    sim: { type: "knob-trainer" },
+    sim: { type: "none" },
     quiz: [
       {
         q: "Meld shipped with…",
@@ -2594,7 +2594,7 @@ const wExtra: Mission[] = [
         text: "If your mix sounds like separate tracks, Glue is the cheat code.",
       },
     ],
-    sim: { type: "knob-trainer", preset: { device: "compressor" } },
+    sim: { type: "device-lab", preset: { device: "glue-compressor" } },
     quiz: [
       {
         q: "Glue emulates which classic?",
@@ -2649,7 +2649,7 @@ const wExtra: Mission[] = [
         text: "Limiting more than 3–4 dB will pump and squash. Mix into the limiter, don't fix the mix with it.",
       },
     ],
-    sim: { type: "knob-trainer", preset: { device: "compressor" } },
+    sim: { type: "device-lab", preset: { device: "limiter" } },
     quiz: [
       {
         q: "A limiter is a…",
@@ -2989,7 +2989,7 @@ const w7: Mission[] = [
         text: "Start with the Init preset and twist Drift up — instant analog character.",
       },
     ],
-    sim: { type: "knob-trainer" },
+    sim: { type: "none" },
     quiz: [
       {
         q: "Drift's filter section has…",
@@ -3044,7 +3044,7 @@ const w7: Mission[] = [
         text: "Granulator turns any short sample into a sustained instrument.",
       },
     ],
-    sim: { type: "knob-trainer" },
+    sim: { type: "none" },
     quiz: [
       {
         q: "Granulator plays the sample as…",
@@ -3100,7 +3100,7 @@ const w7: Mission[] = [
         text: "Modelling instruments respond to velocity and aftertouch with real expression — they reward MPE controllers.",
       },
     ],
-    sim: { type: "knob-trainer" },
+    sim: { type: "none" },
     quiz: [
       {
         q: "Tension models…",
@@ -3832,7 +3832,7 @@ const w8: Mission[] = [
         text: "Freeze + Flatten is destructive on the track's devices — make a duplicate first if you might revisit.",
       },
     ],
-    sim: { type: "mixer" },
+    sim: { type: "none" },
     quiz: [
       {
         q: "Bigger buffer = …",

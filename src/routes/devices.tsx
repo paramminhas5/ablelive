@@ -6,7 +6,7 @@ import { DeviceChainSim } from "@/components/sims/DeviceChainSim";
 
 export const Route = createFileRoute("/devices")({
   head: () => ({ meta: [
-    { title: "Device Lab — ABLETON.SCHOOL" },
+    { title: "Device Lab — CCD.SCHOOL" },
     { name: "description", content: "Real, working device emulations + every built-in instrument explained." },
   ]}),
   component: DevicesIndex,

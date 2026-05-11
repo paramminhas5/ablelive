@@ -8,7 +8,7 @@ export const Route = createFileRoute("/path/$slug")({
   head: ({ params }) => {
     const p = pathBySlug(params.slug);
     return { meta: [
-      { title: `${p?.title ?? "Path"} — ABLETON.SCHOOL` },
+      { title: `${p?.title ?? "Path"} — CCD.SCHOOL` },
       { name: "description", content: p?.tagline ?? "Learning path" },
     ]};
   },

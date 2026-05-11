@@ -6,7 +6,7 @@ import { AudioUnlock } from "@/components/AudioUnlock";
 
 export const Route = createFileRoute("/match")({
   head: () => ({ meta: [
-    { title: "Mix Match — ABLETON.SCHOOL" },
+    { title: "Mix Match — CCD.SCHOOL" },
     { name: "description", content: "Match the target sound by adjusting EQ, compression and reverb." },
   ]}),
   component: MatchPage,

@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Sign in — ABLETON.SCHOOL" }, { name: "description", content: "Sign in to save your XP, streak and badges across devices." }]}),
+  head: () => ({ meta: [{ title: "Sign in — CCD.SCHOOL" }, { name: "description", content: "Sign in to save your XP, streak and badges across devices." }]}),
   component: LoginPage,
 });
 

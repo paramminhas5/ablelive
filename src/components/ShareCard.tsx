@@ -24,7 +24,7 @@ export function ShareCard() {
     ctx.fillRect(40, 40, W - 80, H - 80);
     ctx.fillStyle = "#E6FF55";
     ctx.font = "bold 64px sans-serif";
-    ctx.fillText("ABLETON.SCHOOL", 80, 140);
+    ctx.fillText("CCD.SCHOOL", 80, 140);
     ctx.font = "bold 96px sans-serif";
     ctx.fillText(current.name, 80, 260);
     ctx.font = "32px monospace";
@@ -42,7 +42,7 @@ export function ShareCard() {
       530,
     );
     ctx.font = "20px monospace";
-    ctx.fillText("ableton.school", 80, H - 80);
+    ctx.fillText("ccd.school", 80, H - 80);
   };
 
   const download = () => {

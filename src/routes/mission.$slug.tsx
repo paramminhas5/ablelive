@@ -17,7 +17,7 @@ export const Route = createFileRoute("/mission/$slug")({
     const m = missionBySlug(params.slug);
     return {
       meta: [
-        { title: `${m?.title ?? "Mission"} — ABLETON.SCHOOL` },
+        { title: `${m?.title ?? "Mission"} — CCD.SCHOOL` },
         { name: "description", content: m?.tagline ?? "" },
       ],
     };

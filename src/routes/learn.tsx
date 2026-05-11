@@ -1,28 +1,29 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { PATHS } from "@/content/paths";
-import { missionBySlug } from "@/content/missions";
-import { useProgress } from "@/lib/progress";
+import { MISSIONS, missionBySlug } from "@/content/missions";
+import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { useState } from "react";
-import { JourneyMap } from "@/components/JourneyMap";
 
 export const Route = createFileRoute("/learn")({
-  head: () => ({ meta: [
-    { title: "Learn — ABLETON.SCHOOL" },
-    { name: "description", content: "Paths, skill map and journey — pick a learning path or explore the whole map." },
-    { property: "og:title", content: "Learn — ABLETON.SCHOOL" },
-    { property: "og:description", content: "Hearts, streaks, XP. A learning loop built for music production." },
-  ]}),
+  head: () => ({
+    meta: [
+      { title: "Learn — CCD.SCHOOL" },
+      {
+        name: "description",
+        content: "Choose your learning mode and follow a structured path through Ableton Live 12.",
+      },
+    ],
+  }),
   component: LearnPage,
 });
 
-const MARQUEE_PATH = "first-beat";
-type Tab = "paths" | "skills" | "journey";
+type Tab = "paths" | "all";
 
 function LearnPage() {
   const { progress } = useProgress();
   const { learnMode, setLearnMode } = useLearnMode();
-  const [activePath, setActivePath] = useState(MARQUEE_PATH);
+  const [activePath, setActivePath] = useState(PATHS[0].slug);
   const [tab, setTab] = useState<Tab>("paths");
 
   const path = PATHS.find((p) => p.slug === activePath) ?? PATHS[0];
@@ -31,80 +32,175 @@ function LearnPage() {
   const lessons = path.missionSlugs.map((slug, idx) => {
     const m = missionBySlug(slug);
     const prevSlug = path.missionSlugs[idx - 1];
-    const prevDone = idx === 0 || (prevSlug && completed[prevSlug] && completed[prevSlug].score >= 0.6);
+    const prevDone = idx === 0 || !!(prevSlug && completed[prevSlug]);
     const done = !!completed[slug];
-    const locked = learnMode === "ccd" ? !prevDone : false;
+    const locked = learnMode === "ccd" && !prevDone && !done;
     return { slug, mission: m, idx, done, locked };
   });
 
   const totalDone = lessons.filter((l) => l.done).length;
-  const pct = Math.round((totalDone / lessons.length) * 100);
+  const pathPct = Math.round((totalDone / lessons.length) * 100);
+
+  // CCD stats
+  const allDone = Object.keys(completed).length;
+  const totalPct = Math.round((allDone / MISSIONS.length) * 100);
 
   return (
-    <main className="min-h-screen bg-bone">
-      {/* Hero */}
-      <section className="brutal-border border-x-0 border-t-0 bg-acid">
-        <div className="max-w-5xl mx-auto px-4 py-5 md:py-6 flex items-center justify-between flex-wrap gap-3">
-          <div>
-            <h1 className="font-display text-3xl md:text-5xl">LEARN</h1>
-            <p className="font-mono text-[11px] md:text-xs uppercase mt-1">
-              Paths, skill map, journey — pick how you explore.
-            </p>
-          </div>
-          <div className="flex gap-2 font-mono text-[11px] md:text-xs">
-            <button onClick={() => setLearnMode("classic")} className={`brutal-border px-3 py-2 brutal-press ${learnMode === "classic" ? "bg-ink text-bone" : "bg-bone"}`}>CLASSIC</button>
-            <button onClick={() => setLearnMode("ccd")} className={`brutal-border px-3 py-2 brutal-press ${learnMode === "ccd" ? "bg-hot text-bone" : "bg-bone"}`}>CCD MODE</button>
-          </div>
+    <main className="min-h-screen bg-bone animate-fade-in">
+      {/* Mode selector — the only place it lives */}
+      <section className="brutal-border border-x-0 border-t-0">
+        <div className="max-w-5xl mx-auto px-4 py-4 grid md:grid-cols-2 gap-3">
+          {/* Classic card */}
+          <button
+            onClick={() => setLearnMode("classic")}
+            className={`brutal-border p-4 text-left transition-all ${
+              learnMode === "classic" ? "bg-acid" : "bg-bone hover:bg-sun/30"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div className="font-display text-2xl">CLASSIC</div>
+              {learnMode === "classic" && (
+                <span className="font-mono text-[10px] uppercase brutal-border bg-ink text-bone px-2 py-1">
+                  ACTIVE
+                </span>
+              )}
+            </div>
+            <div className="font-mono text-xs mt-2 leading-relaxed opacity-80">
+              All 116 missions open. No locks. No hearts. Explore freely — follow any path or jump
+              anywhere.
+            </div>
+          </button>
+
+          {/* CCD card */}
+          <button
+            onClick={() => setLearnMode("ccd")}
+            className={`brutal-border p-4 text-left transition-all ${
+              learnMode === "ccd" ? "bg-hot text-bone" : "bg-bone hover:bg-sun/30"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div className="font-display text-2xl">CCD MODE</div>
+              {learnMode === "ccd" && (
+                <span className="font-mono text-[10px] uppercase brutal-border bg-bone text-ink px-2 py-1">
+                  ACTIVE
+                </span>
+              )}
+            </div>
+            <div className="font-mono text-xs mt-2 leading-relaxed opacity-90">
+              Structured. Sequential. Each mission unlocks the next. Wrong quiz answers cost a heart
+              ♥. Earn streak shields at 7-day milestones.
+            </div>
+            {learnMode === "ccd" && (
+              <div className="flex gap-2 mt-3 flex-wrap">
+                <span className="brutal-border bg-bone text-ink px-2 py-1 font-mono text-[10px] uppercase">
+                  ♥ {progress.hearts}/{MAX_HEARTS} hearts
+                </span>
+                <span className="brutal-border bg-bone text-ink px-2 py-1 font-mono text-[10px] uppercase">
+                  🔥 {progress.streakDays}d streak
+                </span>
+                <span className="brutal-border bg-bone text-ink px-2 py-1 font-mono text-[10px] uppercase">
+                  {progress.dailyXp}/{DAILY_GOAL_XP} XP today
+                </span>
+                {progress.streakShield && (
+                  <span className="brutal-border bg-acid text-ink px-2 py-1 font-mono text-[10px] uppercase">
+                    🛡 Shield
+                  </span>
+                )}
+              </div>
+            )}
+          </button>
         </div>
       </section>
 
-      {/* Engagement strip */}
+      {/* Progress summary */}
       <section className="brutal-border border-x-0 border-t-0 bg-bone">
-        <div className="max-w-5xl mx-auto px-4 py-2.5 flex items-center gap-2 flex-wrap font-mono text-[10px] md:text-xs uppercase">
-          <span className="brutal-border bg-hot text-bone px-2 py-1">🔥 {progress.streakDays}d</span>
-          <span className="brutal-border bg-acid px-2 py-1">XP {progress.xp}</span>
-          <span className="brutal-border bg-sun px-2 py-1">{totalDone}/{lessons.length} on path · {pct}%</span>
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3 flex-wrap">
+          <div className="h-2 brutal-border flex-1 bg-bone overflow-hidden min-w-[120px]">
+            <div
+              className="h-full bg-acid transition-all duration-500"
+              style={{ width: `${totalPct}%` }}
+            />
+          </div>
+          <span className="font-mono text-[10px] uppercase opacity-70 shrink-0">
+            {allDone} / {MISSIONS.length} missions · {totalPct}%
+          </span>
         </div>
       </section>
 
-      {/* Tabs */}
-      <section className="max-w-5xl mx-auto px-4 pt-4">
-        <div className="flex gap-1 font-mono text-xs uppercase">
-          {([
-            { id: "paths", label: "PATHS" },
-            { id: "skills", label: "SKILL MAP" },
-            { id: "journey", label: "JOURNEY" },
-          ] as { id: Tab; label: string }[]).map((t) => (
-            <button key={t.id} onClick={() => setTab(t.id)}
-              className={`brutal-border px-3 py-2 brutal-press flex-1 md:flex-none ${tab === t.id ? "bg-volt text-bone" : "bg-bone"}`}>
-              {t.label}
-            </button>
-          ))}
-        </div>
-      </section>
+      {/* Tab switcher */}
+      <div className="max-w-5xl mx-auto px-4 pt-4 flex gap-1">
+        {(
+          [
+            ["paths", "PATHS"],
+            ["all", "ALL MISSIONS"],
+          ] as [Tab, string][]
+        ).map(([id, label]) => (
+          <button
+            key={id}
+            onClick={() => setTab(id)}
+            className={`brutal-border px-4 py-2 font-mono text-xs uppercase brutal-press ${
+              tab === id ? "bg-volt text-bone" : "bg-bone"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
 
+      {/* PATHS tab */}
       {tab === "paths" && (
         <>
           <section className="max-w-5xl mx-auto px-4 py-4">
-            <div className="flex gap-2 flex-wrap font-mono text-[11px] uppercase">
-              {PATHS.map((p) => (
-                <button key={p.slug} onClick={() => setActivePath(p.slug)}
-                  className={`brutal-border px-3 py-2 brutal-press ${activePath === p.slug ? "bg-ink text-bone" : "bg-bone"}`}>
-                  {p.slug === MARQUEE_PATH ? "★ " : ""}{p.title}
-                </button>
-              ))}
+            {/* Path selector — horizontal scrolling pills */}
+            <div className="flex gap-2 flex-wrap font-mono text-[11px] uppercase mb-4">
+              {PATHS.map((p) => {
+                const done = p.missionSlugs.filter((s) => completed[s]).length;
+                return (
+                  <button
+                    key={p.slug}
+                    onClick={() => setActivePath(p.slug)}
+                    className={`brutal-border px-3 py-2 brutal-press flex items-center gap-2 ${
+                      activePath === p.slug ? "bg-ink text-bone" : "bg-bone hover:bg-sun"
+                    }`}
+                  >
+                    {p.title}
+                    <span
+                      className={`text-[9px] ${activePath === p.slug ? "opacity-60" : "opacity-40"}`}
+                    >
+                      {done}/{p.missionSlugs.length}
+                    </span>
+                  </button>
+                );
+              })}
             </div>
-            <p className="font-mono text-xs mt-3 opacity-70">{path.description}</p>
+
+            {/* Active path description */}
+            <div className="brutal-border bg-sun p-3 mb-4">
+              <div className="font-display text-xl">{path.title}</div>
+              <div className="font-mono text-xs mt-1 opacity-80">{path.description}</div>
+              <div className="h-1.5 brutal-border bg-bone mt-3 overflow-hidden">
+                <div
+                  className="h-full bg-ink transition-all duration-500"
+                  style={{ width: `${pathPct}%` }}
+                />
+              </div>
+              <div className="font-mono text-[10px] uppercase mt-1 opacity-60">
+                {totalDone} / {lessons.length} complete · {pathPct}%
+              </div>
+            </div>
           </section>
 
-          <section className="max-w-3xl mx-auto px-4 pb-20">
-            <ol className="relative">
+          {/* Duolingo-style path — vertical snake */}
+          <section className="max-w-lg mx-auto px-4 pb-24">
+            <ol className="relative space-y-3">
               {lessons.map((l, i) => {
-                const offset = i % 4;
-                const ml = ["ml-0", "ml-6 md:ml-24", "ml-12 md:ml-48", "ml-6 md:ml-24"][offset];
+                // Snake: alternating indent pattern
+                const col = i % 5;
+                const indent = ["ml-0", "ml-8", "ml-16", "ml-8", "ml-0"][col];
                 const isCheck = (i + 1) % 5 === 0;
+                const xpEarned = completed[l.slug]?.score;
                 return (
-                  <li key={l.slug} className={`flex items-center gap-3 my-3 ${ml}`}>
+                  <li key={l.slug} className={`${indent} transition-all`}>
                     <LessonNode
                       num={i + 1}
                       title={l.mission?.title ?? l.slug}
@@ -112,97 +208,115 @@ function LearnPage() {
                       done={l.done}
                       locked={l.locked}
                       isCheck={isCheck}
+                      score={typeof xpEarned === "number" ? Math.round(xpEarned * 100) : undefined}
                     />
                   </li>
                 );
               })}
-            </ol>
 
-            <div className="mt-8 brutal-border bg-sun p-4 md:p-5 text-center">
-              <div className="font-display text-xl md:text-2xl">PATH COMPLETE → CROWN</div>
-              <p className="font-mono text-[11px] md:text-xs mt-1 uppercase">
-                Finish all {lessons.length} lessons to earn the {path.title} crown.
-              </p>
-            </div>
+              {/* Crown finish */}
+              <li className="ml-0 mt-6">
+                <div className="brutal-border bg-sun p-4 text-center">
+                  <div className="font-display text-2xl">👑 PATH COMPLETE</div>
+                  <div className="font-mono text-[10px] uppercase mt-1 opacity-70">
+                    Finish all {lessons.length} missions to earn the {path.title} crown
+                  </div>
+                </div>
+              </li>
+            </ol>
           </section>
         </>
       )}
 
-      {tab === "skills" && (
-        <section className="max-w-6xl mx-auto px-4 py-4 pb-20 space-y-3">
-          <div className="font-mono text-[11px] uppercase opacity-70">
-            ▸ Every path as a wrapping lane. Cross-paths share stops where skills overlap.
+      {/* ALL MISSIONS tab — clean grid, not overwhelming */}
+      {tab === "all" && (
+        <section className="max-w-5xl mx-auto px-4 py-4 pb-24">
+          <div className="font-mono text-[10px] uppercase opacity-60 mb-3">
+            All 116 missions · click to open ·{" "}
+            {learnMode === "ccd" ? "CCD locks apply" : "all open"}
           </div>
-          {PATHS.map((p) => {
-            const doneCount = p.missionSlugs.filter((s) => progress.completedMissions[s]).length;
-            return (
-              <div key={p.slug} className="brutal-border bg-card p-2 md:p-3">
-                <button onClick={() => { setActivePath(p.slug); setTab("paths"); }}
-                  className={`${p.color} brutal-border px-2 py-1.5 font-mono text-[10px] uppercase brutal-press text-left mb-2 inline-flex items-center gap-2`}>
-                  <span className="font-display text-sm">{p.title}</span>
-                  <span className="opacity-80">{doneCount}/{p.missionSlugs.length}</span>
-                </button>
-                <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-12 gap-1">
-                  {p.missionSlugs.map((slug, idx) => {
-                    const m = missionBySlug(slug);
-                    const isDone = !!progress.completedMissions[slug];
-                    const prevDone = idx === 0 || (progress.completedMissions[p.missionSlugs[idx - 1]]?.score ?? 0) >= 0.6;
-                    const locked = learnMode === "ccd" && !prevDone && !isDone;
-                    const tone = isDone ? "bg-acid text-ink"
-                              : locked ? "bg-bone opacity-40"
-                              : "bg-bone text-ink hover:bg-sun";
-                    return (
-                      <Link key={slug} to="/mission/$slug" params={{ slug }}
-                        title={`${m?.title ?? slug}${locked ? " — LOCKED" : ""}`}
-                        aria-disabled={locked || undefined}
-                        onClick={(e) => { if (locked) e.preventDefault(); }}
-                        className={`${tone} brutal-border aspect-square flex items-center justify-center font-mono text-[10px] brutal-press`}>
-                        {isDone ? "✓" : locked ? "🔒" : idx + 1}
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-        </section>
-      )}
-
-      {tab === "journey" && (
-        <section className="max-w-6xl mx-auto px-4 py-4 pb-20">
-          <JourneyMap />
+          <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1">
+            {MISSIONS.map((m, i) => {
+              const isDone = !!completed[m.slug];
+              return (
+                <Link
+                  key={m.slug}
+                  to="/mission/$slug"
+                  params={{ slug: m.slug }}
+                  title={`${m.number}. ${m.title}`}
+                  className={`brutal-border aspect-square flex items-center justify-center font-mono text-[10px] brutal-press transition-colors ${
+                    isDone ? "bg-acid text-ink" : "bg-bone hover:bg-sun"
+                  }`}
+                >
+                  {isDone ? "✓" : m.number}
+                </Link>
+              );
+            })}
+          </div>
+          <div className="mt-4 font-mono text-[10px] uppercase opacity-50">
+            Green = completed · hover for title
+          </div>
         </section>
       )}
     </main>
   );
 }
 
-function LessonNode({ num, title, slug, done, locked, isCheck }: {
-  num: number; title: string; slug: string;
-  done: boolean; locked: boolean; isCheck: boolean;
+function LessonNode({
+  num,
+  title,
+  slug,
+  done,
+  locked,
+  isCheck,
+  score,
+}: {
+  num: number;
+  title: string;
+  slug: string;
+  done: boolean;
+  locked: boolean;
+  isCheck: boolean;
+  score?: number;
 }) {
-  const base = "brutal-border px-3 py-2.5 brutal-press flex items-center gap-3 min-w-[220px] max-w-[420px] w-full md:w-auto";
-  const tone = done ? "bg-acid"
-              : locked ? "bg-bone opacity-40 cursor-not-allowed"
-              : isCheck ? "bg-volt text-bone"
-              : "bg-bone hover:bg-sun";
+  const tone = done
+    ? "bg-acid text-ink"
+    : locked
+      ? "bg-bone opacity-40 cursor-not-allowed"
+      : isCheck
+        ? "bg-volt text-bone"
+        : "bg-bone hover:bg-sun";
+
+  const icon = done ? "✓" : locked ? "🔒" : isCheck ? "◆" : String(num);
 
   const inner = (
-    <>
-      <span className={`brutal-border w-9 h-9 flex items-center justify-center font-display text-base shrink-0 ${
-        done ? "bg-ink text-bone" : isCheck ? "bg-hot text-bone" : "bg-bone"
-      }`}>
-        {done ? "✓" : isCheck ? "◆" : num}
+    <div className={`brutal-border px-3 py-2.5 flex items-center gap-3 w-full max-w-xs ${tone}`}>
+      <span
+        className={`brutal-border w-9 h-9 flex items-center justify-center font-display text-base shrink-0 ${
+          done ? "bg-ink text-bone" : isCheck ? "bg-hot text-bone" : "bg-bone text-ink"
+        }`}
+      >
+        {icon}
       </span>
-      <span className="flex-1 min-w-0">
-        <div className="font-display text-sm md:text-base truncate">{title}</div>
-        <div className="font-mono text-[9px] md:text-[10px] uppercase opacity-70">
-          {locked ? "LOCKED · finish previous" : isCheck ? "SKILL CHECK" : "LESSON"}
+      <div className="flex-1 min-w-0">
+        <div className="font-display text-sm truncate">{title}</div>
+        <div className="font-mono text-[9px] uppercase opacity-60">
+          {done && score !== undefined
+            ? `${score}% score`
+            : locked
+              ? "finish previous first"
+              : isCheck
+                ? "skill check"
+                : "lesson"}
         </div>
-      </span>
-    </>
+      </div>
+    </div>
   );
 
-  if (locked) return <div className={`${base} ${tone}`}>{inner}</div>;
-  return <Link to="/mission/$slug" params={{ slug }} className={`${base} ${tone}`}>{inner}</Link>;
+  if (locked) return <div>{inner}</div>;
+  return (
+    <Link to="/mission/$slug" params={{ slug }}>
+      {inner}
+    </Link>
+  );
 }

@@ -4,7 +4,7 @@ import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
 export const Route = createFileRoute("/signal-flow")({
   head: () => ({
     meta: [
-      { title: "Signal Flow — ABLETON.SCHOOL" },
+      { title: "Signal Flow — CCD.SCHOOL" },
       { name: "description", content: "How audio actually moves through Live: tracks, sends, returns, master." },
     ],
   }),

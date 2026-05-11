@@ -6,7 +6,7 @@ import type { SimType } from "@/content/types";
 
 export const Route = createFileRoute("/playground")({
   head: () => ({ meta: [
-    { title: "Workbench — ABLETON.SCHOOL" },
+    { title: "Workbench — CCD.SCHOOL" },
     { name: "description", content: "Hands-on labs: device chain, sidechain, sends, drum rack, piano roll, mixer." },
   ]}),
   component: Workbench,

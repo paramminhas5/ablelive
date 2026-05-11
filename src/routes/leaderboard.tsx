@@ -7,7 +7,7 @@ import { useProgress } from "@/lib/progress";
 export const Route = createFileRoute("/leaderboard")({
   head: () => ({
     meta: [
-      { title: "Leaderboard — ABLETON.SCHOOL" },
+      { title: "Leaderboard — CCD.SCHOOL" },
       { name: "description", content: "Weekly XP rankings — who's learning hardest this week?" },
     ],
   }),

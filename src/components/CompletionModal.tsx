@@ -84,6 +84,7 @@ export function CompletionModal({ mission, xpEarned, score, badgeName, nextSlug,
   const [visible, setVisible] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const shareRef = useRef<HTMLDivElement>(null);
 
   // Mount animation
   useEffect(() => {
@@ -124,7 +125,7 @@ export function CompletionModal({ mission, xpEarned, score, badgeName, nextSlug,
 
     ctx.fillStyle = "#E6FF55";
     ctx.font = "bold 56px sans-serif";
-    ctx.fillText("ABLETON.SCHOOL", 80, 130);
+    ctx.fillText("CCD.SCHOOL", 80, 130);
 
     ctx.font = "bold 80px sans-serif";
     ctx.fillText(`#${mission.number} ${mission.title}`, 80, 240);
@@ -148,7 +149,7 @@ export function CompletionModal({ mission, xpEarned, score, badgeName, nextSlug,
 
     ctx.font = "20px monospace";
     ctx.fillStyle = "#888";
-    ctx.fillText("ableton.school", 80, H - 60);
+    ctx.fillText("ccd.school", 80, H - 60);
 
     const url = c.toDataURL("image/png");
     const a = document.createElement("a");
@@ -156,6 +157,8 @@ export function CompletionModal({ mission, xpEarned, score, badgeName, nextSlug,
     a.download = `ableton-school-${mission.slug}.png`;
     a.click();
     setShowShare(true);
+    // Scroll into view after a tick so the element has rendered
+    setTimeout(() => shareRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }), 50);
   };
 
   return (

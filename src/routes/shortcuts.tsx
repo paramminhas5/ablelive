@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 export const Route = createFileRoute("/shortcuts")({
   head: () => ({
     meta: [
-      { title: "Shortcuts — ABLETON.SCHOOL" },
+      { title: "Shortcuts — CCD.SCHOOL" },
       { name: "description", content: "Every Live keyboard shortcut worth memorising, organised by category." },
     ],
   }),

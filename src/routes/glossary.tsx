@@ -226,7 +226,7 @@ const CATS: Term["cat"][] = ["Workflow", "Devices", "Audio", "MIDI", "Performanc
 
 export const Route = createFileRoute("/glossary")({
   head: () => ({ meta: [
-    { title: "Glossary — ABLETON.SCHOOL" },
+    { title: "Glossary — CCD.SCHOOL" },
     { name: "description", content: "A–Z of every Ableton Live concept, organised by category, with search." },
   ]}),
   component: Glossary,

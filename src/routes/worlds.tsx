@@ -4,7 +4,7 @@ import { MISSIONS } from "@/content/missions";
 import { useProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/worlds")({
-  head: () => ({ meta: [{ title: "Worlds — ABLETON.SCHOOL" }, { name: "description", content: "Explore six worlds covering the full Ableton Live 12 manual." }]}),
+  head: () => ({ meta: [{ title: "Worlds — CCD.SCHOOL" }, { name: "description", content: "Explore six worlds covering the full Ableton Live 12 manual." }]}),
   component: WorldsPage,
 });
 

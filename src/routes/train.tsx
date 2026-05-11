@@ -25,7 +25,7 @@ import {
 export const Route = createFileRoute("/train")({
   head: () => ({
     meta: [
-      { title: "Ear Training — ABLETON.SCHOOL" },
+      { title: "Ear Training — CCD.SCHOOL" },
       {
         name: "description",
         content:

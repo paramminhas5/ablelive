@@ -6,7 +6,7 @@ import { useProgress } from "@/lib/progress";
 export const Route = createFileRoute("/world/$slug")({
   head: ({ params }) => {
     const w = WORLDS.find((x) => x.slug === params.slug);
-    return { meta: [{ title: `${w?.title ?? "World"} — ABLETON.SCHOOL` }, { name: "description", content: w?.description ?? "" }]};
+    return { meta: [{ title: `${w?.title ?? "World"} — CCD.SCHOOL` }, { name: "description", content: w?.description ?? "" }]};
   },
   component: WorldPage,
   notFoundComponent: () => <div className="p-12 font-mono">World not found.</div>,

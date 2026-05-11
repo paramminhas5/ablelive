@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { WORLDS } from "@/content/worlds";
-import { MISSIONS, nextMission } from "@/content/missions";
+import { MISSIONS } from "@/content/missions";
 import { JourneyCompact } from "@/components/JourneyCompact";
 import { useProgress } from "@/lib/progress";
 import { DailyChallenge, SpacedReview, RankBadge } from "@/components/HomeWidgets";
@@ -9,7 +9,7 @@ import { PATHS } from "@/content/paths";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ABLETON.SCHOOL — Learn Ableton Live 12, Brutally Interactive" },
+      { title: "CCD.SCHOOL — Learn Ableton Live 12 · CatsCanDance" },
       {
         name: "description",
         content:

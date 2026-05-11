@@ -78,32 +78,32 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ABLETON.SCHOOL — Learn Ableton Live 12, Brutally Interactive" },
+      { title: "CCD.SCHOOL — Learn Ableton Live 12 · CatsCanDance" },
       {
         name: "description",
         content:
-          "A gamified, interactive learning system for Ableton Live 12. Missions, simulators, XP. Cover the entire manual.",
+          "Learn Ableton Live 12 the CatsCanDance way — gamified missions, simulators, ear training. No fluff.",
       },
-      { name: "author", content: "ABLETON.SCHOOL" },
+      { name: "author", content: "CCD.SCHOOL" },
       {
         property: "og:title",
-        content: "ABLETON.SCHOOL — Learn Ableton Live 12, Brutally Interactive",
+        content: "CCD.SCHOOL — Learn Ableton Live 12 · CatsCanDance",
       },
       {
         property: "og:description",
         content:
-          "A gamified, interactive learning system for Ableton Live 12. Missions, simulators, XP. Cover the entire manual.",
+          "Learn Ableton Live 12 the CatsCanDance way — gamified missions, simulators, ear training. No fluff.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       {
         name: "twitter:title",
-        content: "ABLETON.SCHOOL — Learn Ableton Live 12, Brutally Interactive",
+        content: "CCD.SCHOOL — Learn Ableton Live 12 · CatsCanDance",
       },
       {
         name: "twitter:description",
         content:
-          "A gamified, interactive learning system for Ableton Live 12. Missions, simulators, XP. Cover the entire manual.",
+          "Learn Ableton Live 12 the CatsCanDance way — gamified missions, simulators, ear training. No fluff.",
       },
       {
         property: "og:image",
@@ -163,7 +163,7 @@ function RootComponent() {
           <Header />
           <AnimatedOutlet />
           <footer className="brutal-border border-x-0 border-b-0 bg-ink text-bone p-6 font-mono text-xs uppercase tracking-widest">
-            ABLETON.SCHOOL — UNOFFICIAL · BUILT FOR THE GRID · 2026
+            CCD.SCHOOL · CATSCANDANCE · 2026
           </footer>
         </div>
         <MasterTransportBar />

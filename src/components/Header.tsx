@@ -1,55 +1,39 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { useProgress, DAILY_GOAL_XP, MAX_HEARTS, HEART_REFILL_SECS } from "@/lib/progress";
+import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
 import { RankBadge } from "./HomeWidgets";
-import { useLearnMode } from "@/lib/mode";
 import { PALETTE_OPEN_EVENT } from "./CommandPalette";
 
 const PRIMARY = [
-  { to: "/learn", label: "Learn", hover: "hover:bg-hot hover:text-bone" },
-  { to: "/worlds", label: "Worlds", hover: "hover:bg-acid" },
-  { to: "/devices", label: "Devices", hover: "hover:bg-volt hover:text-bone" },
-  { to: "/playground", label: "Workbench", hover: "hover:bg-hot hover:text-bone" },
+  { to: "/learn", label: "Learn" },
+  { to: "/worlds", label: "Worlds" },
+  { to: "/devices", label: "Devices" },
+  { to: "/playground", label: "Workbench" },
 ] as const;
 
-const MORE = [
-  { to: "/train", label: "Train" },
-  { to: "/match", label: "Match" },
+const MORE_LINKS = [
+  { to: "/train", label: "Ear Training" },
+  { to: "/match", label: "Mix Match" },
   { to: "/leaderboard", label: "Leaderboard" },
   { to: "/glossary", label: "Glossary" },
   { to: "/shortcuts", label: "Shortcuts" },
-  { to: "/profile", label: "Profile" },
 ] as const;
 
-// --- Dark mode hook ---
-function useDarkMode() {
-  const [dark, setDark] = useState(() => {
-    if (typeof localStorage === "undefined") return false;
-    return localStorage.getItem("ableton.school.dark") === "1";
-  });
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-    localStorage.setItem("ableton.school.dark", dark ? "1" : "0");
-  }, [dark]);
-  return { dark, toggle: () => setDark((d) => !d) };
-}
-
-// --- Daily goal ring — 24px SVG circle progress ---
+// ── Daily goal ring ──────────────────────────────────────────────────────────
 function GoalRing({ pct, done }: { pct: number; done: boolean }) {
-  const r = 9;
+  const r = 8;
   const circ = 2 * Math.PI * r;
-  const dash = circ * pct;
   return (
     <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
       aria-label={`Daily goal ${Math.round(pct * 100)}%`}
     >
       <circle
-        cx="12"
-        cy="12"
+        cx="11"
+        cy="11"
         r={r}
         fill="none"
         stroke="currentColor"
@@ -57,32 +41,25 @@ function GoalRing({ pct, done }: { pct: number; done: boolean }) {
         opacity="0.2"
       />
       <circle
-        cx="12"
-        cy="12"
+        cx="11"
+        cy="11"
         r={r}
         fill="none"
         stroke={done ? "#7B2FFF" : "#CDFF00"}
         strokeWidth="2.5"
-        strokeDasharray={`${dash} ${circ}`}
+        strokeDasharray={`${circ * pct} ${circ}`}
         strokeLinecap="round"
-        transform="rotate(-90 12 12)"
+        transform="rotate(-90 11 11)"
         style={{ transition: "stroke-dasharray 0.4s" }}
       />
-      {done && (
-        <text x="12" y="16" textAnchor="middle" fontSize="10" fill="#7B2FFF" fontWeight="bold">
-          ✓
-        </text>
-      )}
     </svg>
   );
 }
 
-// --- Hearts display with live countdown timer ---
+// ── Hearts (CCD mode only) ───────────────────────────────────────────────────
 function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number }) {
   const [secs, setSecs] = useState(refillSeconds);
-  useEffect(() => {
-    setSecs(refillSeconds);
-  }, [refillSeconds]);
+  useEffect(() => setSecs(refillSeconds), [refillSeconds]);
   useEffect(() => {
     if (count >= MAX_HEARTS || secs <= 0) return;
     const id = setInterval(() => setSecs((s) => Math.max(0, s - 1)), 1000);
@@ -91,38 +68,88 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
   const mm = String(Math.floor(secs / 60)).padStart(2, "0");
   const ss = String(secs % 60).padStart(2, "0");
   return (
-    <div className="flex items-center gap-1" aria-label={`${count} hearts remaining`}>
+    <div className="flex items-center gap-0.5" title={`${count} hearts · next in ${mm}:${ss}`}>
       {Array.from({ length: MAX_HEARTS }).map((_, i) => (
-        <span key={i} className={`text-base leading-none ${i < count ? "text-hot" : "opacity-20"}`}>
+        <span key={i} className={`text-sm leading-none ${i < count ? "text-hot" : "opacity-20"}`}>
           ♥
         </span>
       ))}
       {count < MAX_HEARTS && secs > 0 && (
-        <span className="font-mono text-[9px] opacity-60 ml-0.5">
-          +♥ {mm}:{ss}
+        <span className="font-mono text-[9px] opacity-50 ml-0.5">
+          +♥{mm}:{ss}
         </span>
       )}
     </div>
   );
 }
 
+// ── Dark mode ────────────────────────────────────────────────────────────────
+function useDarkMode() {
+  const [dark, setDark] = useState(
+    () =>
+      typeof localStorage !== "undefined" && localStorage.getItem("ableton.school.dark") === "1",
+  );
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+    localStorage.setItem("ableton.school.dark", dark ? "1" : "0");
+  }, [dark]);
+  return { dark, toggle: () => setDark((d) => !d) };
+}
+
+// ── Search icon SVG ─────────────────────────────────────────────────────────
+function SearchIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+    >
+      <circle cx="6.5" cy="6.5" r="4.5" />
+      <line x1="10.5" y1="10.5" x2="14" y2="14" />
+    </svg>
+  );
+}
+
+// ── Avatar / profile icon ────────────────────────────────────────────────────
+function UserIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    >
+      <circle cx="8" cy="5" r="3" />
+      <path d="M2 14c0-3.3 2.7-6 6-6s6 2.7 6 6" />
+    </svg>
+  );
+}
+
+// ── Header ───────────────────────────────────────────────────────────────────
 export function Header() {
   const { progress, dailyGoalPct, dailyGoalDone, heartRefillSeconds } = useProgress();
-  const { dark, toggle: toggleDark } = useDarkMode();
   const { user } = useAuth();
-  const { learnMode, setLearnMode } = useLearnMode();
+  const { dark, toggle: toggleDark } = useDarkMode();
   const [moreOpen, setMoreOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const nav = useNavigate();
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
+    const fn = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setMoreOpen(false);
         setDrawerOpen(false);
       }
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("keydown", fn);
+    return () => window.removeEventListener("keydown", fn);
   }, []);
 
   const openSearch = () => window.dispatchEvent(new Event(PALETTE_OPEN_EVENT));
@@ -133,22 +160,24 @@ export function Header() {
         {/* Logo */}
         <Link
           to="/"
-          className="brutal-border border-y-0 border-l-0 px-3 md:px-4 flex items-center font-display text-lg md:text-2xl bg-acid hover-glitch shrink-0"
+          className="brutal-border border-y-0 border-l-0 px-3 md:px-4 flex items-center font-display text-base md:text-xl bg-acid hover-glitch shrink-0"
         >
-          ABLETON.SCHOOL
+          CCD.SCHOOL
         </Link>
 
-        {/* Desktop nav */}
-        <nav className="hidden md:flex flex-1 items-stretch font-mono uppercase text-sm">
+        {/* Desktop primary nav */}
+        <nav className="hidden md:flex flex-1 items-stretch font-mono uppercase text-xs">
           {PRIMARY.map((l) => (
             <Link
               key={l.to}
               to={l.to}
-              className={`px-4 flex items-center brutal-border border-y-0 border-l-0 ${l.hover}`}
+              className="px-4 flex items-center brutal-border border-y-0 border-l-0 hover:bg-sun transition-colors"
             >
               {l.label}
             </Link>
           ))}
+
+          {/* More dropdown */}
           <div className="relative flex items-stretch">
             <button
               onClick={() => setMoreOpen((o) => !o)}
@@ -158,8 +187,8 @@ export function Header() {
               MORE ▾
             </button>
             {moreOpen && (
-              <div className="absolute top-full left-0 mt-0 brutal-border bg-bone min-w-[160px] z-50 shadow-lg">
-                {MORE.map((l) => (
+              <div className="absolute top-full left-0 brutal-border bg-bone min-w-[160px] z-50 shadow-lg">
+                {MORE_LINKS.map((l) => (
                   <Link
                     key={l.to}
                     to={l.to}
@@ -177,112 +206,96 @@ export function Header() {
         <div className="flex-1 md:flex-none" />
 
         {/* Desktop right cluster */}
-        <div className="hidden md:flex items-center gap-2 px-3 font-mono text-xs">
-          {/* Search button */}
+        <div className="hidden md:flex items-center gap-1.5 px-3">
+          {/* Search */}
           <button
             onClick={openSearch}
-            className="brutal-border bg-bone px-2 py-1 hover:bg-sun"
             title="Search (⌘K)"
-            aria-label="Open search"
+            className="brutal-border bg-bone px-2.5 py-1.5 hover:bg-sun flex items-center gap-1.5 font-mono text-[10px] uppercase"
           >
-            ⌘K
+            <SearchIcon /> Search
           </button>
 
-          {/* Dark mode toggle */}
+          {/* Dark mode */}
           <button
             onClick={toggleDark}
-            className="brutal-border bg-bone px-2 py-1 hover:bg-sun"
             title="Toggle dark mode"
-            aria-label="Toggle dark mode"
+            className="brutal-border bg-bone px-2 py-1.5 hover:bg-sun font-mono text-sm"
           >
             {dark ? "☀" : "☾"}
           </button>
 
-          {/* Mode toggle */}
-          <div className="brutal-border flex">
-            <button
-              onClick={() => setLearnMode("classic")}
-              className={`px-2 py-1 ${learnMode === "classic" ? "bg-ink text-bone" : "bg-bone"}`}
-              title="Open, brutalist site"
-            >
-              CLASSIC
-            </button>
-            <button
-              onClick={() => setLearnMode("ccd")}
-              className={`px-2 py-1 ${learnMode === "ccd" ? "bg-hot text-bone" : "bg-bone"}`}
-              title="Gated skill tree, hearts, XP"
-            >
-              CCD
-            </button>
-          </div>
-
-          {/* CCD hearts */}
-          {learnMode === "ccd" && (
+          {/* Hearts (CCD only — set in /learn) */}
+          {progress.hearts < MAX_HEARTS && (
             <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
           )}
 
-          {/* Daily goal ring */}
+          {/* Goal ring */}
           <div
-            className="flex items-center gap-1"
             title={`Daily goal: ${progress.dailyXp}/${DAILY_GOAL_XP} XP`}
+            className="flex items-center"
           >
             <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
           </div>
 
-          <RankBadge compact />
-          <span className="brutal-border bg-acid px-2 py-1">XP {progress.xp}</span>
-          <span className="brutal-border bg-hot text-bone px-2 py-1">
+          {/* XP + streak pill */}
+          <span className="brutal-border bg-acid px-2 py-1 font-mono text-[10px] uppercase">
+            {progress.xp} XP
+          </span>
+          <span className="brutal-border bg-hot text-bone px-2 py-1 font-mono text-[10px] uppercase">
             🔥 {progress.streakDays}
-            {progress.streakShield ? " 🛡" : ""}
+            {progress.streakShield ? "🛡" : ""}
           </span>
 
+          {/* Rank */}
+          <RankBadge compact />
+
+          {/* Profile / sign-in */}
           {user ? (
-            <button
-              onClick={() => signOut()}
-              className="brutal-border bg-bone px-2 py-1 brutal-press"
-              title={user.email ?? "Account"}
+            <Link
+              to="/profile"
+              className="brutal-border bg-bone px-2.5 py-1.5 hover:bg-sun flex items-center gap-1.5 font-mono text-[10px] uppercase"
+              title={user.email ?? "Profile"}
             >
-              Sign out
-            </button>
+              <UserIcon /> {user.email?.split("@")[0] ?? "Profile"}
+            </Link>
           ) : (
-            <Link to="/login" className="brutal-border bg-volt text-bone px-2 py-1 brutal-press">
+            <Link
+              to="/login"
+              className="brutal-border bg-volt text-bone px-3 py-1.5 font-mono text-[10px] uppercase brutal-press"
+            >
               Sign in
             </Link>
           )}
         </div>
 
-        {/* Mobile compact row */}
+        {/* Mobile row */}
         <div className="md:hidden flex items-center gap-1.5 px-2">
-          {learnMode === "ccd" && (
+          {progress.hearts < MAX_HEARTS && (
             <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
           )}
-          <div title={`Daily goal: ${progress.dailyXp}/${DAILY_GOAL_XP} XP`}>
-            <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
-          </div>
-          <span className="brutal-border bg-acid px-2 py-1 font-mono text-[10px]">
-            {progress.xp}xp · 🔥{progress.streakDays}
-            {progress.streakShield ? "🛡" : ""}
+          <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
+          <span className="brutal-border bg-acid px-1.5 py-1 font-mono text-[10px]">
+            {progress.xp}xp
           </span>
-          {/* Mobile search button */}
           <button
             onClick={openSearch}
             aria-label="Search"
-            className="brutal-border bg-bone px-2.5 py-1.5 font-mono text-base brutal-press"
+            className="brutal-border bg-bone px-2.5 py-1.5 flex items-center"
           >
-            🔍
+            <SearchIcon />
           </button>
-          {/* Hamburger */}
           <button
             onClick={() => setDrawerOpen(true)}
-            aria-label="Open menu"
-            className="brutal-border bg-ink text-bone px-3 py-1.5 font-display text-lg brutal-press"
+            aria-label="Menu"
+            className="brutal-border bg-ink text-bone px-3 py-1.5 font-display text-lg"
           >
             ≡
           </button>
         </div>
       </div>
 
-      {/* Marquee — desktop only */}
+      {/* Marquee */}
       <div className="hidden md:block">
         <Marquee />
       </div>
@@ -294,20 +307,20 @@ export function Header() {
           onClick={() => setDrawerOpen(false)}
         >
           <div
-            className="absolute right-0 top-0 bottom-0 w-[78%] max-w-[320px] bg-bone brutal-border border-y-0 border-r-0 overflow-y-auto"
+            className="absolute right-0 top-0 bottom-0 w-[78%] max-w-[320px] bg-bone brutal-border border-y-0 border-r-0 overflow-y-auto animate-slide-right"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between p-3 brutal-border border-x-0 border-t-0 bg-acid">
-              <span className="font-display text-lg">MENU</span>
+              <span className="font-display text-lg">CCD.SCHOOL</span>
               <button
                 onClick={() => setDrawerOpen(false)}
                 className="brutal-border bg-ink text-bone px-3 py-1 font-mono text-xs"
               >
-                CLOSE ✕
+                ✕
               </button>
             </div>
 
-            {/* Search in drawer */}
+            {/* Search */}
             <button
               onClick={() => {
                 setDrawerOpen(false);
@@ -315,11 +328,12 @@ export function Header() {
               }}
               className="w-full text-left px-4 py-3 brutal-border border-x-0 border-t-0 hover:bg-sun font-mono uppercase text-sm flex items-center gap-2"
             >
-              <span>🔍</span> Search missions &amp; devices
+              <SearchIcon /> Search
             </button>
 
+            {/* Nav */}
             <nav className="flex flex-col font-mono uppercase text-sm">
-              {[...PRIMARY, ...MORE].map((l) => (
+              {[...PRIMARY, ...MORE_LINKS].map((l) => (
                 <Link
                   key={l.to}
                   to={l.to}
@@ -332,7 +346,6 @@ export function Header() {
             </nav>
 
             <div className="p-3 space-y-2">
-              {/* Dark mode */}
               <button
                 onClick={toggleDark}
                 className="w-full brutal-border bg-bone px-3 py-2 font-mono text-xs uppercase text-left"
@@ -340,37 +353,30 @@ export function Header() {
                 {dark ? "☀ Light Mode" : "☾ Dark Mode"}
               </button>
 
-              {/* Mode toggle in drawer */}
-              <div className="brutal-border flex font-mono text-xs">
-                <button
-                  onClick={() => setLearnMode("classic")}
-                  className={`flex-1 py-2 ${learnMode === "classic" ? "bg-ink text-bone" : "bg-bone"}`}
-                >
-                  CLASSIC
-                </button>
-                <button
-                  onClick={() => setLearnMode("ccd")}
-                  className={`flex-1 py-2 ${learnMode === "ccd" ? "bg-hot text-bone" : "bg-bone"}`}
-                >
-                  CCD
-                </button>
-              </div>
-
               {user ? (
-                <button
-                  onClick={() => {
-                    signOut();
-                    setDrawerOpen(false);
-                  }}
-                  className="w-full brutal-border bg-bone px-3 py-2 brutal-press text-left font-mono text-xs uppercase"
-                >
-                  Sign out
-                </button>
+                <>
+                  <Link
+                    to="/profile"
+                    onClick={() => setDrawerOpen(false)}
+                    className="block brutal-border bg-volt text-bone px-3 py-2 font-mono text-xs uppercase text-center brutal-press"
+                  >
+                    Profile
+                  </Link>
+                  <button
+                    onClick={() => {
+                      signOut();
+                      setDrawerOpen(false);
+                    }}
+                    className="w-full brutal-border bg-bone px-3 py-2 font-mono text-xs uppercase text-left brutal-press"
+                  >
+                    Sign out
+                  </button>
+                </>
               ) : (
                 <Link
                   to="/login"
                   onClick={() => setDrawerOpen(false)}
-                  className="block brutal-border bg-volt text-bone px-3 py-2 brutal-press font-mono text-xs uppercase text-center"
+                  className="block brutal-border bg-volt text-bone px-3 py-2 font-mono text-xs uppercase text-center brutal-press"
                 >
                   Sign in
                 </Link>
@@ -385,7 +391,7 @@ export function Header() {
 
 function Marquee() {
   const items = [
-    "LIVE 12",
+    "ABLETON LIVE 12",
     "WARP MARKERS",
     "MAX FOR LIVE",
     "SESSION VIEW",
