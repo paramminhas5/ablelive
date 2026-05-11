@@ -10,13 +10,20 @@ interface Props {
 
 type Phase = "picking" | "feedback" | "done";
 
-// Scroll an element into view using window.scrollBy — more reliable than
-// scrollIntoView across SSR/hydration and mobile browsers.
-function scrollTo(el: HTMLElement | null) {
+// Scroll so element top sits just below the sticky header
+function scrollToTop(el: HTMLElement | null) {
   if (!el) return;
   const rect = el.getBoundingClientRect();
-  const offset = rect.top + window.scrollY - 80; // 80px = sticky header
-  window.scrollTo({ top: offset, behavior: "smooth" });
+  window.scrollTo({ top: rect.top + window.scrollY - 88, behavior: "smooth" });
+}
+
+// Scroll so element is vertically centered in the viewport
+function scrollToCenter(el: HTMLElement | null) {
+  if (!el) return;
+  const rect = el.getBoundingClientRect();
+  const elementMid = rect.top + window.scrollY + rect.height / 2;
+  const viewportMid = window.innerHeight / 2;
+  window.scrollTo({ top: elementMid - viewportMid, behavior: "smooth" });
 }
 
 export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
@@ -67,7 +74,7 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
     }
 
     // Scroll explanation into view — wait two frames for React to paint it
-    requestAnimationFrame(() => requestAnimationFrame(() => scrollTo(explainRef.current)));
+    requestAnimationFrame(() => requestAnimationFrame(() => scrollToCenter(explainRef.current)));
 
     const delay = q.explain ? 3500 : 1400;
     autoRef.current = setTimeout(() => advance(), delay);
@@ -83,13 +90,13 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
       setPhase("done");
       onComplete(score);
       // Scroll to results — two frames after state update paints the done screen
-      requestAnimationFrame(() => requestAnimationFrame(() => scrollTo(doneRef.current)));
+      requestAnimationFrame(() => requestAnimationFrame(() => scrollToCenter(doneRef.current)));
     } else {
       setQIdx((i) => i + 1);
       setPicked(null);
       setHint(false);
       setPhase("picking");
-      requestAnimationFrame(() => requestAnimationFrame(() => scrollTo(quizTopRef.current)));
+      requestAnimationFrame(() => requestAnimationFrame(() => scrollToTop(quizTopRef.current)));
     }
   };
 
@@ -149,7 +156,7 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
               setHint(false);
               setPhase("picking");
               requestAnimationFrame(() =>
-                requestAnimationFrame(() => scrollTo(quizTopRef.current)),
+                requestAnimationFrame(() => scrollToTop(quizTopRef.current)),
               );
             }}
             className="brutal-border bg-ink text-bone px-5 py-3 font-display text-xl brutal-press"
