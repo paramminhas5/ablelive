@@ -60,8 +60,8 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
       onWrongAnswer?.();
     }
 
-    // Auto-advance: 1600ms with explanation visible, or 800ms if no explanation
-    const delay = q.explain ? 1600 : 900;
+    // Auto-advance: 3200ms with explanation visible, or 1200ms if no explanation
+    const delay = q.explain ? 3200 : 1200;
     autoRef.current = setTimeout(() => advance(newResults), delay);
   };
 
