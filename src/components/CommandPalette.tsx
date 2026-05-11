@@ -134,7 +134,12 @@ export function CommandPalette() {
             ref={inputRef}
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="missions, devices, paths… (Esc to close)"
+            placeholder="missions, devices, paths…"
+            inputMode="search"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="off"
+            spellCheck={false}
             className="flex-1 bg-acid brutal-border border-x-0 border-y-0 px-3 py-3 font-mono text-sm outline-none"
             onKeyDown={(e) => {
               if (e.key === "Enter" && filtered[0]) {

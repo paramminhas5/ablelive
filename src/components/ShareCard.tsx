@@ -10,11 +10,16 @@ export function ShareCard() {
   const done = Object.keys(progress.completedMissions).length;
 
   const draw = () => {
-    const c = canvasRef.current; if (!c) return;
-    const ctx = c.getContext("2d"); if (!ctx) return;
-    const W = 1200, H = 630;
-    c.width = W; c.height = H;
-    ctx.fillStyle = "#E6FF55"; ctx.fillRect(0, 0, W, H);
+    const c = canvasRef.current;
+    if (!c) return;
+    const ctx = c.getContext("2d");
+    if (!ctx) return;
+    const W = 1200,
+      H = 630;
+    c.width = W;
+    c.height = H;
+    ctx.fillStyle = "#E6FF55";
+    ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = "#0B0B0B";
     ctx.fillRect(40, 40, W - 80, H - 80);
     ctx.fillStyle = "#E6FF55";
@@ -25,21 +30,30 @@ export function ShareCard() {
     ctx.font = "32px monospace";
     ctx.fillText(current.tagline, 80, 310);
     ctx.font = "bold 140px sans-serif";
-    ctx.fillStyle = "#FF3B30"; ctx.fillText(`${progress.xp}`, 80, 470);
-    ctx.fillStyle = "#E6FF55"; ctx.font = "32px monospace";
+    ctx.fillStyle = "#FF3B30";
+    ctx.fillText(`${progress.xp}`, 80, 470);
+    ctx.fillStyle = "#E6FF55";
+    ctx.font = "32px monospace";
     ctx.fillText("XP", 80 + ctx.measureText(`${progress.xp}`).width + 20, 470);
     ctx.font = "28px monospace";
-    ctx.fillText(`${done} / ${MISSIONS.length} missions · ${progress.streakDays} day streak`, 80, 530);
+    ctx.fillText(
+      `${done} / ${MISSIONS.length} missions · ${progress.streakDays} day streak`,
+      80,
+      530,
+    );
     ctx.font = "20px monospace";
-    ctx.fillText("learnabletonlive.lovable.app", 80, H - 80);
+    ctx.fillText("ableton.school", 80, H - 80);
   };
 
   const download = () => {
     draw();
-    const c = canvasRef.current; if (!c) return;
+    const c = canvasRef.current;
+    if (!c) return;
     const url = c.toDataURL("image/png");
     const a = document.createElement("a");
-    a.href = url; a.download = `ableton-school-${current.slug}-${progress.xp}xp.png`; a.click();
+    a.href = url;
+    a.download = `ableton-school-${current.slug}-${progress.xp}xp.png`;
+    a.click();
   };
 
   return (
@@ -47,8 +61,18 @@ export function ShareCard() {
       <div className="font-mono text-xs uppercase mb-2">// SHARE CARD</div>
       <canvas ref={canvasRef} className="w-full max-w-md brutal-border bg-acid" />
       <div className="flex gap-2 mt-3">
-        <button onClick={draw} className="brutal-border bg-acid px-3 py-2 font-mono text-xs uppercase brutal-press">Preview</button>
-        <button onClick={download} className="brutal-border bg-hot text-bone px-3 py-2 font-mono text-xs uppercase brutal-press">Download PNG</button>
+        <button
+          onClick={draw}
+          className="brutal-border bg-acid px-3 py-2 font-mono text-xs uppercase brutal-press"
+        >
+          Preview
+        </button>
+        <button
+          onClick={download}
+          className="brutal-border bg-hot text-bone px-3 py-2 font-mono text-xs uppercase brutal-press"
+        >
+          Download PNG
+        </button>
       </div>
     </div>
   );
