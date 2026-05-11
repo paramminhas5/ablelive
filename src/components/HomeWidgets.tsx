@@ -13,11 +13,11 @@ function dayHash() {
 }
 
 const DRILLS = [
-  { slug: "interval",    label: "Interval ID" },
-  { slug: "chord",       label: "Chord Quality" },
-  { slug: "eq-cut",      label: "EQ Cut" },
+  { slug: "interval", label: "Interval ID" },
+  { slug: "chord", label: "Chord Quality" },
+  { slug: "eq-cut", label: "EQ Cut" },
   { slug: "compression", label: "Compression Spotting" },
-  { slug: "reverb",      label: "Reverb Tail" },
+  { slug: "reverb", label: "Reverb Tail" },
 ];
 
 export function DailyChallenge() {
@@ -33,15 +33,25 @@ export function DailyChallenge() {
     <div className="brutal-border bg-sun p-5 brutal-shadow">
       <div className="font-mono text-xs uppercase">// DAILY CHALLENGE</div>
       <div className="grid md:grid-cols-2 gap-3 mt-2">
-        <Link to="/mission/$slug" params={{ slug: today.mission.slug }} className="brutal-border bg-bone p-3 brutal-press block">
-          <div className="font-mono text-[10px] uppercase">Mission of the day {done ? "· ✓ done" : ""}</div>
-          <div className="font-display text-2xl">#{today.mission.number} {today.mission.title}</div>
+        <Link
+          to="/mission/$slug"
+          params={{ slug: today.mission.slug }}
+          className="brutal-border bg-bone p-3 brutal-press block"
+        >
+          <div className="font-mono text-[10px] uppercase">
+            Mission of the day {done ? "· ✓ done" : ""}
+          </div>
+          <div className="font-display text-2xl">
+            #{today.mission.number} {today.mission.title}
+          </div>
           <div className="font-mono text-xs opacity-70 mt-1">{today.mission.tagline}</div>
         </Link>
         <Link to="/train" className="brutal-border bg-bone p-3 brutal-press block">
           <div className="font-mono text-[10px] uppercase">Drill of the day</div>
           <div className="font-display text-2xl">{today.drill.label}</div>
-          <div className="font-mono text-xs opacity-70 mt-1">10 quick rounds in the Train room.</div>
+          <div className="font-mono text-xs opacity-70 mt-1">
+            10 quick rounds in the Train room.
+          </div>
         </Link>
       </div>
     </div>
@@ -67,8 +77,15 @@ export function SpacedReview() {
       <div className="font-mono text-xs uppercase">// REVIEW QUEUE — keep it sticky</div>
       <div className="grid md:grid-cols-3 gap-2 mt-2">
         {candidates.map((c) => (
-          <Link key={c.slug} to="/mission/$slug" params={{ slug: c.slug }} className="brutal-border bg-card p-3 brutal-press block">
-            <div className="font-mono text-[10px] uppercase">↻ Review · {Math.round(c.ageDays)}d ago</div>
+          <Link
+            key={c.slug}
+            to="/mission/$slug"
+            params={{ slug: c.slug }}
+            className="brutal-border bg-card p-3 brutal-press block"
+          >
+            <div className="font-mono text-[10px] uppercase">
+              ↻ Review · {Math.round(c.ageDays)}d ago
+            </div>
             <div className="font-display text-lg">{c.mission.title}</div>
           </Link>
         ))}
@@ -81,7 +98,14 @@ export function RankBadge({ compact = false }: { compact?: boolean }) {
   const { progress } = useProgress();
   const { current, next, progress: pct } = rankFor(progress.xp);
   if (compact) {
-    return <span className={`brutal-border ${current.color} px-2 py-1 font-mono text-xs uppercase`} title={current.tagline}>{current.name}</span>;
+    return (
+      <span
+        className={`brutal-border ${current.color} px-2 py-1 font-mono text-xs uppercase`}
+        title={current.tagline}
+      >
+        {current.name}
+      </span>
+    );
   }
   return (
     <div className={`brutal-border ${current.color} p-4 brutal-shadow-sm`}>
@@ -111,23 +135,49 @@ export function Onboarding() {
     setShow(false);
   };
   const steps = [
-    { title: "Welcome to ABLETON.SCHOOL", body: "Six worlds, 55 missions, 5 ear-training drills, a mix-match game and a workbench. No fluff." },
-    { title: "Pick a path", body: "Try a curated path like ‘Make Your First Beat’ or ‘Mix a Track’ — they cut across worlds in the right order." },
-    { title: "⌘K opens search", body: "Anywhere in the app press ⌘K (or Ctrl-K) to jump to any mission, device or page in two keystrokes." },
+    {
+      title: "Welcome to ABLETON.SCHOOL",
+      body: "116 missions across 6 worlds. 23 interactive simulators. Ear training drills, a mix-match game, a workbench. No fluff.",
+    },
+    {
+      title: "Pick a path",
+      body: "Try a curated path like ‘Make Your First Beat’ or ‘Mix a Track’ — they cut across worlds in the right order.",
+    },
+    {
+      title: "⌘K opens search",
+      body: "Anywhere in the app press ⌘K (or Ctrl-K) to jump to any mission, device or page in two keystrokes.",
+    },
   ];
   const s = steps[step];
   return (
     <div className="fixed inset-0 z-[90] bg-ink/70 flex items-center justify-center p-4">
-      <div className="brutal-border bg-bone p-6 max-w-md w-full brutal-shadow-lg">
-        <div className="font-mono text-xs uppercase">// {step + 1} / {steps.length}</div>
+      <div className="brutal-border bg-bone p-6 max-w-md w-full brutal-shadow-lg animate-pop-in">
+        <div className="font-mono text-xs uppercase">
+          // {step + 1} / {steps.length}
+        </div>
         <h2 className="font-display text-3xl mt-1">{s.title}</h2>
         <p className="font-mono text-sm mt-3">{s.body}</p>
         <div className="flex gap-2 mt-5">
-          <button onClick={close} className="brutal-border bg-card px-3 py-2 font-mono text-xs uppercase brutal-press">Skip</button>
+          <button
+            onClick={close}
+            className="brutal-border bg-card px-3 py-2 font-mono text-xs uppercase brutal-press"
+          >
+            Skip
+          </button>
           {step < steps.length - 1 ? (
-            <button onClick={() => setStep(step + 1)} className="brutal-border bg-acid px-3 py-2 font-mono text-xs uppercase brutal-press ml-auto">Next →</button>
+            <button
+              onClick={() => setStep(step + 1)}
+              className="brutal-border bg-acid px-3 py-2 font-mono text-xs uppercase brutal-press ml-auto"
+            >
+              Next →
+            </button>
           ) : (
-            <button onClick={close} className="brutal-border bg-hot text-bone px-3 py-2 font-mono text-xs uppercase brutal-press ml-auto">Let's go</button>
+            <button
+              onClick={close}
+              className="brutal-border bg-hot text-bone px-3 py-2 font-mono text-xs uppercase brutal-press ml-auto"
+            >
+              Let's go
+            </button>
           )}
         </div>
       </div>

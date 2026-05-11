@@ -42,6 +42,7 @@ function MissionPage() {
   const [flowKey, setFlowKey] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [earnedXp, setEarnedXp] = useState(0);
+  const [earnedScore, setEarnedScore] = useState(0);
   const [earnedBadge, setEarnedBadge] = useState<string | undefined>();
 
   // Scroll to top ONLY when navigating to a different mission slug
@@ -79,19 +80,20 @@ function MissionPage() {
     const badge = score >= passThreshold ? m.badge?.slug : undefined;
     completeMission(slug, m.xp, score, badge);
     setEarnedXp(xp);
+    setEarnedScore(score);
     setEarnedBadge(badge ? m.badge?.name : undefined);
     setCompleted(true);
-    // Small delay so the quiz results screen renders before modal appears
-    setTimeout(() => setShowModal(true), 300);
+    // Delay so quiz results screen is visible before modal appears
+    setTimeout(() => setShowModal(true), 400);
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-4 md:p-12 space-y-6 animate-fade-in">
+    <div className="max-w-5xl mx-auto p-4 md:p-12 space-y-6">
       {showModal && (
         <CompletionModal
           mission={m}
           xpEarned={earnedXp}
-          score={progress.completedMissions[slug]?.score ?? 0}
+          score={earnedScore}
           badgeName={earnedBadge}
           nextSlug={next?.slug}
           onClose={() => setShowModal(false)}

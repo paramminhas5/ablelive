@@ -1,9 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
 import {
   Outlet,
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -141,6 +143,16 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+function AnimatedOutlet() {
+  const router = useRouterState();
+  const key = router.location.pathname;
+  return (
+    <main className="flex-1 animate-fade-in" key={key}>
+      <Outlet />
+    </main>
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -149,9 +161,7 @@ function RootComponent() {
       <QueryClientProvider client={queryClient}>
         <div className="min-h-screen flex flex-col bg-bone text-ink pb-24">
           <Header />
-          <main className="flex-1">
-            <Outlet />
-          </main>
+          <AnimatedOutlet />
           <footer className="brutal-border border-x-0 border-b-0 bg-ink text-bone p-6 font-mono text-xs uppercase tracking-widest">
             ABLETON.SCHOOL — UNOFFICIAL · BUILT FOR THE GRID · 2026
           </footer>
