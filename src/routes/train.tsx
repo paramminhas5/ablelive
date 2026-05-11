@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { AudioUnlock } from "@/components/AudioUnlock";
+import { TempoCompareSim } from "@/components/sims/TempoCompareSim";
 import {
   CHORDS,
   DRILL_LABELS,
@@ -91,6 +92,21 @@ function TrainPage() {
 const ROUNDS = 10;
 
 function DrillRunner({ drill, onExit }: { drill: DrillKey; onExit: () => void }) {
+  // Standalone sims for new drill types
+  if (drill === "tempo-compare") {
+    return (
+      <div className="space-y-3">
+        <button
+          onClick={onExit}
+          className="brutal-border bg-bone px-3 py-2 font-mono text-xs uppercase brutal-press"
+        >
+          ← Back
+        </button>
+        <TempoCompareSim />
+      </div>
+    );
+  }
+
   const [round, setRound] = useState(0);
   const [score, setScore] = useState(0);
   const [done, setDone] = useState(false);

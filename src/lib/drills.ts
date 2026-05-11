@@ -2,7 +2,17 @@
 import { supabase } from "@/integrations/supabase/client";
 import { getCtx, getMaster, midiToFreq, playTone, startLoop, type LoopHandle } from "./audio";
 
-export type DrillKey = "interval" | "chord" | "eq-cut" | "compression" | "reverb" | "panning" | "tempo";
+export type DrillKey =
+  | "interval"
+  | "chord"
+  | "eq-cut"
+  | "compression"
+  | "reverb"
+  | "panning"
+  | "tempo"
+  | "tempo-compare"
+  | "dynamic-range"
+  | "stereo-width";
 
 export const DRILL_LABELS: Record<DrillKey, { name: string; tagline: string; emoji: string }> = {
   interval: { name: "Interval ID", tagline: "Hear two notes — name the gap.", emoji: "🎼" },
@@ -12,6 +22,21 @@ export const DRILL_LABELS: Record<DrillKey, { name: string; tagline: string; emo
   reverb: { name: "Reverb Time", tagline: "Short, medium, or long tail?", emoji: "🌫️" },
   panning: { name: "Panning", tagline: "Hard left, slight right, dead center?", emoji: "↔️" },
   tempo: { name: "Tempo", tagline: "BPM by ear — within 5.", emoji: "⏱️" },
+  "tempo-compare": {
+    name: "A/B Faster?",
+    tagline: "Two loops — which one is faster?",
+    emoji: "🏁",
+  },
+  "dynamic-range": {
+    name: "Dynamic Range",
+    tagline: "Which version is more compressed?",
+    emoji: "📊",
+  },
+  "stereo-width": {
+    name: "Stereo Width",
+    tagline: "Mono, narrow, wide — hear the difference.",
+    emoji: "↔️",
+  },
 };
 
 // --- WHY metadata ---
@@ -46,6 +71,21 @@ export const DRILL_WHY: Record<DrillKey, string[]> = {
     "Trains stereo placement awareness — where lives kick, snare, hat, vox.",
     "Builds the ears to hear phase issues before they kill your master.",
   ],
+  "tempo-compare": [
+    "Tempo perception is the most foundational rhythmic skill — faster vs slower, before you know the exact BPM.",
+    "DJs, live performers and editors all make instant tempo judgements. This trains that reflex.",
+    "Foundational for beatmatching, editing transitions, and syncing to picture.",
+  ],
+  "dynamic-range": [
+    "Spotting compression by ear prevents over-processing — the #1 amateur mistake.",
+    "This is the core skill tested in Golden Ears and SoundGym, the industry training tools.",
+    "Trained mastering engineers use this exact A/B method before touching a limiter.",
+  ],
+  "stereo-width": [
+    "Width is half of a great mix. Mono-compatible mixing requires you to hear width critically.",
+    "Phase issues collapse to mono. If you can't hear width, you can't catch phase problems.",
+    "Engineers check stereo width by constantly A/B-ing between stereo and mono.",
+  ],
   tempo: [
     "Producers feel tempo. It's how you sync transitions, FX, edits without looking.",
     "Useful for tap-tempo on hardware and DJ blends.",
@@ -56,28 +96,62 @@ export const DRILL_WHY: Record<DrillKey, string[]> = {
 // --- PANNING ---
 export const PAN_POSITIONS = [
   { id: "L100", name: "Hard Left", val: -1 },
-  { id: "L50",  name: "Half Left", val: -0.5 },
-  { id: "C",    name: "Center", val: 0 },
-  { id: "R50",  name: "Half Right", val: 0.5 },
+  { id: "L50", name: "Half Left", val: -0.5 },
+  { id: "C", name: "Center", val: 0 },
+  { id: "R50", name: "Half Right", val: 0.5 },
   { id: "R100", name: "Hard Right", val: 1 },
 ];
 export function playPanned(pan: number, dur = 1.6): { stop: () => void } {
-  const c = getCtx(); if (!c) return { stop: () => {} };
-  const out = c.createGain(); out.gain.value = 0.6; out.connect(getMaster());
-  const panner = c.createStereoPanner(); panner.pan.value = pan; panner.connect(out);
+  const c = getCtx();
+  if (!c) return { stop: () => {} };
+  const out = c.createGain();
+  out.gain.value = 0.6;
+  out.connect(getMaster());
+  const panner = c.createStereoPanner();
+  panner.pan.value = pan;
+  panner.connect(out);
   const handle = startLoop("drum-loop", 110, panner);
-  const t = setTimeout(() => { handle.stop(); try { out.disconnect(); } catch {} }, dur * 1000);
-  return { stop: () => { clearTimeout(t); handle.stop(); try { out.disconnect(); } catch {} } };
+  const t = setTimeout(() => {
+    handle.stop();
+    try {
+      out.disconnect();
+    } catch {}
+  }, dur * 1000);
+  return {
+    stop: () => {
+      clearTimeout(t);
+      handle.stop();
+      try {
+        out.disconnect();
+      } catch {}
+    },
+  };
 }
 
 // --- TEMPO ---
 export const TEMPO_OPTIONS = [85, 95, 105, 115, 125, 135, 145];
 export function playAtTempo(bpm: number, dur = 4): { stop: () => void } {
-  const c = getCtx(); if (!c) return { stop: () => {} };
-  const out = c.createGain(); out.gain.value = 0.6; out.connect(getMaster());
+  const c = getCtx();
+  if (!c) return { stop: () => {} };
+  const out = c.createGain();
+  out.gain.value = 0.6;
+  out.connect(getMaster());
   const handle = startLoop("drum-loop", bpm, out);
-  const t = setTimeout(() => { handle.stop(); try { out.disconnect(); } catch {} }, dur * 1000);
-  return { stop: () => { clearTimeout(t); handle.stop(); try { out.disconnect(); } catch {} } };
+  const t = setTimeout(() => {
+    handle.stop();
+    try {
+      out.disconnect();
+    } catch {}
+  }, dur * 1000);
+  return {
+    stop: () => {
+      clearTimeout(t);
+      handle.stop();
+      try {
+        out.disconnect();
+      } catch {}
+    },
+  };
 }
 
 // --- INTERVAL ---
@@ -125,7 +199,8 @@ export const EQ_BANDS = [
   { hz: 10000, name: "8–12 kHz (air)" },
 ];
 export function playEqExcerpt(freq: number, durSec = 2.5): { stop: () => void } {
-  const c = getCtx(); if (!c) return { stop: () => {} };
+  const c = getCtx();
+  if (!c) return { stop: () => {} };
   // Pink-ish noise
   const buf = c.createBuffer(1, c.sampleRate * durSec, c.sampleRate);
   const d = buf.getChannelData(0);
@@ -135,58 +210,128 @@ export function playEqExcerpt(freq: number, durSec = 2.5): { stop: () => void } 
     last = (last + 0.02 * w) / 1.02;
     d[i] = last * 6;
   }
-  const src = c.createBufferSource(); src.buffer = buf;
-  const notch = c.createBiquadFilter(); notch.type = "notch"; notch.frequency.value = freq; notch.Q.value = 4;
-  const lp = c.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 14000;
-  const g = c.createGain(); g.gain.value = 0.18;
+  const src = c.createBufferSource();
+  src.buffer = buf;
+  const notch = c.createBiquadFilter();
+  notch.type = "notch";
+  notch.frequency.value = freq;
+  notch.Q.value = 4;
+  const lp = c.createBiquadFilter();
+  lp.type = "lowpass";
+  lp.frequency.value = 14000;
+  const g = c.createGain();
+  g.gain.value = 0.18;
   src.connect(notch).connect(lp).connect(g).connect(getMaster());
   src.start();
-  return { stop: () => { try { src.stop(); } catch {} } };
+  return {
+    stop: () => {
+      try {
+        src.stop();
+      } catch {}
+    },
+  };
 }
 
 // --- COMPRESSION ---
 // Play three short bass-loop variants; user picks the heavily-compressed one.
-export function playCompressedLoop(amount: "none" | "light" | "heavy", durSec = 2.6): { stop: () => void } {
-  const c = getCtx(); if (!c) return { stop: () => {} };
-  const out = c.createGain(); out.gain.value = 0.7; out.connect(getMaster());
+export function playCompressedLoop(
+  amount: "none" | "light" | "heavy",
+  durSec = 2.6,
+): { stop: () => void } {
+  const c = getCtx();
+  if (!c) return { stop: () => {} };
+  const out = c.createGain();
+  out.gain.value = 0.7;
+  out.connect(getMaster());
   const comp = c.createDynamicsCompressor();
-  if (amount === "none") { comp.threshold.value = 0; comp.ratio.value = 1; }
-  else if (amount === "light") { comp.threshold.value = -18; comp.ratio.value = 3; comp.knee.value = 6; comp.attack.value = 0.01; comp.release.value = 0.15; }
-  else { comp.threshold.value = -36; comp.ratio.value = 12; comp.knee.value = 0; comp.attack.value = 0.001; comp.release.value = 0.05; }
-  const make = c.createGain(); make.gain.value = amount === "heavy" ? 4 : amount === "light" ? 1.5 : 1;
+  if (amount === "none") {
+    comp.threshold.value = 0;
+    comp.ratio.value = 1;
+  } else if (amount === "light") {
+    comp.threshold.value = -18;
+    comp.ratio.value = 3;
+    comp.knee.value = 6;
+    comp.attack.value = 0.01;
+    comp.release.value = 0.15;
+  } else {
+    comp.threshold.value = -36;
+    comp.ratio.value = 12;
+    comp.knee.value = 0;
+    comp.attack.value = 0.001;
+    comp.release.value = 0.05;
+  }
+  const make = c.createGain();
+  make.gain.value = amount === "heavy" ? 4 : amount === "light" ? 1.5 : 1;
   comp.connect(make).connect(out);
   const handle = startLoop("bass-loop", 110, comp);
-  const t = setTimeout(() => { handle.stop(); try { out.disconnect(); } catch {} }, durSec * 1000);
-  return { stop: () => { clearTimeout(t); handle.stop(); try { out.disconnect(); } catch {} } };
+  const t = setTimeout(() => {
+    handle.stop();
+    try {
+      out.disconnect();
+    } catch {}
+  }, durSec * 1000);
+  return {
+    stop: () => {
+      clearTimeout(t);
+      handle.stop();
+      try {
+        out.disconnect();
+      } catch {}
+    },
+  };
 }
 
 // --- REVERB ---
 // Play a short tone through a synthetic reverb tail (convolver with random IR).
 export function playReverbHit(decaySec: number, durMs = 2200): { stop: () => void } {
-  const c = getCtx(); if (!c) return { stop: () => {} };
+  const c = getCtx();
+  if (!c) return { stop: () => {} };
   const len = Math.max(0.5, Math.min(4, decaySec));
   const irBuf = c.createBuffer(2, c.sampleRate * len, c.sampleRate);
   for (let ch = 0; ch < 2; ch++) {
     const d = irBuf.getChannelData(ch);
-    for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2.5);
+    for (let i = 0; i < d.length; i++)
+      d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 2.5);
   }
-  const conv = c.createConvolver(); conv.buffer = irBuf;
-  const wet = c.createGain(); wet.gain.value = 0.7;
-  const dry = c.createGain(); dry.gain.value = 0.5;
-  const out = c.createGain(); out.gain.value = 0.6; out.connect(getMaster());
-  conv.connect(wet).connect(out); dry.connect(out);
+  const conv = c.createConvolver();
+  conv.buffer = irBuf;
+  const wet = c.createGain();
+  wet.gain.value = 0.7;
+  const dry = c.createGain();
+  dry.gain.value = 0.5;
+  const out = c.createGain();
+  out.gain.value = 0.6;
+  out.connect(getMaster());
+  conv.connect(wet).connect(out);
+  dry.connect(out);
   // play a vox-like chord
   [60, 64, 67].forEach((n) => {
-    const o = c.createOscillator(); const g = c.createGain();
-    o.type = "triangle"; o.frequency.value = midiToFreq(n);
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = "triangle";
+    o.frequency.value = midiToFreq(n);
     g.gain.setValueAtTime(0.0001, c.currentTime);
     g.gain.exponentialRampToValueAtTime(0.18, c.currentTime + 0.02);
     g.gain.exponentialRampToValueAtTime(0.0001, c.currentTime + 0.5);
-    o.connect(g); g.connect(dry); g.connect(conv);
-    o.start(); o.stop(c.currentTime + 0.55);
+    o.connect(g);
+    g.connect(dry);
+    g.connect(conv);
+    o.start();
+    o.stop(c.currentTime + 0.55);
   });
-  const t = setTimeout(() => { try { out.disconnect(); } catch {} }, durMs);
-  return { stop: () => { clearTimeout(t); try { out.disconnect(); } catch {} } };
+  const t = setTimeout(() => {
+    try {
+      out.disconnect();
+    } catch {}
+  }, durMs);
+  return {
+    stop: () => {
+      clearTimeout(t);
+      try {
+        out.disconnect();
+      } catch {}
+    },
+  };
 }
 
 export const REVERB_LENGTHS = [
@@ -200,7 +345,11 @@ const KEY = "ableton.school.drills.v1";
 type LocalScores = Record<string, { best: number; played: number }>;
 function readLocal(): LocalScores {
   if (typeof localStorage === "undefined") return {};
-  try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch { return {}; }
+  try {
+    return JSON.parse(localStorage.getItem(KEY) || "{}");
+  } catch {
+    return {};
+  }
 }
 function writeLocal(s: LocalScores) {
   if (typeof localStorage === "undefined") return;
@@ -221,4 +370,6 @@ export async function saveDrillScore(drill: DrillKey, score: number, total: numb
   } catch {}
 }
 
-export function getLocalDrillStats(): LocalScores { return readLocal(); }
+export function getLocalDrillStats(): LocalScores {
+  return readLocal();
+}

@@ -32,6 +32,11 @@ export type SimType =
   | "stem-splitter"
   | "groove-extractor"
   | "push3"
+  | "bpm-tap"
+  | "granular"
+  | "synth-playground"
+  | "buffer-sim"
+  | "tempo-compare"
   | "none";
 
 export type QuizQ = {

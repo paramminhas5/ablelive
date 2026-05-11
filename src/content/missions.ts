@@ -925,7 +925,7 @@ const w4: Mission[] = [
         ],
       },
     ],
-    sim: { type: "none", preset: { synth: "wavetable" } },
+    sim: { type: "synth-playground", preset: { synth: "wavetable" } },
     quiz: [
       {
         q: "Meld is what kind of synth?",
@@ -1913,7 +1913,7 @@ const w6: Mission[] = [
         ],
       },
     ],
-    sim: { type: "none" },
+    sim: { type: "bpm-tap" },
     quiz: [
       {
         q: "Tempo Follower added in…",
@@ -2150,7 +2150,7 @@ const w6: Mission[] = [
         ],
       },
     ],
-    sim: { type: "none" },
+    sim: { type: "buffer-sim" },
     quiz: [
       {
         q: "Crackling fix #1…",
@@ -2374,7 +2374,7 @@ const wExtra: Mission[] = [
         text: "Even without an MPE controller, Meld's two-engine layering makes great evolving pads.",
       },
     ],
-    sim: { type: "none" },
+    sim: { type: "synth-playground" },
     quiz: [
       {
         q: "Meld shipped with…",
@@ -2989,7 +2989,7 @@ const w7: Mission[] = [
         text: "Start with the Init preset and twist Drift up — instant analog character.",
       },
     ],
-    sim: { type: "none" },
+    sim: { type: "synth-playground" },
     quiz: [
       {
         q: "Drift's filter section has…",
@@ -3044,7 +3044,7 @@ const w7: Mission[] = [
         text: "Granulator turns any short sample into a sustained instrument.",
       },
     ],
-    sim: { type: "none" },
+    sim: { type: "granular" },
     quiz: [
       {
         q: "Granulator plays the sample as…",
@@ -3100,7 +3100,7 @@ const w7: Mission[] = [
         text: "Modelling instruments respond to velocity and aftertouch with real expression — they reward MPE controllers.",
       },
     ],
-    sim: { type: "none" },
+    sim: { type: "synth-playground" },
     quiz: [
       {
         q: "Tension models…",
@@ -3832,7 +3832,7 @@ const w8: Mission[] = [
         text: "Freeze + Flatten is destructive on the track's devices — make a duplicate first if you might revisit.",
       },
     ],
-    sim: { type: "none" },
+    sim: { type: "buffer-sim" },
     quiz: [
       {
         q: "Bigger buffer = …",

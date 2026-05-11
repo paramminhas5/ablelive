@@ -15,13 +15,14 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
   const [picked, setPicked] = useState<number | null>(null);
   const [hintShown, setHint] = useState(false);
   const [phase, setPhase] = useState<Phase>("picking");
-  const [animKey, setAnimKey] = useState(0); // bumped on each question → re-triggers CSS animation
+  const [animKey, setAnimKey] = useState(0);
 
-  // Ref holds accumulated results — never stale inside closures
   const resultsRef = useRef<boolean[]>([]);
   const autoRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const explainRef = useRef<HTMLDivElement>(null); // scroll target after answering
+  const doneRef = useRef<HTMLDivElement>(null); // scroll target on results
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Full reset when question set changes (new mission load)
   useEffect(() => {
     resultsRef.current = [];
     setQIdx(0);
@@ -48,11 +49,9 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
   const pick = (optIdx: number) => {
     if (phase !== "picking") return;
     setPicked(optIdx);
-
     const isPass = optIdx === q.answer;
     const newResults = [...resultsRef.current, isPass];
     resultsRef.current = newResults;
-
     setPhase("feedback");
     if (isPass) playCorrect();
     else {
@@ -60,7 +59,11 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
       onWrongAnswer?.();
     }
 
-    // Auto-advance: 3200ms with explanation visible, or 1200ms if no explanation
+    // Scroll explanation into view after a short paint delay
+    setTimeout(() => {
+      explainRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 80);
+
     const delay = q.explain ? 3200 : 1200;
     autoRef.current = setTimeout(() => advance(newResults), delay);
   };
@@ -70,18 +73,22 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
       clearTimeout(autoRef.current);
       autoRef.current = null;
     }
-
     if (isLast) {
-      const score = results.filter(Boolean).length / qs.length;
       setPhase("done");
-      onComplete(score);
+      onComplete(results.filter(Boolean).length / qs.length);
+      // Scroll to results card
+      setTimeout(() => doneRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
     } else {
-      // Animate question out then in
       setPhase("picking");
       setQIdx((i) => i + 1);
       setPicked(null);
       setHint(false);
       setAnimKey((k) => k + 1);
+      // Scroll back to top of quiz on new question
+      setTimeout(
+        () => containerRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" }),
+        60,
+      );
     }
   };
 
@@ -98,7 +105,7 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
           : { label: "RETRY", color: "bg-hot  text-bone" };
 
     return (
-      <div className="space-y-3 animate-slide-up">
+      <div ref={doneRef} className="space-y-3 animate-slide-up scroll-mt-4">
         <div className={`${grade.color} brutal-border p-5`}>
           <div className="font-mono text-[10px] uppercase opacity-70">Quiz complete</div>
           <div className="font-display text-5xl mt-1">{grade.label}</div>
@@ -107,24 +114,24 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
           </div>
         </div>
 
-        <div className="space-y-1 stagger">
+        <div className="space-y-2">
           {qs.map((question, i) => (
             <div
               key={i}
-              className={`brutal-border p-3 flex items-start gap-3 ${
-                results[i] ? "bg-acid/20" : "bg-hot/10"
-              }`}
+              className={`brutal-border p-3 flex items-start gap-3 ${results[i] ? "bg-acid/20" : "bg-hot/10"}`}
             >
               <span className="font-display text-lg shrink-0 mt-0.5">{results[i] ? "✓" : "✗"}</span>
               <div className="min-w-0">
                 <div className="font-mono text-xs leading-relaxed">{question.q}</div>
-                <div className="font-mono text-[10px] mt-0.5 opacity-60">
+                <div className="font-mono text-[10px] mt-0.5 font-bold">
                   {results[i]
-                    ? question.options[question.answer]
+                    ? `✓ ${question.options[question.answer]}`
                     : `Correct: ${question.options[question.answer]}`}
                 </div>
-                {!results[i] && question.explain && (
-                  <div className="font-mono text-[10px] opacity-50 mt-0.5 leading-relaxed italic">
+                {question.explain && (
+                  <div
+                    className={`font-mono text-[10px] mt-1 leading-relaxed ${results[i] ? "opacity-60" : "opacity-80"}`}
+                  >
                     {question.explain}
                   </div>
                 )}
@@ -142,6 +149,10 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
               setHint(false);
               setPhase("picking");
               setAnimKey((k) => k + 1);
+              setTimeout(
+                () => containerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }),
+                60,
+              );
             }}
             className="brutal-border bg-ink text-bone px-5 py-3 font-display text-xl brutal-press"
           >
@@ -156,8 +167,7 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
   const progressPct = Math.round((resultsRef.current.length / qs.length) * 100);
 
   return (
-    <div className="space-y-4">
-      {/* Progress bar */}
+    <div ref={containerRef} className="space-y-4 scroll-mt-4">
       <div className="space-y-1">
         <div className="flex justify-between font-mono text-[10px] uppercase opacity-60">
           <span>
@@ -173,23 +183,19 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
         </div>
       </div>
 
-      {/* Question card — key forces remount/re-animation on every new question */}
       <div key={animKey} className="space-y-3 animate-slide-up">
         <div className="font-display text-xl md:text-2xl leading-snug">{q.q}</div>
 
-        {/* Options */}
         <div className="grid sm:grid-cols-2 gap-2">
           {q.options.map((opt, oi) => {
             const isPicked = picked === oi;
             const isRight = phase === "feedback" && oi === q.answer;
             const isWrong = phase === "feedback" && isPicked && oi !== q.answer;
             const isMissed = phase === "feedback" && !isPicked && oi === q.answer;
-
             let cls = "bg-bone hover:bg-sun/40 brutal-press cursor-pointer";
             if (isRight || isMissed) cls = "bg-acid text-ink font-bold";
             else if (isWrong) cls = "bg-hot text-bone";
             else if (phase === "feedback") cls = "bg-bone opacity-50 cursor-default";
-
             return (
               <button
                 key={oi}
@@ -207,13 +213,13 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
           })}
         </div>
 
-        {/* Hint — only before answering */}
+        {/* Hint */}
         {phase === "picking" && q.hint && (
-          <div className="animate-fade-fast">
+          <div>
             {!hintShown ? (
               <button
                 onClick={() => setHint(true)}
-                className="font-mono text-[10px] uppercase opacity-40 hover:opacity-70 underline underline-offset-2 transition-opacity"
+                className="font-mono text-[10px] uppercase opacity-40 hover:opacity-70 underline underline-offset-2"
               >
                 Stuck? See a hint
               </button>
@@ -226,26 +232,30 @@ export function Quiz({ qs, onComplete, onWrongAnswer }: Props) {
           </div>
         )}
 
-        {/* Explanation — appears right after picking */}
-        {phase === "feedback" && q.explain && (
-          <div
-            className={`brutal-border px-4 py-3 font-mono text-xs leading-relaxed animate-pop-in ${
-              correct ? "bg-volt text-bone" : "bg-ink text-bone"
-            }`}
-          >
-            <span className="font-bold mr-2">{correct ? "✓" : "✗"}</span>
-            {q.explain}
-          </div>
-        )}
-
-        {/* Skip-wait link */}
+        {/* Explanation — scroll ref attached here */}
         {phase === "feedback" && (
-          <button
-            onClick={() => advance(resultsRef.current)}
-            className="font-mono text-[10px] uppercase opacity-30 hover:opacity-60 underline underline-offset-2 transition-opacity block"
-          >
-            {isLast ? "See results →" : "Next →"}
-          </button>
+          <div ref={explainRef} className="scroll-mt-4">
+            {q.explain ? (
+              <div
+                className={`brutal-border px-4 py-3 font-mono text-sm leading-relaxed animate-pop-in ${correct ? "bg-volt text-bone" : "bg-ink text-bone"}`}
+              >
+                <span className="font-bold mr-2 text-base">{correct ? "✓" : "✗"}</span>
+                {q.explain}
+              </div>
+            ) : (
+              <div
+                className={`brutal-border px-4 py-2 font-mono text-sm animate-pop-in ${correct ? "bg-acid text-ink" : "bg-hot text-bone"}`}
+              >
+                {correct ? "✓ Correct" : `✗ Correct answer: ${q.options[q.answer]}`}
+              </div>
+            )}
+            <button
+              onClick={() => advance(resultsRef.current)}
+              className="mt-2 font-mono text-[10px] uppercase opacity-30 hover:opacity-60 underline underline-offset-2 block"
+            >
+              {isLast ? "See results →" : "Next →"}
+            </button>
+          </div>
         )}
       </div>
     </div>

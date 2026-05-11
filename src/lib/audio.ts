@@ -76,66 +76,168 @@ const env = (g: GainNode, t: number, attack: number, decay: number, peak = 1) =>
   g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay);
 };
 
-export const playKick = (when = 0, dest?: AudioNode) => {
+export const playKick = (delay = 0, dest?: AudioNode) => {
   const c = getCtx();
   if (!c) return;
-  const t = Math.max(c.currentTime + 0.05, c.currentTime + when);
-  const o = c.createOscillator();
-  const g = c.createGain();
-  o.frequency.setValueAtTime(150, t);
-  o.frequency.exponentialRampToValueAtTime(40, t + 0.18);
-  env(g, t, 0.005, 0.4, 1);
-  o.connect(g).connect(dest ?? getMaster());
-  o.start(t);
-  o.stop(t + 0.5);
+  const out = dest ?? getMaster();
+  const t = c.currentTime + delay + 0.002;
+
+  // Sub layer — 808-style pitch envelope
+  const sub = c.createOscillator();
+  const subG = c.createGain();
+  sub.type = "sine";
+  sub.frequency.setValueAtTime(160, t);
+  sub.frequency.exponentialRampToValueAtTime(45, t + 0.08);
+  sub.frequency.exponentialRampToValueAtTime(38, t + 0.35);
+  subG.gain.setValueAtTime(0.0001, t);
+  subG.gain.exponentialRampToValueAtTime(1.1, t + 0.003);
+  subG.gain.exponentialRampToValueAtTime(0.6, t + 0.04);
+  subG.gain.exponentialRampToValueAtTime(0.0001, t + 0.45);
+  sub.connect(subG).connect(out);
+  sub.start(t);
+  sub.stop(t + 0.5);
+
+  // Click transient — adds punch
+  const click = c.createOscillator();
+  const clickG = c.createGain();
+  click.type = "triangle";
+  click.frequency.setValueAtTime(1200, t);
+  click.frequency.exponentialRampToValueAtTime(80, t + 0.012);
+  clickG.gain.setValueAtTime(0.0001, t);
+  clickG.gain.exponentialRampToValueAtTime(0.9, t + 0.001);
+  clickG.gain.exponentialRampToValueAtTime(0.0001, t + 0.018);
+  click.connect(clickG).connect(out);
+  click.start(t);
+  click.stop(t + 0.025);
+
+  // Body noise
+  const noise = c.createOscillator();
+  const noiseG = c.createGain();
+  noise.type = "sawtooth";
+  noise.frequency.setValueAtTime(80, t);
+  noise.frequency.exponentialRampToValueAtTime(40, t + 0.1);
+  noiseG.gain.setValueAtTime(0.0001, t);
+  noiseG.gain.exponentialRampToValueAtTime(0.18, t + 0.003);
+  noiseG.gain.exponentialRampToValueAtTime(0.0001, t + 0.12);
+  const lp = c.createBiquadFilter();
+  lp.type = "lowpass";
+  lp.frequency.value = 200;
+  noise.connect(lp).connect(noiseG).connect(out);
+  noise.start(t);
+  noise.stop(t + 0.15);
 };
 
-export const playSnare = (when = 0, dest?: AudioNode) => {
+export const playSnare = (delay = 0, dest?: AudioNode) => {
   const c = getCtx();
   if (!c) return;
-  const t = Math.max(c.currentTime + 0.05, c.currentTime + when);
+  const out = dest ?? getMaster();
+  const t = c.currentTime + delay + 0.002;
+
+  // Tonal body (tuned drum shell)
+  const body = c.createOscillator();
+  const bodyG = c.createGain();
+  body.type = "triangle";
+  body.frequency.setValueAtTime(220, t);
+  body.frequency.exponentialRampToValueAtTime(150, t + 0.05);
+  bodyG.gain.setValueAtTime(0.0001, t);
+  bodyG.gain.exponentialRampToValueAtTime(0.6, t + 0.002);
+  bodyG.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
+  body.connect(bodyG).connect(out);
+  body.start(t);
+  body.stop(t + 0.12);
+
+  // Snare wires noise burst
+  const buf = c.createBuffer(1, c.sampleRate * 0.22, c.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
   const noise = c.createBufferSource();
-  const buf = c.createBuffer(1, c.sampleRate * 0.2, c.sampleRate);
-  const d = buf.getChannelData(0);
-  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
   noise.buffer = buf;
+  const noiseG = c.createGain();
   const hp = c.createBiquadFilter();
   hp.type = "highpass";
-  hp.frequency.value = 1500;
-  const g = c.createGain();
-  env(g, t, 0.002, 0.18, 0.6);
-  noise
-    .connect(hp)
-    .connect(g)
-    .connect(dest ?? getMaster());
+  hp.frequency.value = 1800;
+  hp.Q.value = 0.5;
+  const bp = c.createBiquadFilter();
+  bp.type = "peaking";
+  bp.frequency.value = 3500;
+  bp.gain.value = 6;
+  bp.Q.value = 1;
+  noiseG.gain.setValueAtTime(0.0001, t);
+  noiseG.gain.exponentialRampToValueAtTime(0.9, t + 0.002);
+  noiseG.gain.exponentialRampToValueAtTime(0.3, t + 0.04);
+  noiseG.gain.exponentialRampToValueAtTime(0.0001, t + 0.2);
+  noise.connect(hp).connect(bp).connect(noiseG).connect(out);
   noise.start(t);
-  noise.stop(t + 0.25);
+  noise.stop(t + 0.22);
+
+  // Attack click
+  const click = c.createOscillator();
+  const clickG = c.createGain();
+  click.type = "square";
+  click.frequency.value = 800;
+  clickG.gain.setValueAtTime(0.0001, t);
+  clickG.gain.exponentialRampToValueAtTime(0.35, t + 0.001);
+  clickG.gain.exponentialRampToValueAtTime(0.0001, t + 0.008);
+  click.connect(clickG).connect(out);
+  click.start(t);
+  click.stop(t + 0.01);
 };
 
-export const playHat = (when = 0, open = false, dest?: AudioNode) => {
+export const playHat = (delay = 0, open = false, dest?: AudioNode) => {
   const c = getCtx();
   if (!c) return;
-  const t = Math.max(c.currentTime + 0.05, c.currentTime + when);
-  const noise = c.createBufferSource();
-  const buf = c.createBuffer(1, c.sampleRate * 0.1, c.sampleRate);
-  const d = buf.getChannelData(0);
-  for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-  noise.buffer = buf;
-  const hp = c.createBiquadFilter();
-  hp.type = "highpass";
-  hp.frequency.value = 7000;
-  const g = c.createGain();
-  env(g, t, 0.001, open ? 0.25 : 0.05, 0.3);
-  noise
-    .connect(hp)
-    .connect(g)
-    .connect(dest ?? getMaster());
-  noise.start(t);
-  noise.stop(t + 0.3);
+  const out = dest ?? getMaster();
+  const t = c.currentTime + delay + 0.002;
+  const dur = open ? 0.38 : 0.05;
+
+  // Metallic noise — 6 detuned square oscillators (real hat emulation)
+  const freqs = [205, 310, 480, 703, 1006, 1477].map((f) => f * (open ? 1 : 1.15));
+  freqs.forEach((freq) => {
+    const o = c.createOscillator();
+    const g = c.createGain();
+    o.type = "square";
+    o.frequency.value = freq;
+    const hp = c.createBiquadFilter();
+    hp.type = "highpass";
+    hp.frequency.value = 7000;
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.07, t + 0.001);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(hp).connect(g).connect(out);
+    o.start(t);
+    o.stop(t + dur + 0.02);
+  });
 };
 
-export const playClap = (when = 0, dest?: AudioNode) => {
-  for (let i = 0; i < 3; i++) playSnare(when + i * 0.012, dest);
+export const playClap = (delay = 0, dest?: AudioNode) => {
+  const c = getCtx();
+  if (!c) return;
+  const out = dest ?? getMaster();
+  const t0 = c.currentTime + delay + 0.002;
+
+  // 3 layered noise bursts — real clap is multiple hand slaps
+  [0, 0.012, 0.024].forEach((offset, layer) => {
+    const t = t0 + offset;
+    const buf = c.createBuffer(1, c.sampleRate * 0.12, c.sampleRate);
+    const data = buf.getChannelData(0);
+    for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+    const noise = c.createBufferSource();
+    noise.buffer = buf;
+    const bp = c.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.value = 1200 + layer * 300;
+    bp.Q.value = 0.5;
+    const hp = c.createBiquadFilter();
+    hp.type = "highpass";
+    hp.frequency.value = 900;
+    const g = c.createGain();
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(layer === 2 ? 0.55 : 0.3, t + 0.002);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + (layer === 2 ? 0.1 : 0.04));
+    noise.connect(bp).connect(hp).connect(g).connect(out);
+    noise.start(t);
+    noise.stop(t + 0.14);
+  });
 };
 
 export const playTone = (

@@ -4,6 +4,7 @@ import { MISSIONS, missionBySlug } from "@/content/missions";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
 import { useState } from "react";
+import { SkillMap } from "@/components/SkillMap";
 
 export const Route = createFileRoute("/learn")({
   head: () => ({
@@ -18,7 +19,7 @@ export const Route = createFileRoute("/learn")({
   component: LearnPage,
 });
 
-type Tab = "paths" | "all";
+type Tab = "paths" | "skills" | "all";
 
 function LearnPage() {
   const { progress } = useProgress();
@@ -229,6 +230,12 @@ function LearnPage() {
       )}
 
       {/* ALL MISSIONS tab — clean grid, not overwhelming */}
+      {tab === "skills" && (
+        <section className="max-w-5xl mx-auto px-4 py-4 pb-24">
+          <SkillMap />
+        </section>
+      )}
+
       {tab === "all" && (
         <section className="max-w-5xl mx-auto px-4 py-4 pb-24">
           <div className="font-mono text-[10px] uppercase opacity-60 mb-3">
