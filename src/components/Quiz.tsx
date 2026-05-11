@@ -12,6 +12,7 @@ export interface QuizMeta {
 
 interface Props {
   qs: QuizQ[];
+  resetKey?: string; // reset the quiz when this changes (e.g. slug)
   meta?: QuizMeta;
   onComplete: (score: number) => void;
   onWrongAnswer?: () => void;
@@ -120,7 +121,7 @@ function ShareCard({
   );
 }
 
-export function Quiz({ qs, meta, onComplete, onWrongAnswer }: Props) {
+export function Quiz({ qs, resetKey, meta, onComplete, onWrongAnswer }: Props) {
   // ALL mutable state needed by the scheduler lives in refs — zero stale-closure risk
   const qIdxRef = useRef(0);
   const resultsRef = useRef<boolean[]>([]);
@@ -137,7 +138,10 @@ export function Quiz({ qs, meta, onComplete, onWrongAnswer }: Props) {
 
   const rerender = () => setTick((t) => t + 1);
 
-  // Reset when question set changes
+  // Reset when the mission changes (resetKey = slug), NOT on qs reference change.
+  // qs is m.quiz.slice() which creates a new reference on every parent render,
+  // which would reset the quiz mid-session.
+  const resetTarget = resetKey ?? qs.length.toString();
   useEffect(() => {
     if (autoRef.current) clearTimeout(autoRef.current);
     qIdxRef.current = 0;
@@ -145,7 +149,8 @@ export function Quiz({ qs, meta, onComplete, onWrongAnswer }: Props) {
     phaseRef.current = "picking";
     setShowShare(false);
     setTick(0);
-  }, [qs]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resetTarget]);
 
   useEffect(
     () => () => {

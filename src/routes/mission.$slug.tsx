@@ -5,7 +5,7 @@ import { Simulator } from "@/components/sims/Simulator";
 import { Quiz, type QuizMeta } from "@/components/Quiz";
 import { useProgress } from "@/lib/progress";
 import { useLearnMode } from "@/lib/mode";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { LESSONS } from "@/content/lesson-deep";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
 import { useMode } from "@/lib/mode";
@@ -73,7 +73,11 @@ function MissionPage() {
   const whatParas = track?.what ?? deep?.definition;
   // Always use m.quiz — it has explain + hint on every question.
   // deep.quizEasy/quizHard are unenriched and would shadow the explanations.
-  const quizQs = advanced ? m.quiz : m.quiz.slice(0, 4);
+  const quizQs = useMemo(
+    () => (advanced ? m.quiz : m.quiz.slice(0, 4)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [slug, advanced],
+  );
   const passThreshold = advanced ? 0.6 : 0.5;
 
   const onQuizDone = (score: number) => {
@@ -349,6 +353,7 @@ function MissionPage() {
         <Quiz
           key={slug}
           qs={quizQs}
+          resetKey={slug}
           meta={{
             missionTitle: m.title,
             missionNumber: m.number,
