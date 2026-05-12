@@ -5,10 +5,15 @@ import { DeviceChainSim } from "@/components/sims/DeviceChainSim";
 import type { SimType } from "@/content/types";
 
 export const Route = createFileRoute("/playground")({
-  head: () => ({ meta: [
-    { title: "Workbench — CCD.SCHOOL" },
-    { name: "description", content: "Hands-on labs: device chain, sidechain, sends, drum rack, piano roll, mixer." },
-  ]}),
+  head: () => ({
+    meta: [
+      { title: "Workbench — CCD.SCHOOL" },
+      {
+        name: "description",
+        content: "Hands-on labs: device chain, sidechain, sends, drum rack, piano roll, mixer.",
+      },
+    ],
+  }),
   component: Workbench,
 });
 
@@ -29,7 +34,6 @@ const SIM_TABS: { id: SimType; label: string }[] = [
   { id: "ear-training", label: "Ear Training" },
   { id: "midi-vs-audio", label: "MIDI vs Audio" },
   { id: "interface-tour", label: "Interface" },
-  { id: "browser-tour", label: "Browser" },
 ];
 
 function Workbench() {
@@ -57,11 +61,24 @@ function Workbench() {
   );
 }
 
-function TabBtn({ id, tab, setTab, label }: { id: TabId; tab: TabId; setTab: (t: TabId) => void; label: string }) {
+function TabBtn({
+  id,
+  tab,
+  setTab,
+  label,
+}: {
+  id: TabId;
+  tab: TabId;
+  setTab: (t: TabId) => void;
+  label: string;
+}) {
   const active = tab === id;
   return (
-    <button onClick={() => setTab(id)} aria-pressed={active}
-      className={`brutal-border px-3 py-1.5 font-mono text-[11px] uppercase brutal-press ${active ? "bg-ink text-bone" : "bg-bone text-ink hover:bg-acid"}`}>
+    <button
+      onClick={() => setTab(id)}
+      aria-pressed={active}
+      className={`brutal-border px-3 py-1.5 font-mono text-[11px] uppercase brutal-press ${active ? "bg-ink text-bone" : "bg-bone text-ink hover:bg-acid"}`}
+    >
       {label}
     </button>
   );

@@ -1,12 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useProgress } from "@/lib/progress";
+import { RANKS, rankFor } from "@/lib/ranks";
 import { MISSIONS } from "@/content/missions";
 import { useAuth, signOut } from "@/lib/auth";
 import { RankBadge } from "@/components/HomeWidgets";
 import { ShareCard } from "@/components/ShareCard";
 
 export const Route = createFileRoute("/profile")({
-  head: () => ({ meta: [{ title: "Profile — CCD.SCHOOL" }, { name: "description", content: "Your XP, badges, streak and completed missions." }]}),
+  head: () => ({
+    meta: [
+      { title: "Profile — CCD.SCHOOL" },
+      { name: "description", content: "Your XP, badges, streak and completed missions." },
+    ],
+  }),
   component: Profile,
 });
 
@@ -20,21 +26,85 @@ function Profile() {
       <div className="brutal-border bg-bone p-4 flex items-center justify-between gap-3">
         {user ? (
           <>
-            <div className="font-mono text-sm">Signed in as <strong>{user.email}</strong> — progress synced.</div>
-            <button onClick={() => signOut()} className="brutal-border bg-hot text-bone px-3 py-2 font-mono text-xs uppercase brutal-press">Sign out</button>
+            <div className="font-mono text-sm">
+              Signed in as <strong>{user.email}</strong> — progress synced.
+            </div>
+            <button
+              onClick={() => signOut()}
+              className="brutal-border bg-hot text-bone px-3 py-2 font-mono text-xs uppercase brutal-press"
+            >
+              Sign out
+            </button>
           </>
         ) : (
           <>
-            <div className="font-mono text-sm">Not signed in — progress only saved on this device.</div>
-            <Link to="/login" className="brutal-border bg-acid px-3 py-2 font-mono text-xs uppercase brutal-press">Sign in / sign up</Link>
+            <div className="font-mono text-sm">
+              Not signed in — progress only saved on this device.
+            </div>
+            <Link
+              to="/login"
+              className="brutal-border bg-acid px-3 py-2 font-mono text-xs uppercase brutal-press"
+            >
+              Sign in / sign up
+            </Link>
           </>
         )}
       </div>
       <div className="grid grid-cols-3 gap-3 font-mono uppercase text-center">
-        <div className="brutal-border bg-acid p-4 brutal-shadow-sm"><div className="font-display text-5xl">{progress.xp}</div>XP</div>
-        <div className="brutal-border bg-hot text-bone p-4 brutal-shadow-sm"><div className="font-display text-5xl">{progress.streakDays}</div>Streak</div>
-        <div className="brutal-border bg-volt text-bone p-4 brutal-shadow-sm"><div className="font-display text-5xl">{completed.length}</div>Missions</div>
+        <div className="brutal-border bg-acid p-4 brutal-shadow-sm">
+          <div className="font-display text-5xl">{progress.xp}</div>XP
+        </div>
+        <div className="brutal-border bg-hot text-bone p-4 brutal-shadow-sm">
+          <div className="font-display text-5xl">{progress.streakDays}</div>Streak
+        </div>
+        <div className="brutal-border bg-volt text-bone p-4 brutal-shadow-sm">
+          <div className="font-display text-5xl">{completed.length}</div>Missions
+        </div>
       </div>
+      {/* Rank ladder */}
+      <div>
+        <h2 className="text-3xl mb-3">// RANK LADDER</h2>
+        {(() => {
+          const { idx } = rankFor(progress.xp);
+          return (
+            <div className="space-y-1">
+              {RANKS.map((r, i) => {
+                const isCurrent = i === idx;
+                const isDone = i < idx;
+                const isNext = i === idx + 1;
+                return (
+                  <div
+                    key={r.slug}
+                    className={`brutal-border flex items-center gap-3 px-3 py-2 transition-all ${isCurrent ? `${r.color} brutal-shadow` : isDone ? "bg-acid/20" : "bg-bone opacity-50"}`}
+                  >
+                    <span className="text-xl w-8 text-center">
+                      {isDone ? "✓" : isCurrent ? r.emoji : r.emoji}
+                    </span>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-display text-base leading-none">{r.name}</div>
+                      <div className="font-mono text-[10px] opacity-70">{r.tagline}</div>
+                    </div>
+                    <div className="font-mono text-[10px] text-right shrink-0">
+                      {isCurrent ? (
+                        <span className="brutal-border bg-bone text-ink px-2 py-1 font-bold">
+                          YOU ARE HERE
+                        </span>
+                      ) : isDone ? (
+                        <span className="opacity-50">{r.minXp} XP ✓</span>
+                      ) : isNext ? (
+                        <span className="text-ink">{r.minXp - progress.xp} XP to go</span>
+                      ) : (
+                        <span className="opacity-40">{r.minXp} XP</span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
+      </div>
+
       <div className="grid md:grid-cols-2 gap-3">
         <RankBadge />
         <ShareCard />
@@ -42,24 +112,51 @@ function Profile() {
       <div>
         <h2 className="text-3xl mb-3">// BADGES</h2>
         <div className="flex flex-wrap gap-2">
-          {progress.badges.length === 0 && <span className="font-mono text-sm opacity-60">No badges yet — complete missions to earn them.</span>}
+          {progress.badges.length === 0 && (
+            <span className="font-mono text-sm opacity-60">
+              No badges yet — complete missions to earn them.
+            </span>
+          )}
           {progress.badges.map((b) => (
-            <span key={b} className="brutal-border bg-sun px-3 py-2 font-mono text-xs uppercase brutal-shadow-sm">🏅 {b}</span>
+            <span
+              key={b}
+              className="brutal-border bg-sun px-3 py-2 font-mono text-xs uppercase brutal-shadow-sm"
+            >
+              🏅 {b}
+            </span>
           ))}
         </div>
       </div>
       <div>
         <h2 className="text-3xl mb-3">// COMPLETED</h2>
         <div className="grid md:grid-cols-2 gap-2">
-          {completed.length === 0 && <Link to="/mission/$slug" params={{ slug: "what-is-live" }} className="brutal-border bg-acid p-3 font-mono uppercase brutal-press">▶ Start Mission 01</Link>}
+          {completed.length === 0 && (
+            <Link
+              to="/mission/$slug"
+              params={{ slug: "what-is-live" }}
+              className="brutal-border bg-acid p-3 font-mono uppercase brutal-press"
+            >
+              ▶ Start Mission 01
+            </Link>
+          )}
           {completed.map((m) => (
-            <Link key={m.slug} to="/mission/$slug" params={{ slug: m.slug }} className="brutal-border bg-card p-3 font-mono text-sm brutal-press">
+            <Link
+              key={m.slug}
+              to="/mission/$slug"
+              params={{ slug: m.slug }}
+              className="brutal-border bg-card p-3 font-mono text-sm brutal-press"
+            >
               ✓ {String(m.number).padStart(2, "0")} · {m.title}
             </Link>
           ))}
         </div>
       </div>
-      <button onClick={reset} className="brutal-border bg-bone px-3 py-2 font-mono text-xs uppercase brutal-press">Reset progress</button>
+      <button
+        onClick={reset}
+        className="brutal-border bg-bone px-3 py-2 font-mono text-xs uppercase brutal-press"
+      >
+        Reset progress
+      </button>
     </div>
   );
 }

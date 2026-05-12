@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { XP_PER_CORRECT, XP_PERFECT_BONUS } from "@/lib/ranks";
 import { playCorrect, playWrong, playFanfare } from "@/lib/audio";
 import type { QuizQ } from "@/content/types";
 
@@ -16,6 +17,8 @@ interface Props {
   meta?: QuizMeta;
   onComplete: (score: number) => void;
   onWrongAnswer?: () => void;
+  onCorrectAnswer?: (xp: number) => void; // called per correct answer
+  onPerfect?: (bonusXp: number) => void; // called when all correct
 }
 
 type Phase = "picking" | "feedback" | "done";
@@ -121,7 +124,15 @@ function ShareCard({
   );
 }
 
-export function Quiz({ qs, resetKey, meta, onComplete, onWrongAnswer }: Props) {
+export function Quiz({
+  qs,
+  resetKey,
+  meta,
+  onComplete,
+  onWrongAnswer,
+  onCorrectAnswer,
+  onPerfect,
+}: Props) {
   // ALL mutable state needed by the scheduler lives in refs — zero stale-closure risk
   const qIdxRef = useRef(0);
   const resultsRef = useRef<boolean[]>([]);
@@ -174,7 +185,10 @@ export function Quiz({ qs, resetKey, meta, onComplete, onWrongAnswer }: Props) {
       const score = resultsRef.current.filter(Boolean).length / qs.length;
       rerender();
       onComplete(score);
-      if (resultsRef.current.every(Boolean)) playFanfare();
+      if (resultsRef.current.every(Boolean)) {
+        playFanfare();
+        onPerfect?.(XP_PERFECT_BONUS);
+      }
       requestAnimationFrame(() => requestAnimationFrame(() => scrollToCenter(doneRef.current)));
     } else {
       qIdxRef.current = idx + 1;

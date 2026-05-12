@@ -83,7 +83,6 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
   );
 }
 
-// ── Dark mode ────────────────────────────────────────────────────────────────
 function useDarkMode() {
   const [dark, setDark] = useState(
     () =>
@@ -136,7 +135,6 @@ function UserIcon() {
 export function Header() {
   const { progress, dailyGoalPct, dailyGoalDone, heartRefillSeconds } = useProgress();
   const { user } = useAuth();
-  const { dark, toggle: toggleDark } = useDarkMode();
   const [moreOpen, setMoreOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const nav = useNavigate();
@@ -215,16 +213,6 @@ export function Header() {
           >
             <SearchIcon /> Search
           </button>
-
-          {/* Dark mode */}
-          <button
-            onClick={toggleDark}
-            title="Toggle dark mode"
-            className="brutal-border bg-bone px-2 py-1.5 hover:bg-sun font-mono text-sm"
-          >
-            {dark ? "☀" : "☾"}
-          </button>
-
           {/* Hearts (CCD only — set in /learn) */}
           {progress.hearts < MAX_HEARTS && (
             <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
@@ -274,7 +262,6 @@ export function Header() {
           {progress.hearts < MAX_HEARTS && (
             <Hearts count={progress.hearts} refillSeconds={heartRefillSeconds} />
           )}
-          <GoalRing pct={dailyGoalPct} done={dailyGoalDone} />
           <span className="brutal-border bg-acid px-1.5 py-1 font-mono text-[10px]">
             {progress.xp}xp
           </span>
@@ -346,13 +333,6 @@ export function Header() {
             </nav>
 
             <div className="p-3 space-y-2">
-              <button
-                onClick={toggleDark}
-                className="w-full brutal-border bg-bone px-3 py-2 font-mono text-xs uppercase text-left"
-              >
-                {dark ? "☀ Light Mode" : "☾ Dark Mode"}
-              </button>
-
               {user ? (
                 <>
                   <Link

@@ -8,7 +8,7 @@ const MERGED_KEY = "ableton.school.merged_for";
 
 export const DAILY_GOAL_XP = 50; // XP target per day
 export const MAX_HEARTS = 3; // CCD mode lives
-export const HEART_REFILL_SECS = 3600; // one heart per hour
+export const HEART_REFILL_SECS = 60; // 1 minute refill
 
 export type Progress = {
   xp: number;
@@ -127,18 +127,16 @@ async function writeCloudCompletion(userId: string, slug: string, score: number,
 }
 
 async function writeCloudProgress(userId: string, xp: number, streak: number, lastDay: string) {
-  await supabase
-    .from("progress")
-    .upsert(
-      {
-        user_id: userId,
-        xp,
-        streak_days: streak,
-        last_day: lastDay,
-        updated_at: new Date().toISOString(),
-      },
-      { onConflict: "user_id" },
-    );
+  await supabase.from("progress").upsert(
+    {
+      user_id: userId,
+      xp,
+      streak_days: streak,
+      last_day: lastDay,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "user_id" },
+  );
 }
 
 async function mergeLocalIntoCloud(userId: string) {
@@ -299,10 +297,21 @@ export const useProgress = () => {
   const dailyGoalPct = Math.min(1, p.dailyXp / DAILY_GOAL_XP);
   const dailyGoalDone = p.dailyXp >= DAILY_GOAL_XP;
 
+  const addXp = (amount: number) => {
+    const cur = userId ? p : readLocal();
+    const today = todayKey();
+    const newDailyXp = cur.dailyXpDate === today ? cur.dailyXp + amount : amount;
+    const next: Progress = { ...cur, xp: cur.xp + amount, dailyXp: newDailyXp, dailyXpDate: today };
+    setP(next);
+    if (!userId) writeLocal(next);
+    if (userId) void writeCloudProgress(userId, next.xp, next.streakDays, next.lastDay ?? today);
+  };
+
   return {
     progress: p,
     completeMission,
     loseHeart,
+    addXp,
     reset,
     heartRefillSeconds,
     dailyGoalPct,

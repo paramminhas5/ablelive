@@ -11,6 +11,7 @@ import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
 import { useMode } from "@/lib/mode";
 import { ModeToggle } from "@/components/ModeToggle";
 import { CompletionModal } from "@/components/CompletionModal";
+import { HeartsWall } from "@/components/HeartsWall";
 
 export const Route = createFileRoute("/mission/$slug")({
   head: ({ params }) => {
@@ -36,7 +37,7 @@ function MissionPage() {
   const { mode } = useMode();
   const advanced = mode === "advanced";
   const { learnMode } = useLearnMode();
-  const { progress, completeMission, loseHeart } = useProgress();
+  const { progress, completeMission, loseHeart, addXp } = useProgress();
 
   const [completed, setCompleted] = useState(false);
   const [flowKey, setFlowKey] = useState(0);
@@ -344,26 +345,32 @@ function MissionPage() {
 
       <section id="quiz">
         <h2 className="text-2xl mb-2">// QUIZ {advanced ? "(PRO)" : "(QUICK)"}</h2>
-        {/* CCD hearts warning */}
-        {learnMode === "ccd" && (
+        {/* CCD hearts wall */}
+        {learnMode === "ccd" && progress.hearts === 0 ? (
+          <HeartsWall />
+        ) : learnMode === "ccd" ? (
           <div className="brutal-border bg-hot text-bone px-3 py-2 font-mono text-[10px] uppercase mb-3 flex items-center gap-2">
-            <span>CCD Mode — wrong answers cost a heart ♥</span>
+            <span>CCD Mode — wrong answers cost a ♥ · {progress.hearts} remaining</span>
           </div>
+        ) : null}
+        {learnMode === "ccd" && progress.hearts === 0 ? null : (
+          <Quiz
+            key={slug}
+            qs={quizQs}
+            resetKey={slug}
+            meta={{
+              missionTitle: m.title,
+              missionNumber: m.number,
+              xpEarned: earnedXp,
+              badgeName: earnedBadge,
+              nextSlug: next?.slug,
+            }}
+            onComplete={onQuizDone}
+            onWrongAnswer={learnMode === "ccd" ? loseHeart : undefined}
+            onCorrectAnswer={addXp}
+            onPerfect={addXp}
+          />
         )}
-        <Quiz
-          key={slug}
-          qs={quizQs}
-          resetKey={slug}
-          meta={{
-            missionTitle: m.title,
-            missionNumber: m.number,
-            xpEarned: earnedXp,
-            badgeName: earnedBadge,
-            nextSlug: next?.slug,
-          }}
-          onComplete={onQuizDone}
-          onWrongAnswer={learnMode === "ccd" ? loseHeart : undefined}
-        />
       </section>
 
       {advanced && deep?.sources && deep.sources.length > 0 && (
