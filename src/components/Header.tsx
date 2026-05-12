@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useMode, useIntermediatePath } from "@/lib/mode";
+import { useMode } from "@/lib/mode";
 import { useEffect, useState } from "react";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
@@ -7,9 +7,9 @@ import { RankBadge } from "./HomeWidgets";
 import { PALETTE_OPEN_EVENT } from "./CommandPalette";
 
 const PRIMARY = [
-  { to: "/beginner", label: "Beginner" },
-  { to: "/learn", label: "Learn" },
-  { to: "/dj", label: "DJ Path" },
+  { to: "/learn", label: "Paths" },
+  { to: "/beginner", label: "🌱 Beginner" },
+  { to: "/dj", label: "🎧 DJ" },
   { to: "/devices", label: "Devices" },
   { to: "/playground", label: "Workbench" },
 ] as const;
@@ -137,22 +137,18 @@ function UserIcon() {
 // ── Mode pill ────────────────────────────────────────────────────────────────
 function ModePill() {
   const { mode } = useMode();
-  const { path } = useIntermediatePath();
-  const config = {
+  const cfg = {
     beginner: { label: "BEGINNER", bg: "bg-acid text-ink" },
-    intermediate: {
-      label: path === "dj" ? "INTER · DJ" : "INTER · LIVE",
-      bg: "bg-volt text-bone",
-    },
+    intermediate: { label: "INTERMEDIATE", bg: "bg-volt text-bone" },
     advanced: { label: "ADVANCED", bg: "bg-hot text-bone" },
   }[mode];
   return (
     <Link
       to="/"
-      className={`brutal-border px-2 py-1 font-mono text-[9px] uppercase ${config.bg}`}
-      title="Change mode"
+      className={`brutal-border px-2 py-1 font-mono text-[9px] uppercase ${cfg.bg}`}
+      title="Content depth — click to change"
     >
-      {config.label}
+      {cfg.label}
     </Link>
   );
 }

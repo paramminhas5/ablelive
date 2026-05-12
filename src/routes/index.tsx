@@ -1,10 +1,10 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMode, useIntermediatePath, type Mode } from "@/lib/mode";
 import { useProgress } from "@/lib/progress";
 import { MISSIONS } from "@/content/missions";
-import { BEGINNER_SLUGS, isBeginnerComplete } from "@/content/beginner-foundations";
+import { BEGINNER_SLUGS } from "@/content/beginner-foundations";
 import { DJ_CORE_SLUGS } from "@/content/dj-missions";
-import { useState } from "react";
+import { PATHS } from "@/content/paths";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -13,93 +13,54 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Three modes: Beginner foundations, Intermediate (DJ or Ableton), Advanced. Gamified, structured, no fluff.",
+          "Learn music from scratch. Beginner foundations, DJ path (rekordbox), Ableton Live. No fluff.",
       },
     ],
   }),
   component: Home,
 });
 
-type Panel = "beginner" | "intermediate" | "advanced";
+const MODES: { id: Mode; label: string; desc: string; color: string; active: string }[] = [
+  {
+    id: "beginner",
+    label: "Beginner",
+    desc: "Concepts explained simply",
+    color: "bg-bone hover:bg-acid",
+    active: "bg-acid text-ink",
+  },
+  {
+    id: "intermediate",
+    label: "Intermediate",
+    desc: "Full content depth",
+    color: "bg-bone hover:bg-volt/20",
+    active: "bg-volt text-bone",
+  },
+  {
+    id: "advanced",
+    label: "Advanced",
+    desc: "Deep dives + pro tips",
+    color: "bg-bone hover:bg-hot/20",
+    active: "bg-hot text-bone",
+  },
+];
 
 function Home() {
   const { mode, setMode } = useMode();
-  const { path: intermediatePath, setPath } = useIntermediatePath();
   const { progress } = useProgress();
-  const navigate = useNavigate();
-  const [hovered, setHovered] = useState<Panel | null>(null);
 
   const beginnerDone = BEGINNER_SLUGS.filter((s) => !!progress.completedMissions[s]).length;
-  const beginnerComplete = isBeginnerComplete(progress.completedMissions);
   const djDone = DJ_CORE_SLUGS.filter((s) => !!progress.completedMissions[s]).length;
-  const abletonDone = Object.keys(progress.completedMissions).filter(
-    (s) => !BEGINNER_SLUGS.includes(s) && !DJ_CORE_SLUGS.includes(s),
-  ).length;
+  const abletonDone = MISSIONS.filter((m) => !!progress.completedMissions[m.slug]).length;
 
-  const handleModeSelect = (m: Mode) => {
-    setMode(m);
-    if (m === "beginner") navigate({ to: "/beginner" });
-    else if (m === "intermediate") navigate({ to: "/learn" });
-    else navigate({ to: "/learn" });
-  };
-
-  const panels: {
-    id: Panel;
-    label: string;
-    sub: string;
-    color: string;
-    textColor: string;
-    accent: string;
-    emoji: string;
-    desc: string;
-    locked: boolean;
-    lockedMsg?: string;
-    cta: string;
-    progress?: { done: number; total: number };
-  }[] = [
-    {
-      id: "beginner",
-      label: "BEGINNER",
-      sub: "Start from scratch",
-      color: "bg-acid",
-      textColor: "text-ink",
-      accent: "bg-ink text-bone",
-      emoji: "🌱",
-      desc: "No music knowledge needed. Learn sound, rhythm, melody, harmony, what a DAW is — all explained like you're 5. Complete all 10 to unlock Intermediate.",
-      locked: false,
-      cta: beginnerDone > 0 ? "CONTINUE →" : "START HERE →",
-      progress: { done: beginnerDone, total: BEGINNER_SLUGS.length },
-    },
-    {
-      id: "intermediate",
-      label: "INTERMEDIATE",
-      sub: "Choose your path",
-      color: "bg-volt",
-      textColor: "text-bone",
-      accent: "bg-acid text-ink",
-      emoji: "⚡",
-      desc: "Two paths: learn DJing with rekordbox (no software required upfront) or dive into Ableton Live (works without downloading it too). Builds on Beginner concepts.",
-      locked: !beginnerComplete,
-      lockedMsg: `Complete ${BEGINNER_SLUGS.length - beginnerDone} more beginner missions to unlock`,
-      cta: "CHOOSE PATH →",
-      progress: { done: djDone + abletonDone, total: 20 },
-    },
-    {
-      id: "advanced",
-      label: "ADVANCED",
-      sub: "Instruments recommended",
-      color: "bg-hot",
-      textColor: "text-bone",
-      accent: "bg-bone text-ink",
-      emoji: "🔥",
-      desc: "Advanced DJ (harmonic mixing, set design, effects) or Advanced Ableton (sound design, modulation, full production). Instruments strongly recommended.",
-      locked: !beginnerComplete,
-      lockedMsg: beginnerComplete
-        ? "Complete some Intermediate missions to unlock"
-        : `Complete ${BEGINNER_SLUGS.length - beginnerDone} more beginner missions first`,
-      cta: "GO DEEP →",
-    },
-  ];
+  // First incomplete beginner slug for the Start/Resume button
+  const firstBeginnerIncomplete = BEGINNER_SLUGS.find((s) => !progress.completedMissions[s]);
+  const beginnerCta = firstBeginnerIncomplete
+    ? beginnerDone > 0
+      ? "RESUME"
+      : "START HERE"
+    : "REVIEW";
+  const firstDjIncomplete = DJ_CORE_SLUGS.find((s) => !progress.completedMissions[s]);
+  const djCta = firstDjIncomplete ? (djDone > 0 ? "CONTINUE" : "START") : "REVIEW";
 
   return (
     <div className="min-h-screen bg-bone">
@@ -110,211 +71,176 @@ function Home() {
             // CCD.SCHOOL · MUSIC EDUCATION · NO FLUFF
           </div>
           <h1 className="text-5xl sm:text-7xl md:text-9xl leading-none font-display">
-            MAKE
+            LEARN
             <br />
             MUSIC.
             <br />
             <span className="text-acid">BRUTALLY.</span>
           </h1>
-          <p className="font-mono mt-4 max-w-2xl text-sm md:text-base opacity-70 leading-relaxed">
-            Three modes. Beginner learns music from absolute zero — sound, rhythm, melody, DAWs.
-            Intermediate chooses: DJ (with rekordbox) or Ableton producer. Advanced goes as deep as
-            it gets.
+          <p className="font-mono mt-4 max-w-2xl text-sm md:text-base opacity-60 leading-relaxed">
+            Music foundations from zero. DJ skills via rekordbox. Ableton Live production.
+            Structured paths, gamified missions, real sources.
           </p>
+
+          {/* Content depth toggle — not a lock, just adjusts how content is shown */}
+          <div className="mt-6">
+            <div className="font-mono text-[9px] uppercase opacity-40 mb-2">
+              CONTENT DEPTH — changes how concepts are explained
+            </div>
+            <div className="brutal-border inline-flex">
+              {MODES.map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => setMode(m.id)}
+                  className={`px-4 py-2 font-mono text-xs uppercase transition-colors ${
+                    mode === m.id ? m.active : m.color
+                  }`}
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+            <div className="font-mono text-[9px] uppercase opacity-40 mt-1">
+              Currently: {MODES.find((m) => m.id === mode)?.desc}
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* 3-Mode Selector */}
+      {/* Stats bar */}
+      <div className="brutal-border border-x-0 border-t-0 bg-bone">
+        <div className="max-w-7xl mx-auto grid grid-cols-4 divide-x divide-ink">
+          {[
+            { v: progress.xp, l: "XP" },
+            { v: Object.keys(progress.completedMissions).length, l: "Missions done" },
+            { v: progress.streakDays, l: "Day streak" },
+            { v: `🔥`, l: progress.streakDays > 0 ? "On a roll" : "Start streak" },
+          ].map((s) => (
+            <div key={s.l} className="px-4 py-3 text-center">
+              <div className="font-display text-2xl">{s.v}</div>
+              <div className="font-mono text-[9px] uppercase opacity-40">{s.l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* All paths */}
       <section className="max-w-7xl mx-auto p-4 md:p-12">
-        <div className="font-mono text-xs uppercase mb-4 opacity-60">// CHOOSE YOUR MODE</div>
-        <div className="grid md:grid-cols-3 gap-3 md:gap-4">
-          {panels.map((panel) => {
-            const isActive = mode === panel.id;
-            const isHovered = hovered === panel.id;
-            return (
-              <button
-                key={panel.id}
-                onClick={() => !panel.locked && handleModeSelect(panel.id as Mode)}
-                onMouseEnter={() => setHovered(panel.id)}
-                onMouseLeave={() => setHovered(null)}
-                disabled={panel.locked}
-                className={`
-                  brutal-border text-left p-5 md:p-6 transition-all duration-150 relative
-                  ${panel.locked ? "opacity-50 cursor-not-allowed bg-bone" : `${panel.color} ${panel.textColor} cursor-pointer brutal-press`}
-                  ${isActive ? "brutal-shadow-lg" : ""}
-                `}
-              >
-                {/* Active badge */}
-                {isActive && (
-                  <div
-                    className={`absolute top-3 right-3 ${panel.accent} font-mono text-[9px] uppercase px-2 py-1 brutal-border`}
-                  >
-                    ACTIVE
-                  </div>
-                )}
+        <div className="font-mono text-[10px] uppercase opacity-50 mb-5">// CHOOSE YOUR PATH</div>
 
-                {/* Lock badge */}
-                {panel.locked && (
-                  <div className="absolute top-3 right-3 bg-ink text-bone font-mono text-[9px] uppercase px-2 py-1 brutal-border">
-                    🔒 LOCKED
-                  </div>
-                )}
-
-                <div className="text-3xl mb-2">{panel.emoji}</div>
-                <div className="font-display text-3xl md:text-4xl leading-none">{panel.label}</div>
-                <div className="font-mono text-[10px] uppercase opacity-70 mt-1">{panel.sub}</div>
-
+        {/* Beginner + DJ — top two featured paths */}
+        <div className="grid md:grid-cols-2 gap-3 mb-3">
+          {/* Beginner Foundations */}
+          <div className="brutal-border bg-acid p-5 flex flex-col gap-4">
+            <div>
+              <div className="font-mono text-[9px] uppercase opacity-60">
+                PATH · {BEGINNER_SLUGS.length} MISSIONS · ALL LEVELS
+              </div>
+              <div className="font-display text-3xl mt-1">🌱 Music Foundations</div>
+              <div className="font-mono text-xs mt-2 opacity-80 leading-relaxed">
+                No music knowledge needed. Sound, rhythm, melody, chords, DAWs, MIDI, samples,
+                mixing — all explained simply with sources. Complete before anything else.
+              </div>
+            </div>
+            <div>
+              <div className="h-2 brutal-border bg-ink/10 overflow-hidden mb-1">
                 <div
-                  className={`font-mono text-xs mt-3 leading-relaxed ${panel.locked ? "opacity-50" : "opacity-80"}`}
-                >
-                  {panel.locked ? panel.lockedMsg : panel.desc}
+                  className="h-full bg-ink transition-all"
+                  style={{ width: `${Math.round((beginnerDone / BEGINNER_SLUGS.length) * 100)}%` }}
+                />
+              </div>
+              <div className="font-mono text-[9px] uppercase opacity-50">
+                {beginnerDone}/{BEGINNER_SLUGS.length} complete
+              </div>
+            </div>
+            <Link
+              to="/beginner"
+              className="brutal-border bg-ink text-bone px-5 py-3 font-display text-xl brutal-press text-center self-start"
+            >
+              {beginnerCta} →
+            </Link>
+          </div>
+
+          {/* DJ Path */}
+          <div className="brutal-border bg-volt text-bone p-5 flex flex-col gap-4">
+            <div>
+              <div className="font-mono text-[9px] uppercase opacity-60">
+                PATH · {DJ_CORE_SLUGS.length} CORE MISSIONS · REKORDBOX
+              </div>
+              <div className="font-display text-3xl mt-1">🎧 DJ Path</div>
+              <div className="font-mono text-xs mt-2 opacity-80 leading-relaxed">
+                Learn DJing with rekordbox. BPM matching, cue points, the mixer, transitions,
+                library management, reading the crowd. Sourced from the rekordbox manual.
+              </div>
+            </div>
+            <div>
+              <div className="h-2 brutal-border bg-bone/20 overflow-hidden mb-1">
+                <div
+                  className="h-full bg-acid transition-all"
+                  style={{ width: `${Math.round((djDone / DJ_CORE_SLUGS.length) * 100)}%` }}
+                />
+              </div>
+              <div className="font-mono text-[9px] uppercase opacity-60">
+                {djDone}/{DJ_CORE_SLUGS.length} complete · No hardware needed to learn
+              </div>
+            </div>
+            <Link
+              to="/dj"
+              className="brutal-border bg-acid text-ink px-5 py-3 font-display text-xl brutal-press text-center self-start"
+            >
+              {djCta} →
+            </Link>
+          </div>
+        </div>
+
+        {/* Ableton paths grid */}
+        <div className="font-mono text-[9px] uppercase opacity-40 mb-3 mt-6">
+          // ABLETON LIVE 12 PATHS
+        </div>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {PATHS.map((p) => {
+            const done = p.missionSlugs.filter((s) => !!progress.completedMissions[s]).length;
+            const pct = Math.round((done / p.missionSlugs.length) * 100);
+            const firstIncomplete = p.missionSlugs.find((s) => !progress.completedMissions[s]);
+            return (
+              <Link
+                key={p.slug}
+                to="/path/$slug"
+                params={{ slug: p.slug }}
+                className={`${p.color} brutal-border p-4 brutal-press block`}
+              >
+                <div className="font-mono text-[9px] uppercase opacity-60">
+                  PATH · {p.missionSlugs.length} MISSIONS
                 </div>
-
-                {/* Progress bar */}
-                {panel.progress && !panel.locked && (
-                  <div className="mt-4">
-                    <div className="h-1.5 brutal-border bg-ink/20 overflow-hidden">
-                      <div
-                        className="h-full bg-ink/60 transition-all duration-500"
-                        style={{
-                          width: `${Math.round((panel.progress.done / panel.progress.total) * 100)}%`,
-                        }}
-                      />
-                    </div>
-                    <div className="font-mono text-[9px] uppercase mt-1 opacity-60">
-                      {panel.progress.done}/{panel.progress.total} complete
-                    </div>
-                  </div>
-                )}
-
-                {!panel.locked && (
-                  <div
-                    className={`font-display text-lg mt-4 ${isHovered || isActive ? "opacity-100" : "opacity-60"}`}
-                  >
-                    {panel.cta}
-                  </div>
-                )}
-              </button>
+                <div className="font-display text-2xl mt-1">{p.title}</div>
+                <div className="font-mono text-xs mt-1 opacity-70">{p.tagline}</div>
+                <div className="h-1.5 brutal-border bg-ink/10 mt-3 overflow-hidden">
+                  <div className="h-full bg-ink/50 transition-all" style={{ width: `${pct}%` }} />
+                </div>
+                <div className="font-mono text-[9px] uppercase opacity-50 mt-1">
+                  {done}/{p.missionSlugs.length} · {pct}%
+                </div>
+              </Link>
             );
           })}
         </div>
 
-        {/* Intermediate path choice — shown when intermediate mode active */}
-        {mode === "intermediate" && (
-          <div className="mt-6 brutal-border bg-bone p-5">
-            <div className="font-mono text-xs uppercase mb-4 opacity-60">// CHOOSE YOUR PATH</div>
-            <div className="grid md:grid-cols-2 gap-3">
-              <button
-                onClick={() => {
-                  setPath("dj");
-                  navigate({ to: "/learn" });
-                }}
-                className={`brutal-border p-4 text-left brutal-press transition-all ${
-                  intermediatePath === "dj" ? "bg-acid" : "bg-bone hover:bg-sun"
-                }`}
-              >
-                {intermediatePath === "dj" && (
-                  <span className="font-mono text-[9px] uppercase brutal-border bg-ink text-bone px-2 py-1 float-right">
-                    ACTIVE
-                  </span>
-                )}
-                <div className="text-2xl mb-1">🎧</div>
-                <div className="font-display text-2xl">DJ PATH</div>
-                <div className="font-mono text-xs mt-2 opacity-70 leading-relaxed">
-                  Learn DJing with rekordbox. BPM matching, cue points, mixing, library management.
-                  No software required to start — but you'll want it soon.
-                </div>
-                <div className="font-mono text-[9px] uppercase mt-3 opacity-50">
-                  {DJ_CORE_SLUGS.filter((s) => !!progress.completedMissions[s]).length}/
-                  {DJ_CORE_SLUGS.length} core missions · rekordbox (Pioneer DJ)
-                </div>
-              </button>
-
-              <button
-                onClick={() => {
-                  setPath("ableton");
-                  navigate({ to: "/learn" });
-                }}
-                className={`brutal-border p-4 text-left brutal-press transition-all ${
-                  intermediatePath === "ableton" ? "bg-volt text-bone" : "bg-bone hover:bg-sun"
-                }`}
-              >
-                {intermediatePath === "ableton" && (
-                  <span className="font-mono text-[9px] uppercase brutal-border bg-bone text-ink px-2 py-1 float-right">
-                    ACTIVE
-                  </span>
-                )}
-                <div className="text-2xl mb-1">🎹</div>
-                <div className="font-display text-2xl">ABLETON PATH</div>
-                <div className="font-mono text-xs mt-2 opacity-80 leading-relaxed">
-                  Learn Ableton Live 12: sessions, clips, devices, mixing, arrangement. Works
-                  conceptually without Ableton — but having it open supercharges learning.
-                </div>
-                <div className="font-mono text-[9px] uppercase mt-3 opacity-60">
-                  42+ missions · Ableton Live 12
-                </div>
-              </button>
-            </div>
-          </div>
-        )}
-      </section>
-
-      {/* Quick stats */}
-      <section className="max-w-7xl mx-auto px-4 md:px-12 pb-12">
-        <div className="brutal-border border-x-0 border-b-0 grid grid-cols-3 md:grid-cols-6">
+        {/* Quick nav */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-8">
           {[
-            { v: progress.xp, l: "XP" },
-            {
-              v: Object.keys(progress.completedMissions).length,
-              l: "Done",
-            },
-            { v: progress.streakDays, l: "Streak" },
-            { v: `${beginnerDone}/${BEGINNER_SLUGS.length}`, l: "Beginner" },
-            { v: `${djDone}/${DJ_CORE_SLUGS.length}`, l: "DJ Core" },
-            {
-              v: `${MISSIONS.filter((m) => !!progress.completedMissions[m.slug]).length}/${MISSIONS.length}`,
-              l: "Ableton",
-            },
-          ].map((s) => (
-            <div key={s.l} className="brutal-border border-x-0 border-t-0 p-4 text-center">
-              <div className="font-display text-2xl md:text-3xl">{s.v}</div>
-              <div className="font-mono text-[9px] uppercase opacity-50 mt-1">{s.l}</div>
-            </div>
+            { to: "/learn", label: "All Paths", color: "bg-bone" },
+            { to: "/devices", label: "Devices", color: "bg-bone" },
+            { to: "/playground", label: "Workbench", color: "bg-bone" },
+            { to: "/glossary", label: "Glossary", color: "bg-bone" },
+          ].map((l) => (
+            <Link
+              key={l.to}
+              to={l.to as any}
+              className={`brutal-border ${l.color} p-3 font-display text-lg brutal-press text-center block`}
+            >
+              {l.label}
+            </Link>
           ))}
-        </div>
-      </section>
-
-      {/* Quick nav */}
-      <section className="max-w-7xl mx-auto px-4 md:px-12 pb-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          <Link
-            to="/beginner"
-            className="brutal-border bg-acid p-4 brutal-press block"
-          >
-            <div className="font-mono text-[10px] uppercase opacity-60">Foundations</div>
-            <div className="font-display text-xl mt-1">Beginner Mode</div>
-          </Link>
-          <Link
-            to="/learn"
-            className="brutal-border bg-volt text-bone p-4 brutal-press block"
-          >
-            <div className="font-mono text-[10px] uppercase opacity-60">Paths</div>
-            <div className="font-display text-xl mt-1">Learn</div>
-          </Link>
-          <Link
-            to="/devices"
-            className="brutal-border bg-sun p-4 brutal-press block"
-          >
-            <div className="font-mono text-[10px] uppercase opacity-60">Reference</div>
-            <div className="font-display text-xl mt-1">Devices</div>
-          </Link>
-          <Link
-            to="/playground"
-            className="brutal-border bg-hot text-bone p-4 brutal-press block"
-          >
-            <div className="font-mono text-[10px] uppercase opacity-60">Experiment</div>
-            <div className="font-display text-xl mt-1">Workbench</div>
-          </Link>
         </div>
       </section>
     </div>
