@@ -7,7 +7,7 @@ function makeBeat(
   ctx: AudioContext,
   bpm: number,
   dest: AudioNode,
-  bars = 2,
+  bars = 8,
 ): ReturnType<typeof setTimeout>[] {
   const step = 60 / bpm / 4; // 16th note
   const timers: ReturnType<typeof setTimeout>[] = [];
