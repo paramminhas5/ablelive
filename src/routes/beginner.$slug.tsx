@@ -1,9 +1,5 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import {
-  BEGINNER_MISSIONS,
-  beginnerMissionBySlug,
-  isBeginnerComplete,
-} from "@/content/beginner-foundations";
+import { BEGINNER_MISSIONS, beginnerMissionBySlug } from "@/content/beginner-foundations";
 import { useProgress } from "@/lib/progress";
 import { useState } from "react";
 
@@ -17,17 +13,25 @@ export const Route = createFileRoute("/beginner/$slug")({
       ],
     };
   },
+  loader: ({ params }) => {
+    const m = beginnerMissionBySlug(params.slug);
+    if (!m) throw notFound();
+    return m;
+  },
+  notFoundComponent: () => (
+    <div className="p-12 font-mono text-center">
+      <div className="font-display text-4xl">404</div>
+      <div className="mt-2">Lesson not found.</div>
+      <Link to="/beginner" className="brutal-border bg-acid px-4 py-2 mt-4 inline-block font-mono text-xs uppercase">← Back</Link>
+    </div>
+  ),
   component: BeginnerMissionPage,
-  notFoundComponent: () => <div className="p-12 font-mono">Lesson not found.</div>,
 });
 
 type Phase = "learn" | "quiz" | "done";
 
 function BeginnerMissionPage() {
-  const { slug } = Route.useParams();
-  const mission = beginnerMissionBySlug(slug);
-  if (!mission) throw notFound();
-
+  const mission = Route.useLoaderData();
   const { progress, completeMission } = useProgress();
   const [phase, setPhase] = useState<Phase>("learn");
   const [showDeeper, setShowDeeper] = useState(false);
@@ -36,11 +40,10 @@ function BeginnerMissionPage() {
   const [answers, setAnswers] = useState<{ correct: boolean }[]>([]);
   const [showHint, setShowHint] = useState(false);
 
-  const mIdx = BEGINNER_MISSIONS.findIndex((m) => m.slug === slug);
+  const mIdx = BEGINNER_MISSIONS.findIndex((m) => m.slug === mission.slug);
   const next = BEGINNER_MISSIONS[mIdx + 1];
   const prev = BEGINNER_MISSIONS[mIdx - 1];
-  const alreadyDone = !!progress.completedMissions[slug];
-  const allDone = isBeginnerComplete(progress.completedMissions);
+  const alreadyDone = !!progress.completedMissions[mission.slug];
 
   const q = mission.quiz[quizIdx];
   const isLastQ = quizIdx === mission.quiz.length - 1;
@@ -57,188 +60,152 @@ function BeginnerMissionPage() {
     setAnswers(newAnswers);
     setSelected(null);
     setShowHint(false);
-
     if (!isLastQ) {
       setQuizIdx((i) => i + 1);
     } else {
       const score = newAnswers.filter((a) => a.correct).length / mission.quiz.length;
-      completeMission(slug, mission.xp, score, score >= 0.6 ? mission.badge?.slug : undefined);
+      completeMission(
+        mission.slug,
+        mission.xp,
+        score,
+        score >= 0.6 ? mission.badge?.slug : undefined,
+      );
       setPhase("done");
     }
   };
 
-  const scoreDisplay = () => {
-    const correct = answers.filter((a) => a.correct).length;
-    return `${correct}/${mission.quiz.length}`;
-  };
-
   return (
-    <div className="max-w-3xl mx-auto p-4 md:p-10 space-y-6">
+    <div className="max-w-2xl mx-auto p-4 md:p-10 space-y-5">
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 font-mono text-xs uppercase opacity-60">
-        <Link to="/beginner" className="hover:opacity-100">
-          ← Beginner
-        </Link>
+      <nav className="font-mono text-xs uppercase opacity-50 flex gap-2">
+        <Link to="/beginner" className="hover:opacity-100">← Beginner</Link>
         <span>/</span>
-        <span>
-          {mission.number}. {mission.title}
-        </span>
+        <span>{mission.number}. {mission.title}</span>
       </nav>
 
-      {/* Mission header */}
+      {/* Header */}
       <header className="brutal-border bg-acid p-5">
-        <div className="font-mono text-[10px] uppercase opacity-60">
+        <div className="font-mono text-[9px] uppercase opacity-60">
           FOUNDATION {mission.number}/{BEGINNER_MISSIONS.length} · {mission.xp} XP
         </div>
-        <h1 className="font-display text-4xl md:text-5xl mt-1 leading-none">
-          {mission.emoji} {mission.title}
-        </h1>
-        <p className="font-mono text-sm mt-2 opacity-70">{mission.tagline}</p>
+        <h1 className="font-display text-4xl mt-1">{mission.emoji} {mission.title}</h1>
+        <p className="font-mono text-sm mt-1 opacity-70">{mission.tagline}</p>
         {alreadyDone && (
-          <div className="mt-3 brutal-border bg-ink text-bone font-mono text-[10px] uppercase px-3 py-1.5 inline-block">
-            ✓ Completed
-          </div>
+          <div className="mt-2 brutal-border bg-ink text-bone font-mono text-[9px] uppercase px-2 py-1 inline-block">✓ Completed</div>
         )}
       </header>
 
-      {/* LEARN PHASE */}
+      {/* LEARN */}
       {phase === "learn" && (
         <>
-          {/* Simple explanation */}
-          <section className="space-y-4">
-            <div className="font-mono text-[10px] uppercase opacity-50">// THE SIMPLE VERSION</div>
-            {mission.simple.map((para, i) => (
-              <p key={i} className="font-sans text-base leading-relaxed">
-                {para}
-              </p>
+          <section className="space-y-3">
+            <div className="font-mono text-[9px] uppercase opacity-40">// EXPLAINED SIMPLY</div>
+            {mission.simple.map((p: string, i: number) => (
+              <p key={i} className="text-base leading-relaxed">{p}</p>
             ))}
           </section>
 
-          {/* Analogy */}
           <div className="brutal-border bg-sun p-4">
-            <div className="font-mono text-[10px] uppercase opacity-60 mb-2">💡 ANALOGY</div>
-            <p className="font-sans text-sm leading-relaxed">{mission.analogy}</p>
+            <div className="font-mono text-[9px] uppercase opacity-60 mb-1.5">💡 ANALOGY</div>
+            <p className="text-sm leading-relaxed">{mission.analogy}</p>
           </div>
 
-          {/* Deeper toggle */}
-          <div>
-            <button
-              onClick={() => setShowDeeper((d) => !d)}
-              className="brutal-border bg-bone px-4 py-2 font-mono text-xs uppercase brutal-press hover:bg-sun"
-            >
-              {showDeeper ? "▲ HIDE DEEPER DIVE" : "▼ GO DEEPER (optional)"}
-            </button>
-            {showDeeper && (
-              <div className="brutal-border mt-3 p-4 bg-bone space-y-3">
-                <div className="font-mono text-[10px] uppercase opacity-50 mb-3">
-                  // THE DEEPER VERSION
-                </div>
-                {mission.deeper.map((para, i) => (
-                  <p key={i} className="font-sans text-sm leading-relaxed opacity-80">
-                    {para}
-                  </p>
-                ))}
-              </div>
-            )}
-          </div>
+          <button
+            onClick={() => setShowDeeper((d) => !d)}
+            className="brutal-border bg-bone px-4 py-2 font-mono text-xs uppercase brutal-press hover:bg-sun"
+          >
+            {showDeeper ? "▲ HIDE DEEPER DIVE" : "▼ GO DEEPER (optional)"}
+          </button>
+          {showDeeper && (
+            <div className="brutal-border p-4 bg-bone space-y-2">
+              <div className="font-mono text-[9px] uppercase opacity-40 mb-2">// DEEPER</div>
+              {mission.deeper.map((p: string, i: number) => (
+                <p key={i} className="text-sm leading-relaxed opacity-80">{p}</p>
+              ))}
+            </div>
+          )}
 
-          {/* Sources */}
           <div className="brutal-border border-ink/20 p-3">
             <div className="font-mono text-[9px] uppercase opacity-40 mb-2">SOURCES</div>
             <div className="flex flex-wrap gap-2">
-              {mission.sources.map((s, i) => (
-                <a
-                  key={i}
-                  href={s.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="brutal-border bg-bone px-2 py-1 font-mono text-[9px] uppercase opacity-60 hover:opacity-100 hover:bg-sun transition-all"
-                >
+              {mission.sources.map((s: {label: string; url: string; section?: string}, i: number) => (
+                <a key={i} href={s.url} target="_blank" rel="noopener noreferrer"
+                  className="brutal-border bg-bone px-2 py-1 font-mono text-[9px] uppercase opacity-60 hover:opacity-100 hover:bg-sun">
                   ↗ {s.label}
                 </a>
               ))}
             </div>
           </div>
 
-          {/* CTA */}
           <button
             onClick={() => setPhase("quiz")}
-            className="brutal-border bg-ink text-bone px-6 py-3 font-display text-xl brutal-press brutal-shadow w-full"
+            className="brutal-border bg-ink text-bone px-6 py-3 font-display text-xl brutal-press w-full"
           >
             TAKE THE QUIZ →
           </button>
+
+          <div className="flex gap-3">
+            {prev && (
+              <Link to="/beginner/$slug" params={{ slug: prev.slug }}
+                className="brutal-border bg-bone px-4 py-2 font-mono text-xs uppercase brutal-press">
+                ← {prev.title}
+              </Link>
+            )}
+            {next && (
+              <Link to="/beginner/$slug" params={{ slug: next.slug }}
+                className="ml-auto brutal-border bg-bone px-4 py-2 font-mono text-xs uppercase brutal-press">
+                {next.title} →
+              </Link>
+            )}
+          </div>
         </>
       )}
 
-      {/* QUIZ PHASE */}
+      {/* QUIZ */}
       {phase === "quiz" && (
         <div className="space-y-4">
           <div className="brutal-border bg-volt text-bone p-4">
-            <div className="font-mono text-[10px] uppercase opacity-70 mb-1">
+            <div className="font-mono text-[9px] uppercase opacity-60 mb-1">
               QUESTION {quizIdx + 1}/{mission.quiz.length}
             </div>
-            <p className="font-sans text-lg font-semibold leading-snug">{q.q}</p>
+            <p className="font-sans text-lg font-semibold">{q.q}</p>
           </div>
 
           <div className="space-y-2">
-            {q.options.map((opt, i) => {
+            {q.options.map((opt: string, i: number) => {
               const revealed = selected !== null;
               const isCorrect = i === q.answer;
               const isWrong = selected === i && !isCorrect;
               return (
-                <button
-                  key={i}
-                  onClick={() => handleAnswer(i)}
-                  disabled={revealed}
-                  className={`w-full brutal-border px-4 py-3 text-left font-sans text-sm transition-all brutal-press ${
+                <button key={i} onClick={() => handleAnswer(i)} disabled={revealed}
+                  className={`w-full brutal-border px-4 py-3 text-left text-sm brutal-press ${
                     revealed
-                      ? isCorrect
-                        ? "bg-acid text-ink"
-                        : isWrong
-                          ? "bg-hot text-bone"
-                          : "bg-bone opacity-50"
+                      ? isCorrect ? "bg-acid" : isWrong ? "bg-hot text-bone" : "bg-bone opacity-40"
                       : "bg-bone hover:bg-sun"
-                  }`}
-                >
-                  <span className="font-mono text-[9px] uppercase opacity-50 mr-2">
-                    {String.fromCharCode(65 + i)}.
-                  </span>
+                  }`}>
+                  <span className="font-mono text-[9px] uppercase opacity-40 mr-2">{String.fromCharCode(65 + i)}.</span>
                   {opt}
                 </button>
               );
             })}
           </div>
 
-          {/* Hint */}
           {selected === null && !showHint && (
-            <button
-              onClick={() => setShowHint(true)}
-              className="font-mono text-[10px] uppercase opacity-40 hover:opacity-80 underline"
-            >
+            <button onClick={() => setShowHint(true)} className="font-mono text-[10px] uppercase opacity-40 hover:opacity-80 underline">
               Show hint
             </button>
           )}
           {showHint && selected === null && (
-            <div className="brutal-border bg-sun p-3 font-mono text-xs opacity-80">
-              💡 {q.hint}
-            </div>
+            <div className="brutal-border bg-sun p-3 font-mono text-xs">💡 {q.hint}</div>
           )}
 
-          {/* Explanation after answer */}
           {selected !== null && (
             <>
-              <div
-                className={`brutal-border p-3 font-mono text-xs ${
-                  selected === q.answer ? "bg-acid" : "bg-hot text-bone"
-                }`}
-              >
-                {selected === q.answer ? "✓ CORRECT! " : "✗ NOT QUITE. "}
-                {q.explain}
+              <div className={`brutal-border p-3 font-mono text-xs ${selected === q.answer ? "bg-acid" : "bg-hot text-bone"}`}>
+                {selected === q.answer ? "✓ CORRECT! " : "✗ NOT QUITE. "}{q.explain}
               </div>
-              <button
-                onClick={handleNext}
-                className="w-full brutal-border bg-ink text-bone px-4 py-3 font-display text-lg brutal-press"
-              >
+              <button onClick={handleNext}
+                className="w-full brutal-border bg-ink text-bone px-4 py-3 font-display text-lg brutal-press">
                 {isLastQ ? "FINISH →" : "NEXT →"}
               </button>
             </>
@@ -246,89 +213,34 @@ function BeginnerMissionPage() {
         </div>
       )}
 
-      {/* DONE PHASE */}
+      {/* DONE */}
       {phase === "done" && (
         <div className="space-y-4">
           <div className="brutal-border bg-acid p-6 text-center">
             <div className="font-display text-5xl">🎉</div>
             <div className="font-display text-3xl mt-2">COMPLETE!</div>
-            <div className="font-mono text-sm mt-2 opacity-70">
-              Score: {scoreDisplay()} · +{mission.xp} XP
+            <div className="font-mono text-sm mt-1 opacity-70">
+              {answers.filter((a) => a.correct).length}/{mission.quiz.length} correct · +{mission.xp} XP
             </div>
             {mission.badge && (
-              <div className="mt-3 brutal-border bg-ink text-bone font-mono text-xs uppercase px-3 py-1.5 inline-block">
-                🏅 Badge earned: {mission.badge.name}
+              <div className="mt-3 brutal-border bg-ink text-bone font-mono text-xs uppercase px-3 py-1 inline-block">
+                🏅 {mission.badge.name}
               </div>
             )}
           </div>
-
-          {allDone && (
-            <div className="brutal-border bg-ink text-bone p-5">
-              <div className="font-display text-2xl">🔓 INTERMEDIATE UNLOCKED!</div>
-              <div className="font-mono text-sm mt-2 opacity-80">
-                You've completed all Beginner foundations. Time to choose your path.
-              </div>
-              <Link
-                to="/"
-                className="brutal-border bg-acid text-ink px-4 py-2 font-display text-lg mt-3 inline-block brutal-press"
-              >
-                CHOOSE YOUR PATH →
-              </Link>
-            </div>
-          )}
-
           <div className="flex gap-3">
             {prev && (
-              <Link
-                to="/beginner/$slug"
-                params={{ slug: prev.slug }}
-                className="flex-1 brutal-border bg-bone px-4 py-3 font-display text-lg brutal-press text-center"
-              >
-                ← PREV
-              </Link>
+              <Link to="/beginner/$slug" params={{ slug: prev.slug }}
+                className="flex-1 brutal-border bg-bone px-4 py-3 font-display text-lg brutal-press text-center">← PREV</Link>
             )}
-            {next && (
-              <Link
-                to="/beginner/$slug"
-                params={{ slug: next.slug }}
-                className="flex-1 brutal-border bg-ink text-bone px-4 py-3 font-display text-lg brutal-press text-center"
-              >
-                NEXT →
-              </Link>
-            )}
-            {!next && !allDone && (
-              <Link
-                to="/beginner"
-                className="flex-1 brutal-border bg-volt text-bone px-4 py-3 font-display text-lg brutal-press text-center"
-              >
-                BACK TO LIST
-              </Link>
+            {next ? (
+              <Link to="/beginner/$slug" params={{ slug: next.slug }}
+                className="flex-1 brutal-border bg-ink text-bone px-4 py-3 font-display text-lg brutal-press text-center">NEXT →</Link>
+            ) : (
+              <Link to="/beginner"
+                className="flex-1 brutal-border bg-volt text-bone px-4 py-3 font-display text-lg brutal-press text-center">ALL DONE ✓</Link>
             )}
           </div>
-        </div>
-      )}
-
-      {/* Prev/Next nav (learn phase) */}
-      {phase === "learn" && (
-        <div className="flex gap-3 pt-4 border-t brutal-border border-x-0 border-b-0">
-          {prev && (
-            <Link
-              to="/beginner/$slug"
-              params={{ slug: prev.slug }}
-              className="brutal-border bg-bone px-4 py-2 font-mono text-xs uppercase brutal-press"
-            >
-              ← {prev.title}
-            </Link>
-          )}
-          {next && (
-            <Link
-              to="/beginner/$slug"
-              params={{ slug: next.slug }}
-              className="ml-auto brutal-border bg-bone px-4 py-2 font-mono text-xs uppercase brutal-press"
-            >
-              {next.title} →
-            </Link>
-          )}
         </div>
       )}
     </div>
