@@ -1,8 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { PATHS } from "@/content/paths";
 import { MISSIONS, missionBySlug } from "@/content/missions";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
-import { useLearnMode } from "@/lib/mode";
+import { useLearnMode, useMode, useIntermediatePath } from "@/lib/mode";
+import { isBeginnerComplete } from "@/content/beginner-foundations";
+import { INTERMEDIATE_ABLETON_SECTIONS, ADVANCED_ABLETON_SECTIONS } from "@/content/intermediate-paths";
 import { useState } from "react";
 import { SkillMap } from "@/components/SkillMap";
 
@@ -24,6 +26,10 @@ type Tab = "paths" | "skills" | "all";
 function LearnPage() {
   const { progress } = useProgress();
   const { learnMode, setLearnMode } = useLearnMode();
+  const { mode } = useMode();
+  const { path: intermediatePath } = useIntermediatePath();
+  const beginnerComplete = isBeginnerComplete(progress.completedMissions);
+  const showDJPath = mode === "intermediate" && intermediatePath === "dj";
   const [activePath, setActivePath] = useState(PATHS[0].slug);
   const [tab, setTab] = useState<Tab>("paths");
 
@@ -46,8 +52,56 @@ function LearnPage() {
   const allDone = Object.keys(completed).length;
   const totalPct = Math.round((allDone / MISSIONS.length) * 100);
 
+  const navigate = useNavigate();
+
   return (
     <main className="min-h-screen bg-bone animate-fade-in">
+
+      {/* DJ Path redirect banner */}
+      {showDJPath && (
+        <div className="brutal-border border-x-0 border-t-0 bg-volt text-bone">
+          <div className="max-w-5xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div className="font-display text-2xl">🎧 You're on the DJ Path</div>
+              <div className="font-mono text-xs opacity-80 mt-1">
+                Your intermediate missions are in the DJ Path — rekordbox, beatmatching, cue points, mixing.
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Link
+                to="/dj"
+                className="brutal-border bg-acid text-ink px-4 py-2 font-display text-lg brutal-press"
+              >
+                GO TO DJ PATH →
+              </Link>
+              <button
+                onClick={() => navigate({ to: "/" })}
+                className="brutal-border bg-bone text-ink px-3 py-2 font-mono text-xs uppercase brutal-press"
+              >
+                SWITCH PATH
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Beginner foundations gate */}
+      {!beginnerComplete && (
+        <div className="brutal-border border-x-0 border-t-0 bg-acid">
+          <div className="max-w-5xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div className="font-mono text-xs">
+              🌱 <strong>Beginner mode:</strong> Complete foundations first for the best experience.
+            </div>
+            <Link
+              to="/beginner"
+              className="brutal-border bg-ink text-bone px-3 py-1.5 font-mono text-[10px] uppercase brutal-press"
+            >
+              GO TO FOUNDATIONS →
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* Mode selector — the only place it lives */}
       <section className="brutal-border border-x-0 border-t-0">
         <div className="max-w-5xl mx-auto px-4 py-4 grid md:grid-cols-2 gap-3">
@@ -147,6 +201,70 @@ function LearnPage() {
           </button>
         ))}
       </div>
+
+      {/* Intermediate Ableton sections — shown when not DJ path */}
+      {!showDJPath && (mode === "intermediate" || mode === "advanced") && tab === "paths" && (
+        <section className="max-w-5xl mx-auto px-4 pt-6 pb-4">
+          <div className="font-mono text-[10px] uppercase opacity-60 mb-4">
+            // {mode === "advanced" ? "ADVANCED" : "INTERMEDIATE"} ABLETON PATH · STRUCTURED SECTIONS
+          </div>
+          <div className="space-y-3">
+            {(mode === "advanced" ? ADVANCED_ABLETON_SECTIONS : INTERMEDIATE_ABLETON_SECTIONS).map((section) => {
+              const sectionDone = section.missionSlugs.filter((s) => completed[s]).length;
+              const sectionPct = Math.round((sectionDone / section.missionSlugs.length) * 100);
+              return (
+                <div key={section.title} className={`brutal-border ${section.color} p-4`}>
+                  <div className="flex items-start justify-between gap-3 flex-wrap">
+                    <div>
+                      <div className="font-display text-2xl leading-none">{section.title}</div>
+                      <div className="font-mono text-xs mt-1 opacity-80">{section.tagline}</div>
+                      {section.requiresAbleton && (
+                        <div className="brutal-border bg-ink text-bone font-mono text-[9px] uppercase px-2 py-0.5 inline-block mt-2">
+                          ABLETON RECOMMENDED
+                        </div>
+                      )}
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="font-display text-3xl">{sectionDone}/{section.missionSlugs.length}</div>
+                      <div className="font-mono text-[9px] uppercase opacity-60">{sectionPct}% done</div>
+                    </div>
+                  </div>
+                  <div className="h-1.5 brutal-border bg-ink/20 mt-3 overflow-hidden">
+                    <div className="h-full bg-ink/60 transition-all duration-500" style={{ width: `${sectionPct}%` }} />
+                  </div>
+                  <div className="flex flex-wrap gap-1.5 mt-3">
+                    {section.missionSlugs.slice(0, 5).map((slug) => {
+                      const isDone = !!completed[slug];
+                      return (
+                        <Link
+                          key={slug}
+                          to="/mission/$slug"
+                          params={{ slug }}
+                          className={`brutal-border px-2 py-1 font-mono text-[9px] uppercase brutal-press ${
+                            isDone ? "bg-ink text-bone" : "bg-bone hover:bg-sun"
+                          }`}
+                        >
+                          {isDone ? "✓ " : ""}{slug.replace(/-/g, " ")}
+                        </Link>
+                      );
+                    })}
+                    {section.missionSlugs.length > 5 && (
+                      <span className="font-mono text-[9px] uppercase opacity-40 self-center">
+                        +{section.missionSlugs.length - 5} more
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="mt-4 brutal-border border-ink/20 p-3">
+            <div className="font-mono text-[10px] uppercase opacity-60 mb-1">
+              Or browse all Ableton paths below ↓
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* PATHS tab */}
       {tab === "paths" && (

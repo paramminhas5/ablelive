@@ -4,11 +4,11 @@ import { WORLDS } from "@/content/worlds";
 import { Simulator } from "@/components/sims/Simulator";
 import { Quiz, type QuizMeta } from "@/components/Quiz";
 import { useProgress } from "@/lib/progress";
-import { useLearnMode } from "@/lib/mode";
+import { useLearnMode, useMode } from "@/lib/mode";
 import { useEffect, useMemo, useState } from "react";
 import { LESSONS } from "@/content/lesson-deep";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
-import { useMode } from "@/lib/mode";
+import { isBeginnerComplete } from "@/content/beginner-foundations";
 import { ModeToggle } from "@/components/ModeToggle";
 import { CompletionModal } from "@/components/CompletionModal";
 import { HeartsWall } from "@/components/HeartsWall";
@@ -36,8 +36,12 @@ function MissionPage() {
   const deep = LESSONS[slug];
   const { mode } = useMode();
   const advanced = mode === "advanced";
+  const isIntermediate = mode === "intermediate";
+  const isBeginner = mode === "beginner";
   const { learnMode } = useLearnMode();
   const { progress, completeMission, loseHeart, addXp } = useProgress();
+  // In beginner mode, show a friendly "you should do foundations first" note
+  const beginnerUnlocked = isBeginnerComplete(progress.completedMissions);
 
   const [completed, setCompleted] = useState(false);
   const [flowKey, setFlowKey] = useState(0);
@@ -75,9 +79,9 @@ function MissionPage() {
   // Always use m.quiz — it has explain + hint on every question.
   // deep.quizEasy/quizHard are unenriched and would shadow the explanations.
   const quizQs = useMemo(
-    () => (advanced ? m.quiz : m.quiz.slice(0, 4)),
+    () => (isBeginner ? m.quiz.slice(0, 3) : m.quiz),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [slug, advanced],
+    [slug, isBeginner],
   );
   const passThreshold = advanced ? 0.6 : 0.5;
 
@@ -95,6 +99,24 @@ function MissionPage() {
 
   return (
     <div className="max-w-5xl mx-auto p-4 md:p-12 space-y-6">
+      {/* Beginner mode gate — shown when user hasn't completed foundations */}
+      {isBeginner && !beginnerUnlocked && (
+        <div className="brutal-border bg-acid p-4">
+          <div className="font-display text-xl">🌱 You're in Beginner Mode</div>
+          <div className="font-mono text-xs mt-2 opacity-80 leading-relaxed">
+            This is an Ableton mission — you can preview it here, but we recommend completing{" "}
+            <Link to="/beginner" className="underline font-bold">Beginner Foundations</Link>{" "}
+            first. That covers sound, rhythm, MIDI, samples and DAWs at a 5-year-old level,
+            giving you the vocabulary to make this click.
+          </div>
+        </div>
+      )}
+      {/* Intermediate mode — full standard content, no beginner simplification */}
+      {isIntermediate && (
+        <div className="brutal-border bg-volt text-bone px-4 py-2 font-mono text-[10px] uppercase">
+          ⚡ INTERMEDIATE MODE · Full content · Ableton path
+        </div>
+      )}
       {showModal && (
         <CompletionModal
           mission={m}

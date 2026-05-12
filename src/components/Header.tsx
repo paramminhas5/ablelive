@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useMode, useIntermediatePath } from "@/lib/mode";
 import { useEffect, useState } from "react";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
@@ -6,8 +7,9 @@ import { RankBadge } from "./HomeWidgets";
 import { PALETTE_OPEN_EVENT } from "./CommandPalette";
 
 const PRIMARY = [
+  { to: "/beginner", label: "Beginner" },
   { to: "/learn", label: "Learn" },
-  { to: "/worlds", label: "Worlds" },
+  { to: "/dj", label: "DJ Path" },
   { to: "/devices", label: "Devices" },
   { to: "/playground", label: "Workbench" },
 ] as const;
@@ -131,6 +133,30 @@ function UserIcon() {
   );
 }
 
+
+// ── Mode pill ────────────────────────────────────────────────────────────────
+function ModePill() {
+  const { mode } = useMode();
+  const { path } = useIntermediatePath();
+  const config = {
+    beginner: { label: "BEGINNER", bg: "bg-acid text-ink" },
+    intermediate: {
+      label: path === "dj" ? "INTER · DJ" : "INTER · LIVE",
+      bg: "bg-volt text-bone",
+    },
+    advanced: { label: "ADVANCED", bg: "bg-hot text-bone" },
+  }[mode];
+  return (
+    <Link
+      to="/"
+      className={`brutal-border px-2 py-1 font-mono text-[9px] uppercase ${config.bg}`}
+      title="Change mode"
+    >
+      {config.label}
+    </Link>
+  );
+}
+
 // ── Header ───────────────────────────────────────────────────────────────────
 export function Header() {
   const { progress, dailyGoalPct, dailyGoalDone, heartRefillSeconds } = useProgress();
@@ -205,6 +231,9 @@ export function Header() {
 
         {/* Desktop right cluster */}
         <div className="hidden md:flex items-center gap-1.5 px-3">
+          {/* Mode pill */}
+          <ModePill />
+
           {/* Search */}
           <button
             onClick={openSearch}

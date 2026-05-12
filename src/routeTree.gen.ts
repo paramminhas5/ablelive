@@ -27,6 +27,10 @@ import { Route as WorldSlugRouteImport } from './routes/world.$slug'
 import { Route as PathSlugRouteImport } from './routes/path.$slug'
 import { Route as MissionSlugRouteImport } from './routes/mission.$slug'
 import { Route as DeviceSlugRouteImport } from './routes/device.$slug'
+import { Route as BeginnerRouteImport } from './routes/beginner'
+import { Route as BeginnerSlugRouteImport } from './routes/beginner.$slug'
+import { Route as DjRouteImport } from './routes/dj'
+import { Route as DjSlugRouteImport } from './routes/dj.$slug'
 
 const WorldsRoute = WorldsRouteImport.update({
   id: '/worlds',
@@ -197,6 +201,10 @@ export interface FileRouteTypes {
     | '/mission/$slug'
     | '/path/$slug'
     | '/world/$slug'
+    | '/beginner'
+    | '/beginner/$slug'
+    | '/dj'
+    | '/dj/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -216,6 +224,10 @@ export interface FileRouteTypes {
     | '/mission/$slug'
     | '/path/$slug'
     | '/world/$slug'
+    | '/beginner'
+    | '/beginner/$slug'
+    | '/dj'
+    | '/dj/$slug'
   id:
     | '__root__'
     | '/'
@@ -235,6 +247,10 @@ export interface FileRouteTypes {
     | '/mission/$slug'
     | '/path/$slug'
     | '/world/$slug'
+    | '/beginner'
+    | '/beginner/$slug'
+    | '/dj'
+    | '/dj/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -255,6 +271,10 @@ export interface RootRouteChildren {
   MissionSlugRoute: typeof MissionSlugRoute
   PathSlugRoute: typeof PathSlugRoute
   WorldSlugRoute: typeof WorldSlugRoute
+  BeginnerRoute: typeof BeginnerRoute
+  BeginnerSlugRoute: typeof BeginnerSlugRoute
+  DjRoute: typeof DjRoute
+  DjSlugRoute: typeof DjSlugRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -385,8 +405,58 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DeviceSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/beginner': {
+      id: '/beginner'
+      path: '/beginner'
+      fullPath: '/beginner'
+      preLoaderRoute: typeof BeginnerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/beginner/$slug': {
+      id: '/beginner/$slug'
+      path: '/beginner/$slug'
+      fullPath: '/beginner/$slug'
+      preLoaderRoute: typeof BeginnerSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dj': {
+      id: '/dj'
+      path: '/dj'
+      fullPath: '/dj'
+      preLoaderRoute: typeof DjRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dj/$slug': {
+      id: '/dj/$slug'
+      path: '/dj/$slug'
+      fullPath: '/dj/$slug'
+      preLoaderRoute: typeof DjSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
+
+
+const BeginnerRoute = BeginnerRouteImport.update({
+  id: '/beginner',
+  path: '/beginner',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BeginnerSlugRoute = BeginnerSlugRouteImport.update({
+  id: '/beginner/$slug',
+  path: '/beginner/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DjRoute = DjRouteImport.update({
+  id: '/dj',
+  path: '/dj',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DjSlugRoute = DjSlugRouteImport.update({
+  id: '/dj/$slug',
+  path: '/dj/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -407,7 +477,15 @@ const rootRouteChildren: RootRouteChildren = {
   MissionSlugRoute: MissionSlugRoute,
   PathSlugRoute: PathSlugRoute,
   WorldSlugRoute: WorldSlugRoute,
+  BeginnerRoute: BeginnerRoute,
+  BeginnerSlugRoute: BeginnerSlugRoute,
+  DjRoute: DjRoute,
+  DjSlugRoute: DjSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+// ── NEW ROUTES: Beginner + DJ Path ─────────────────────────────────────────
+// These are manually added to the generated route tree since the router
+// generator hasn't run yet. They follow the same pattern as the generated code.
