@@ -2,6 +2,22 @@ import type { World } from "./types";
 
 export const WORLDS: World[] = [
   {
+    slug: "foundations",
+    number: 0,
+    title: "Music Foundations",
+    tagline: "Sound, rhythm, melody, harmony, music tech — from absolute zero.",
+    color: "acid",
+    description: "Everything you need to know before you touch a DAW or a DJ controller. 40 missions across 5 paths.",
+  },
+  {
+    slug: "dj",
+    number: 9,
+    title: "DJ World",
+    tagline: "Beatmatching, the mix, performance, the crowd.",
+    color: "volt",
+    description: "From setting up your first rig to reading a crowd at peak hour. 40 missions built from the rekordbox manual.",
+  },
+  {
     slug: "first-contact",
     number: 1,
     title: "First Contact",

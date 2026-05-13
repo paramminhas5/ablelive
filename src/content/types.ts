@@ -1,4 +1,6 @@
 export type WorldSlug =
+  | "foundations"
+  | "dj"
   | "first-contact"
   | "two-views"
   | "midi-audio"
