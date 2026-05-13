@@ -9,6 +9,34 @@ export type LearningPath = {
 
 export const PATHS: LearningPath[] = [
   {
+    slug: "music-foundations",
+    title: "Music Foundations",
+    tagline: "Sound, rhythm, melody, harmony, production — from absolute zero.",
+    color: "bg-acid",
+    description: "40 missions across 5 paths. Everything you need to know before you touch a DAW or a DJ controller.",
+    missionSlugs: [
+      "what-is-sound","frequency-pitch","amplitude-volume","timbre-tone","waveforms","sound-in-space","overtones-harmonics","how-we-hear",
+      "what-is-rhythm","tempo-bpm","bars-time-signatures","groove-feel","syncopation","polyrhythm","note-values","rhythm-in-production",
+      "notes-and-octaves","major-scale","minor-scale","intervals","pentatonic-scales","melody-writing","ear-training","transposition-modes",
+      "what-are-chords","chord-types","chord-progressions","keys-tonality","tension-resolution","harmony-in-production","song-structure","listening-actively",
+      "daw-explained","midi-explained","digital-audio","samples-loops","signal-chain","effects-overview","mixing-basics","music-tech-integration",
+    ],
+  },
+  {
+    slug: "dj-fundamentals-path",
+    title: "DJ Path",
+    tagline: "Beatmatching, the mix, performance, the crowd.",
+    color: "bg-volt text-bone",
+    description: "40 missions built from the rekordbox 6.0 manual. From setting up your first rig to reading a crowd at peak hour.",
+    missionSlugs: [
+      "what-is-djing","dj-equipment","rekordbox-intro","headphone-monitoring","booth-setup","dj-culture","genre-bpm-reference","your-first-mix",
+      "music-library-dj","bpm-analysis-dj","key-detection-dj","my-tags-dj","playlists-dj","crate-digging","export-mode-dj","waveform-reading",
+      "beatmatching-manual","sync-function","cue-points-dj","eq-mixing-dj","crossfader-technique","long-mix-blend","transitions-cut-dj","loop-function-dj",
+      "reading-the-crowd","set-structure-dj","harmonic-mixing-dj","effects-performance-dj","energy-management-dj","genre-strategy-dj","preparing-a-set-dj","live-mistakes-dj",
+      "effects-deep-dj","loop-performance-dj","harmonic-key-shift-dj","stem-djing","recording-your-set-dj","dvs-basics","dj-business","dj-advanced-complete",
+    ],
+  },
+  {
     slug: "first-beat",
     title: "Make Your First Beat",
     tagline: "Zero to a 16-bar loop, the fastest path.",
