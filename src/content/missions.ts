@@ -1,4 +1,6 @@
 import type { Mission } from "./types";
+import { FOUNDATIONS_MISSIONS } from "./missions-foundations";
+import { DJ_WORLD_MISSIONS } from "./missions-dj";
 
 const w1: Mission[] = [
   {
@@ -3918,6 +3920,8 @@ const w8: Mission[] = [
 ];
 
 export const MISSIONS: Mission[] = [
+  ...FOUNDATIONS_MISSIONS,
+  ...DJ_WORLD_MISSIONS,
   ...w1,
   ...w2,
   ...w3,
