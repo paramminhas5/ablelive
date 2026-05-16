@@ -42,13 +42,14 @@
   --radius-lg: 0;
 }
 
-:root {
-  /* brutalist palette */
+:root,
+[data-theme="ccd-classic"] {
+  /* brutalist palette — CCD Classic (default) */
   --bone: oklch(0.96 0.012 90);
   --ink: oklch(0.12 0 0);
-  --acid: oklch(0.92 0.24 125); /* #C6FF00 acid green */
-  --hot: oklch(0.66 0.27 0); /* hot pink */
-  --volt: oklch(0.55 0.27 265); /* electric blue */
+  --acid: oklch(0.92 0.24 125);
+  --hot: oklch(0.66 0.27 0);
+  --volt: oklch(0.55 0.27 265);
   --sun: oklch(0.88 0.18 90);
 
   --background: var(--bone);
@@ -71,6 +72,72 @@
   --input: var(--ink);
   --ring: var(--volt);
   --radius: 0;
+}
+
+[data-theme="midnight"] {
+  --bone: oklch(0.16 0.04 280);
+  --ink: oklch(0.96 0.012 90);
+  --acid: oklch(0.78 0.2 295);
+  --hot: oklch(0.7 0.22 350);
+  --volt: oklch(0.78 0.18 200);
+  --sun: oklch(0.65 0.2 60);
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(0.2 0.04 280);
+  --card-foreground: var(--ink);
+  --border: var(--ink);
+}
+
+[data-theme="paper-ink"] {
+  --bone: oklch(0.97 0.008 70);
+  --ink: oklch(0.16 0.01 30);
+  --acid: oklch(0.72 0.22 45);
+  --hot: oklch(0.6 0.24 25);
+  --volt: oklch(0.55 0.18 260);
+  --sun: oklch(0.85 0.18 80);
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(1 0 0);
+  --border: var(--ink);
+}
+
+[data-theme="neon-mint"] {
+  --bone: oklch(0.15 0.03 220);
+  --ink: oklch(0.97 0.02 150);
+  --acid: oklch(0.85 0.22 165);
+  --hot: oklch(0.68 0.25 10);
+  --volt: oklch(0.78 0.18 200);
+  --sun: oklch(0.85 0.2 100);
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(0.2 0.04 220);
+  --border: var(--ink);
+}
+
+[data-theme="sunset"] {
+  --bone: oklch(0.18 0.06 320);
+  --ink: oklch(0.96 0.04 70);
+  --acid: oklch(0.75 0.2 45);
+  --hot: oklch(0.65 0.25 0);
+  --volt: oklch(0.7 0.22 320);
+  --sun: oklch(0.82 0.18 70);
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(0.22 0.06 320);
+  --border: var(--ink);
+}
+
+[data-theme="cherry"] {
+  --bone: oklch(0.97 0.02 350);
+  --ink: oklch(0.22 0.08 350);
+  --acid: oklch(0.75 0.18 350);
+  --hot: oklch(0.6 0.22 0);
+  --volt: oklch(0.55 0.22 295);
+  --sun: oklch(0.88 0.12 80);
+  --background: var(--bone);
+  --foreground: var(--ink);
+  --card: oklch(1 0 0);
+  --border: var(--ink);
 }
 
 .dark {

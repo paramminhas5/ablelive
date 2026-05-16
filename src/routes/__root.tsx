@@ -5,7 +5,6 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
-  useRouterState,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -144,10 +143,11 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function AnimatedOutlet() {
-  const router = useRouterState();
-  const key = router.location.pathname;
+  // No keyed remount — that causes a full subtree rebuild on every nav,
+  // which made clicks feel slow ("same page, then redirects"). The
+  // page-level routes handle their own enter animations.
   return (
-    <main className="flex-1 animate-fade-in" key={key}>
+    <main className="flex-1">
       <Outlet />
     </main>
   );

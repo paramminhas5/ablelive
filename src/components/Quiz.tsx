@@ -209,17 +209,17 @@ export function Quiz({
       phaseRef.current = "feedback";
       rerender();
 
-      if (isPass) playCorrect();
-      else {
+      if (isPass) {
+        playCorrect();
+        onCorrectAnswer?.(XP_PER_CORRECT);
+      } else {
         playWrong();
         onWrongAnswer?.();
       }
       requestAnimationFrame(() => requestAnimationFrame(() => scrollToCenter(explainRef.current)));
-
-      const delay = q.explain ? 3500 : 1400;
-      autoRef.current = setTimeout(advance, delay);
+      // No auto-advance — user controls pace with the Next button.
     },
-    [qs, advance, onWrongAnswer],
+    [qs, onWrongAnswer, onCorrectAnswer],
   );
 
   // ── Derived display values from refs ───────────────────────────────────
@@ -420,11 +420,19 @@ export function Quiz({
               </div>
             )}
           </div>
+          {/* Big, obvious primary action — replaces the tiny underline that
+              auto-fired on the timer and felt premature. */}
           <button
-            onClick={advance}
-            className="mt-2 font-mono text-[10px] uppercase opacity-40 hover:opacity-80 underline underline-offset-2 block"
+            onClick={() => {
+              if (autoRef.current) {
+                clearTimeout(autoRef.current);
+                autoRef.current = null;
+              }
+              advance();
+            }}
+            className="mt-3 w-full brutal-border bg-acid text-ink px-6 py-4 font-display text-2xl brutal-press brutal-shadow flex items-center justify-center gap-3"
           >
-            {isLast ? "See results →" : "Next →"}
+            {isLast ? "SEE RESULTS →" : "NEXT QUESTION →"}
           </button>
         </div>
       )}

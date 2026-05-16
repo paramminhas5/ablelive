@@ -1,4 +1,7 @@
-import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+
 export const Route = createFileRoute("/dj")({
-  component: () => <Navigate to="/world/dj" />,
+  beforeLoad: () => {
+    throw redirect({ to: "/world/$slug", params: { slug: "dj" } });
+  },
 });
