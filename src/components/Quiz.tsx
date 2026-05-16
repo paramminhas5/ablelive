@@ -209,17 +209,17 @@ export function Quiz({
       phaseRef.current = "feedback";
       rerender();
 
-      if (isPass) playCorrect();
-      else {
+      if (isPass) {
+        playCorrect();
+        onCorrectAnswer?.(XP_PER_CORRECT);
+      } else {
         playWrong();
         onWrongAnswer?.();
       }
       requestAnimationFrame(() => requestAnimationFrame(() => scrollToCenter(explainRef.current)));
-
-      const delay = q.explain ? 3500 : 1400;
-      autoRef.current = setTimeout(advance, delay);
+      // No auto-advance — user controls pace with the Next button.
     },
-    [qs, advance, onWrongAnswer],
+    [qs, onWrongAnswer, onCorrectAnswer],
   );
 
   // ── Derived display values from refs ───────────────────────────────────
