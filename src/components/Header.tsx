@@ -7,9 +7,9 @@ import { RankBadge } from "./HomeWidgets";
 import { PALETTE_OPEN_EVENT } from "./CommandPalette";
 
 const PRIMARY = [
+  { to: "/worlds", label: "Worlds" },
   { to: "/learn", label: "Paths" },
-  { to: "/beginner", label: "🌱 Beginner" },
-  { to: "/dj", label: "🎧 DJ" },
+  { to: "/missions", label: "Missions" },
   { to: "/devices", label: "Devices" },
   { to: "/playground", label: "Workbench" },
 ] as const;

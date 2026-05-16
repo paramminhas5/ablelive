@@ -16,6 +16,7 @@ import { Route as ShortcutsRouteImport } from './routes/shortcuts'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as PlaygroundRouteImport } from './routes/playground'
 import { Route as PathsRouteImport } from './routes/paths'
+import { Route as MissionsRouteImport } from './routes/missions'
 import { Route as MatchRouteImport } from './routes/match'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnRouteImport } from './routes/learn'
@@ -65,6 +66,11 @@ const PlaygroundRoute = PlaygroundRouteImport.update({
 const PathsRoute = PathsRouteImport.update({
   id: '/paths',
   path: '/paths',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MissionsRoute = MissionsRouteImport.update({
+  id: '/missions',
+  path: '/missions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MatchRoute = MatchRouteImport.update({
@@ -131,6 +137,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/match': typeof MatchRoute
   '/paths': typeof PathsRoute
+  '/missions': typeof MissionsRoute
+  '/missions': typeof MissionsRoute
+  '/missions': typeof MissionsRoute
   '/playground': typeof PlaygroundRoute
   '/profile': typeof ProfileRoute
   '/shortcuts': typeof ShortcutsRoute
@@ -191,6 +200,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/match'
     | '/paths'
+    | '/missions'
     | '/playground'
     | '/profile'
     | '/shortcuts'
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/match'
     | '/paths'
+    | '/missions'
     | '/playground'
     | '/profile'
     | '/shortcuts'
@@ -237,6 +248,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/match'
     | '/paths'
+    | '/missions'
     | '/playground'
     | '/profile'
     | '/shortcuts'
@@ -328,6 +340,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlaygroundRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/missions': {
+      preloadedRoute: undefined,
+      id: '/missions',
+    },
     '/paths': {
       id: '/paths'
       path: '/paths'
@@ -467,6 +483,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   MatchRoute: MatchRoute,
   PathsRoute: PathsRoute,
+  MissionsRoute,
   PlaygroundRoute: PlaygroundRoute,
   ProfileRoute: ProfileRoute,
   ShortcutsRoute: ShortcutsRoute,
