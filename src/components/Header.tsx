@@ -1,10 +1,10 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { useMode } from "@/lib/mode";
 import { useEffect, useState } from "react";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
 import { RankBadge } from "./HomeWidgets";
 import { PALETTE_OPEN_EVENT } from "./CommandPalette";
+import { ThemePicker } from "./ThemePicker";
 
 const PRIMARY = [
   { to: "/worlds", label: "Worlds" },
@@ -134,24 +134,7 @@ function UserIcon() {
 }
 
 
-// ── Mode pill ────────────────────────────────────────────────────────────────
-function ModePill() {
-  const { mode } = useMode();
-  const cfg = {
-    beginner: { label: "BEGINNER", bg: "bg-acid text-ink" },
-    intermediate: { label: "INTERMEDIATE", bg: "bg-volt text-bone" },
-    advanced: { label: "ADVANCED", bg: "bg-ink text-bone" },
-  }[mode];
-  return (
-    <Link
-      to="/"
-      className={`brutal-border px-2 py-1 font-mono text-[9px] uppercase ${cfg.bg}`}
-      title="Content depth — click to change"
-    >
-      {cfg.label}
-    </Link>
-  );
-}
+// (Mode pill removed — depth toggle is per-mission, only where it changes content)
 
 // ── Header ───────────────────────────────────────────────────────────────────
 export function Header() {
@@ -227,8 +210,8 @@ export function Header() {
 
         {/* Desktop right cluster */}
         <div className="hidden md:flex items-center gap-1.5 px-3">
-          {/* Mode pill */}
-          <ModePill />
+          {/* Theme picker */}
+          <ThemePicker />
 
           {/* Search */}
           <button
