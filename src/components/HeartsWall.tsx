@@ -22,7 +22,7 @@ export function HeartsWall() {
   if (progress.hearts > 0) return null;
 
   return (
-    <div className="brutal-border bg-hot text-bone p-6 space-y-4 my-4">
+    <div className="brutal-border bg-ink text-bone p-6 space-y-4 my-4">
       <div className="flex gap-1 text-2xl">
         {Array.from({ length: MAX_HEARTS }).map((_, i) => (
           <span key={i} className="opacity-20">

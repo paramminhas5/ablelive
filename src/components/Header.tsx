@@ -72,7 +72,7 @@ function Hearts({ count, refillSeconds }: { count: number; refillSeconds: number
   return (
     <div className="flex items-center gap-0.5" title={`${count} hearts · next in ${mm}:${ss}`}>
       {Array.from({ length: MAX_HEARTS }).map((_, i) => (
-        <span key={i} className={`text-sm leading-none ${i < count ? "text-hot" : "opacity-20"}`}>
+        <span key={i} className={`text-sm leading-none ${i < count ? "text-acid" : "opacity-20"}`}>
           ♥
         </span>
       ))}
@@ -140,7 +140,7 @@ function ModePill() {
   const cfg = {
     beginner: { label: "BEGINNER", bg: "bg-acid text-ink" },
     intermediate: { label: "INTERMEDIATE", bg: "bg-volt text-bone" },
-    advanced: { label: "ADVANCED", bg: "bg-hot text-bone" },
+    advanced: { label: "ADVANCED", bg: "bg-ink text-bone" },
   }[mode];
   return (
     <Link
@@ -255,7 +255,7 @@ export function Header() {
           <span className="brutal-border bg-acid px-2 py-1 font-mono text-[10px] uppercase">
             {progress.xp} XP
           </span>
-          <span className="brutal-border bg-hot text-bone px-2 py-1 font-mono text-[10px] uppercase">
+          <span className="brutal-border bg-ink text-bone px-2 py-1 font-mono text-[10px] uppercase">
             🔥 {progress.streakDays}
             {progress.streakShield ? "🛡" : ""}
           </span>

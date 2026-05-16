@@ -105,7 +105,7 @@ export function CompletionModal({ mission, xpEarned, score, badgeName, nextSlug,
         ? { label: "SOLID", color: "bg-volt text-bone" }
         : pct >= 50
           ? { label: "DONE", color: "bg-sun text-ink" }
-          : { label: "RETRY", color: "bg-hot text-bone" };
+          : { label: "RETRY", color: "bg-ink text-bone" };
 
   // Generate and download share card
   const share = () => {
@@ -213,7 +213,7 @@ export function CompletionModal({ mission, xpEarned, score, badgeName, nextSlug,
           )}
 
           {/* Streak */}
-          <div className="brutal-border bg-hot text-bone px-4 py-2 font-mono text-xs uppercase flex items-center gap-2">
+          <div className="brutal-border bg-ink text-bone px-4 py-2 font-mono text-xs uppercase flex items-center gap-2">
             🔥 {progress.streakDays}-day streak
             {progress.streakShield && <span className="ml-auto">🛡 Streak shield active</span>}
           </div>

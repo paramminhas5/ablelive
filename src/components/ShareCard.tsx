@@ -69,7 +69,7 @@ export function ShareCard() {
         </button>
         <button
           onClick={download}
-          className="brutal-border bg-hot text-bone px-3 py-2 font-mono text-xs uppercase brutal-press"
+          className="brutal-border bg-ink text-bone px-3 py-2 font-mono text-xs uppercase brutal-press"
         >
           Download PNG
         </button>

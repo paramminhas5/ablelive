@@ -7,7 +7,7 @@ import { useProgress } from "@/lib/progress";
 // On mobile the lane wraps as a 6-col grid; on desktop it's a horizontal rail.
 const WORLD_LINE: Record<string, { bg: string; label: string }> = {
   acid: { bg: "bg-acid", label: "text-ink" },
-  hot:  { bg: "bg-hot",  label: "text-bone" },
+  hot:  { bg: "bg-ink",  label: "text-bone" },
   volt: { bg: "bg-volt", label: "text-bone" },
   sun:  { bg: "bg-sun",  label: "text-ink" },
   bone: { bg: "bg-bone", label: "text-ink" },
@@ -27,7 +27,7 @@ export function JourneyMap({ currentSlug }: { currentSlug?: string }) {
         </div>
         <div className="flex gap-1.5 font-mono text-[9px] md:text-[10px] uppercase">
           <span className="brutal-border bg-bone px-2 py-0.5">○ open</span>
-          <span className="brutal-border bg-hot text-bone px-2 py-0.5">● now</span>
+          <span className="brutal-border bg-ink text-bone px-2 py-0.5">● now</span>
           <span className="brutal-border bg-acid px-2 py-0.5">✓ done</span>
         </div>
       </div>
@@ -50,7 +50,7 @@ export function JourneyMap({ currentSlug }: { currentSlug?: string }) {
                 {ms.map((m) => {
                   const isDone = !!done[m.slug];
                   const isCur = m.slug === currentSlug;
-                  const tone = isCur ? "bg-hot text-bone animate-pulse"
+                  const tone = isCur ? "bg-ink text-bone animate-pulse"
                             : isDone ? "bg-acid text-ink"
                             : "bg-bone text-ink";
                   return (
