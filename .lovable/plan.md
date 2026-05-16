@@ -1,105 +1,89 @@
-# Plan — Fix learning chain, audio, nav, and skill page
+## 1. Routing perf (priority fix)
 
-## 1. Fix the broken quiz on Next
+**Symptom:** clicks show same page, then redirect a beat later.
 
-**Bug:** When you press a "Next mission" link the route param changes but `<Quiz>` keeps its previous `answers` / `submitted` state, so the new mission appears to be already answered/submitted.
+Causes I'll address:
 
-**Fix:** in `src/routes/mission.$slug.tsx`, key the quiz + completion state by slug.
+- `defaultPreloadStaleTime: 0` + no `defaultPreload` → every nav refetches loaders cold. Set `defaultPreload: "intent"` and bump stale time to ~30s.
+- `mission.$slug.tsx` / `beginner.$slug.tsx` likely run heavy work in component body on every nav. Wrap derivations in `useMemo`, key sims/quiz by slug (already done) but ensure parent doesn't re-mount the layout.
+- Header re-renders on every route change due to `useMode` + `useProgress` zustand selectors pulling whole state — switch to narrow selectors.
+- Verify no `<Navigate>` redirect chains in route loaders (the "shows same page then redirects" symptom). Audit `index.tsx`, `learn.tsx`, `paths.tsx` for redirect-on-mount patterns and replace with proper `redirect()` in `beforeLoad`.
 
-- Add `key={slug}` to `<Quiz>` so it remounts per mission.
-- Replace `useState(!!progress.completedMissions[slug])` with `useEffect` that resets `completed` and `flowKey` whenever `slug` changes.
-- Also remount `<Simulator>` with `key={slug}` so audio nodes from the previous sim are torn down.
+## 2. Breadcrumb fix on Foundations
 
-## 2. Audio missing on new sims
+`beginner.$slug.tsx` line 79 breadcrumb uses `<Link to="/beginner">` — verify `/beginner` route still exists & renders. Add a real Breadcrumb component (shadcn one is already in `src/components/ui/breadcrumb.tsx`) and reuse on mission/device/dj pages so it's consistent and clickable.
 
-Audit the six new sims (`StemSplitterSim`, `MidiTransformSim`, `ScaleAwareSim`, `CompLakeSim`, `GrooveExtractorSim`, `Push3Sim`) and the older `EarTrainingSim`. For each, either:
+## 3. Homepage rebuild
 
-- Wire them to the shared `audio.ts` / `source.ts` engine (drum-loop, bass-loop, vox-chop, MIDI synth voice via `audio.ts` oscillators), with a local Play/Stop button using `AudioUnlock`, or
-- If the sim is conceptual only (e.g. Scale-Aware piano roll), add a small "▶ Audition" button that plays back the result using the shared synth.
-
-Standard pattern (already used in `SidechainSim`): create source on first interaction, route through whatever the sim is demonstrating, expose Play/Stop + a "bypass" or A/B if relevant.
-
-## 3. Prune mis-matched sim assignments
-
-A lot of missions reuse a generic sim that doesn't teach the lesson topic. Pass:
-
-- Read `src/content/missions.ts` end-to-end.
-- For every mission where `sim.type` is unrelated to the topic, switch to either:
-  - the matching `device-lab` (pass `preset.device`) when the lesson is about a built-in device, or
-  - `none` (renders the "read & quiz only" block) when no useful sim exists yet.
-- Examples to fix: instrument-overview lessons → `device-lab` of the discussed instrument; routing/sends lessons → `send-return`; warp-modes-deep → `warp-lab`; etc.
-- Output a short table in the PR notes listing every mission whose sim changed.
-
-## 4. Make Beginner/Advanced contextual
-
-Remove the global `<ModeToggle>` from the header. The toggle should only appear where it actually changes content:
-
-- `mission/$slug.tsx` — only render the toggle when `LESSONS[slug]` has BOTH a `beginner` and an `advanced` track (or differing `quizEasy`/`quizHard`).
-- `device/$slug.tsx` — only render the toggle when the device explainer has advanced engineer notes.
-- Everywhere else: hide it. The state still lives in `useMode()` so it persists when present.
-
-## 5. Nav cleanup
-
-- Remove `Paths` from the `MORE` menu in `Header.tsx` (route already redirects to /learn; the page now owns paths).
-- Rename the top nav item `Skill Tree` → `**Learn**`.
-- Update the `/learn` page H1 from "SKILL TREE" to **"LEARN — PATHS & SKILLS"** (or similar, see §7).
-
-## 6. Add instrument explanations on /devices
-
-On the Devices index and each `device/$slug` page, add a short "What it does / What it's for" block sourced from `device-explainers.ts`. For instruments specifically (Drift, Wavetable, Operator, Meld, Sampler, Drum Rack, Granulator III, Collision/Tension/Electric/Analog, Bass, Poli):
-
-- 1-line tagline (already present)
-- 2-3 sentence "what kind of sounds it makes & when to reach for it"
-- A "Try a preset" row that loads 3 hand-picked presets into the existing device-lab.
-
-Where copy doesn't exist yet, extend `src/content/device-explainers.ts` with an `overview` field and render it above the lab.  
-Move the device chain to the bottom collapsed, its not very usful right now. Also make these new instruments and devices appear on the device tab i cant see it
-
-## 7. Rebuild /learn page (paths + skills clearer, mobile-first)
-
-The current page has three views (tree/lanes + JourneyMap) all stacked. Replace with a tighter layout:
+Replace `src/routes/index.tsx` (currently just shows Foundations + DJ rails) with a proper marketing landing:
 
 ```text
-┌─ Hero: LEARN. progress + streak + XP ─┐
-├─ Tabs:  [Paths] [Skill Map] [Journey] ┤
-│                                       │
-│  Paths tab → vertical list of paths,  │
-│  each row shows mini-rail of stops    │
-│  (mobile-friendly, no horizontal      │
-│  scroll-fest). Tap a row to expand    │
-│  into the Duolingo-style serpentine.  │
-│                                       │
-│  Skill Map tab → existing lanes view  │
-│  but each lane wraps on mobile        │
-│  (flex-wrap, 8 stops per row).        │
-│                                       │
-│  Journey tab → the subway JourneyMap, │
-│  rotated to vertical on viewports     │
-│  <768px so lanes stack instead of     │
-│  overflowing horizontally.            │
-└───────────────────────────────────────┘
+[ Hero ]          big mark, tagline, primary CTA → /learn, secondary → /login
+[ How it works ]  3 steps: Pick a path · Do missions · Build muscle
+[ Choose your    grid of all worlds (Foundations, DJ, Two Views, MIDI,
+  world ]         Devices, Mixing, Performance, MIDI Inst, Live 12)
+[ Paths & chapters ] horizontal rail of curated paths w/ chapter counts
+[ FAQ ]          6-8 Qs in accordion
+[ Get started ]  big CTA band
 ```
 
-- Fix `JourneyMap` mobile layout: replace `min-w-max` + horizontal rail with a responsive grid; on `<md` each world renders its stops as a wrapping 6-col grid.
-- Rename internal "TREE" / "SKILL MAP" buttons to "PATHS" / "SKILL MAP" / "JOURNEY".
+When `progress.xp > 0` OR user is authed → redirect home content to a **Dashboard** layout (Continue learning, streak, XP, recent missions, daily challenge, review queue) — essentially today's `/profile` widgets surfaced as the logged-in home. Use `beforeLoad` for the auth-aware redirect, not client-side.
 
-## 8. Verification
+## 4. CCD visual language (full adopt)
 
-- Build & open `/learn` on 390px viewport — confirm no horizontal overflow, JourneyMap readable.
-- Walk through `first-beat` path: start mission, submit quiz, click Next — confirm new mission has clean quiz state and the simulator audio starts fresh.
-- Visit 3-4 randomly chosen missions whose sim assignment was changed; confirm sim matches topic.
-- Visit `/devices/wavetable` and `/devices/drift` — confirm new explainer block renders and presets load.
-- Confirm Beginner/Advanced toggle only appears on missions/devices where it changes content.
+Pull from `github.com/paramminhas5/ccdfinal`:
 
-## Files touched
+- Typography stack (display + mono + body).
+- Spacing/border/shadow tokens.
+- Motion timing (page transitions, hover lifts).
+- 4-6 palettes registered as data-theme attributes on `<html>`.
 
-- `src/components/Header.tsx` — rename label, remove Paths, gate ModeToggle.
-- `src/components/Quiz.tsx` — no change needed; keying happens at parent.
-- `src/routes/mission.$slug.tsx` — slug-scoped state, key Quiz/Simulator, conditional ModeToggle.
-- `src/routes/device.$slug.tsx` — conditional ModeToggle, instrument overview block.
-- `src/routes/devices.tsx` — show overview blurb per device card (instruments only).
-- `src/routes/learn.tsx` — new 3-tab layout, mobile fixes.
-- `src/components/JourneyMap.tsx` — responsive layout.
-- `src/components/sims/*` — wire audio in the six new sims.
-- `src/content/missions.ts` — re-map mis-assigned sims.
-- `src/content/device-explainers.ts` — add `overview` field for instruments.
+Implementation:
+
+- Add palettes to `src/styles.css` via `[data-theme="..."]` blocks of oklch tokens.
+- Build `ThemePicker` (header dropdown) writing to localStorage + `<html data-theme>`.
+- Refactor existing brutal-* utility usage to read from new tokens so the switch actually re-skins everything.
+- Restyle header, cards, buttons, mission tiles, journey map to match CCD's rhythm — keep brutalist edge but lift typographic hierarchy, breathing room, and motion polish.
+
+## 5. Replace emoji labels with custom glyphs
+
+- Create `src/components/glyphs/` — one tiny inline SVG per world & chapter (geometric monoline marks, 24×24, currentColor).
+- Map `worldSlug → Glyph` and `chapterSlug → Glyph`.
+- Remove emoji from `worlds.ts`, `beginner-foundations.ts`, `dj-missions.ts`, `paths.ts` headers; replace with `<Glyph name="..." />`.
+- Mission numerals stay typographic.
+
+## 6. Foundations & DJ content content extention
+
+Source structure from learningmusic.ableton.com chapters (Beat, Notes & Scales, Chords, Basslines, Melodies, Song Structure) and rekordbox manual sections (Browse, Hot Cues, Beatgrid, Sync, Loops, FX, Recording). I'll mirror their **structure and exercise types** (interactive grids, build-a-beat, scale player, beat-match drill) but write all copy in our voice and design our own exercises (some improved/extended). If cant be improved copy exactly as is
+
+Per mission: `hook → simple → analogy → interactive exercise → deeper → quiz`. Bump quiz quality: 4 well-explained Qs per mission instead of generic ones. Make the quiz **Next button** bigger/sticky (`bg-ink text-bone` full-width, shadow, h-14).
+
+New/upgraded exercises to add:
+
+- Beat builder (4-on-the-floor → break → fill)
+- Scale explorer (root + mode, hear intervals)
+- Chord stacker (triads → 7ths)
+- Beatmatch trainer (two decks, nudge to align)
+- Hot-cue drill (memory test)
+- Loop-roll drill
+
+## 7. Beginner/Advanced scoping
+
+- Delete global `<ModeToggle>` from any remaining spot.
+- Delete `useMode` global store usage from `index.tsx` etc; keep only as a per-mission local state.
+- On mission/chapter pages: render the toggle **only** when `LessonDeep` has both `beginner` and `advanced` blocks. Otherwise show single-track content.
+- Audit which missions deserve an advanced track — output a `needs-advanced.md` checklist after build so we can fill in over time. Initial candidates: compression, eq, sidechain, warp-modes, midi-quantize, sampler, drum-rack, mixer-routing, send-return, group-tracks, arrangement-automation.
+
+## 8. Verification pass
+
+- Click through `/`, `/learn`, a beginner mission, a regular mission, a DJ mission, `/devices/wavetable` — confirm: no double-render redirect, breadcrumb works, beginner/advanced only where it matters, glyphs render, theme picker re-skins everything, quiz Next is prominent.
+- Mobile (390px) walkthrough.
+- Run audit script if present.
+
+## Technical details
+
+- Files touched: `src/router.tsx`, `src/routes/index.tsx`, `src/routes/beginner.$slug.tsx`, `src/routes/mission.$slug.tsx`, `src/routes/dj.$slug.tsx`, `src/components/Header.tsx`, `src/components/Quiz.tsx`, `src/styles.css`, `src/lib/mode.ts`, `src/content/{worlds,paths,beginner-foundations,dj-missions,missions}.ts`.
+- New files: `src/components/ThemePicker.tsx`, `src/components/Breadcrumbs.tsx`, `src/components/glyphs/*.tsx` + `index.ts`, `src/components/home/{Hero,HowItWorks,WorldGrid,PathsRail,FAQ,CTA,Dashboard}.tsx`, `src/content/themes.ts`, `src/content/exercises/*`.
+- Keep diffs surgical — no rewrites of files I don't need to touch.
+
+Scope note: rewriting all Foundations + DJ missions is large; I'll do a complete first pass for Foundations (10 chapters) and DJ core (12 missions). The remaining 73 world missions stay as-is in this turn and are flagged for follow-up.
