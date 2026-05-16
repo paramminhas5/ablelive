@@ -78,7 +78,7 @@ function BeginnerMissionPage() {
     <div className="max-w-2xl mx-auto p-4 md:p-10 space-y-5">
       {/* Breadcrumb */}
       <nav className="font-mono text-xs uppercase opacity-50 flex gap-2">
-        <Link to="/beginner" className="hover:opacity-100">← Beginner</Link>
+        <Link to="/world/$slug" params={{ slug: "fundamentals" }} className="hover:opacity-100">← Fundamentals</Link>
         <span>/</span>
         <span>{mission.number}. {mission.title}</span>
       </nav>
