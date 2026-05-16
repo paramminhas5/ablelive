@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { initTheme } from "@/lib/theme";
 import {
   Outlet,
   Link,
@@ -16,6 +17,11 @@ import { TransportProvider } from "@/components/TransportProvider";
 import { MasterTransportBar } from "@/components/MasterTransportBar";
 import { CommandPalette } from "@/components/CommandPalette";
 import { Onboarding } from "@/components/HomeWidgets";
+
+function ThemeInit() {
+  useEffect(() => { initTheme(); }, []);
+  return null;
+}
 
 function NotFoundComponent() {
   return (
@@ -167,6 +173,7 @@ function RootComponent() {
           </footer>
         </div>
         <MasterTransportBar />
+        <ThemeInit />
         <CommandPalette />
         <Onboarding />
       </QueryClientProvider>

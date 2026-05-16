@@ -1,15 +1,13 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { missionBySlug, nextMission, prevMission, MISSIONS } from "@/content/missions";
-import { WORLDS } from "@/content/worlds";
+import { getMissionContext } from "@/lib/missionContext";
 import { Simulator } from "@/components/sims/Simulator";
 import { Quiz, type QuizMeta } from "@/components/Quiz";
 import { useProgress } from "@/lib/progress";
-import { useLearnMode, useMode } from "@/lib/mode";
+import { useLearnMode } from "@/lib/mode";
 import { useEffect, useMemo, useState } from "react";
 import { LESSONS } from "@/content/lesson-deep";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
-import { isBeginnerComplete } from "@/content/beginner-foundations";
-import { ModeToggle } from "@/components/ModeToggle";
 import { CompletionModal } from "@/components/CompletionModal";
 import { HeartsWall } from "@/components/HeartsWall";
 
@@ -32,16 +30,13 @@ function MissionPage() {
   const m = missionBySlug(slug);
   if (!m) throw notFound();
 
-  const w = WORLDS.find((x) => x.slug === m.world)!;
+  const ctx = getMissionContext(slug);
   const deep = LESSONS[slug];
-  const { mode } = useMode();
-  const advanced = mode === "advanced";
-  const isIntermediate = mode === "intermediate";
-  const isBeginner = mode === "beginner";
+  const hasAdvanced = !!(deep?.advanced);
+  const [advancedTab, setAdvancedTab] = useState(false);
+  const advanced = advancedTab;
   const { learnMode } = useLearnMode();
   const { progress, completeMission, loseHeart, addXp } = useProgress();
-  // In beginner mode, show a friendly "you should do foundations first" note
-  const beginnerUnlocked = isBeginnerComplete(progress.completedMissions);
 
   const [completed, setCompleted] = useState(false);
   const [flowKey, setFlowKey] = useState(0);
@@ -71,7 +66,7 @@ function MissionPage() {
     sun: "bg-sun",
     bone: "bg-bone",
     ink: "bg-ink text-bone",
-  }[w.color];
+  }[ctx.world === "fundamentals" ? "acid" : ctx.world === "dj" ? "ink" : ctx.world === "producer" ? "sun" : "bone"] ?? "bg-bone text-ink";
 
   const fallbackWhat = m.explainer.find((b) => b.kind === "lead" || b.kind === "para");
   const track = advanced ? deep?.advanced : deep?.beginner;
@@ -79,9 +74,9 @@ function MissionPage() {
   // Always use m.quiz — it has explain + hint on every question.
   // deep.quizEasy/quizHard are unenriched and would shadow the explanations.
   const quizQs = useMemo(
-    () => (isBeginner ? m.quiz.slice(0, 3) : m.quiz),
+    () => m.quiz,
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [slug, isBeginner],
+    [slug],
   );
   const passThreshold = advanced ? 0.6 : 0.5;
 
@@ -99,24 +94,7 @@ function MissionPage() {
 
   return (
     <div className="max-w-5xl mx-auto p-4 md:p-12 space-y-6">
-      {/* Beginner mode gate — shown when user hasn't completed foundations */}
-      {isBeginner && !beginnerUnlocked && (
-        <div className="brutal-border bg-acid p-4">
-          <div className="font-display text-xl">🌱 You're in Beginner Mode</div>
-          <div className="font-mono text-xs mt-2 opacity-80 leading-relaxed">
-            This is an Ableton mission — you can preview it here, but we recommend completing{" "}
-            <Link to="/beginner" className="underline font-bold">Beginner Foundations</Link>{" "}
-            first. That covers sound, rhythm, MIDI, samples and DAWs at a 5-year-old level,
-            giving you the vocabulary to make this click.
-          </div>
-        </div>
-      )}
-      {/* Intermediate mode — full standard content, no beginner simplification */}
-      {isIntermediate && (
-        <div className="brutal-border bg-volt text-bone px-4 py-2 font-mono text-[10px] uppercase">
-          ⚡ INTERMEDIATE MODE · Full content · Ableton path
-        </div>
-      )}
+
       {showModal && (
         <CompletionModal
           mission={m}
@@ -128,13 +106,14 @@ function MissionPage() {
         />
       )}
 
-      <Link
-        to="/world/$slug"
-        params={{ slug: m.world }}
-        className="font-mono text-xs uppercase underline"
-      >
-        ← {w.title}
-      </Link>
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-1 font-mono text-[9px] uppercase opacity-60 flex-wrap">
+        <Link to="/worlds" className="hover:opacity-100">Worlds</Link>
+        {ctx.world && <><span>›</span><Link to={ctx.worldRoute} className="hover:opacity-100">{ctx.worldLabel}</Link></>}
+        {ctx.chapter && <><span>›</span><span className="opacity-70">{ctx.chapter.title}</span></>}
+        {ctx.path && <><span>›</span><Link to="/path/$slug" params={{ slug: ctx.path.slug }} className="hover:opacity-100">{ctx.path.title}</Link></>}
+        <span>›</span><span className="text-ink">{m.title}</span>
+      </div>
 
       <nav className="sticky top-[60px] z-30 brutal-border bg-bone p-2 flex flex-wrap gap-1 font-mono text-[10px] uppercase items-center">
         <a href="#hook" className="brutal-border px-2 py-1 bg-acid">
@@ -149,20 +128,26 @@ function MissionPage() {
         <a href="#quiz" className="brutal-border px-2 py-1 bg-hot text-bone">
           Quiz
         </a>
-        {(deep?.beginner && deep?.advanced) || (deep?.quizEasy && deep?.quizHard) ? (
-          <span className="ml-auto">
-            <ModeToggle />
-          </span>
-        ) : (
-          <span className="ml-auto opacity-60 self-center">
-            M{m.number}/{MISSIONS.length}
-          </span>
-        )}
+        <span className="ml-auto flex items-center gap-1">
+          {hasAdvanced && (
+            <>
+              <button
+                onClick={() => setAdvancedTab(false)}
+                className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${!advancedTab ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}
+              >Standard</button>
+              <button
+                onClick={() => setAdvancedTab(true)}
+                className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${advancedTab ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}
+              >Advanced</button>
+            </>
+          )}
+          {!hasAdvanced && <span className="opacity-50 font-mono text-[9px]">M{m.number}</span>}
+        </span>
       </nav>
 
       <header id="hook" className={`${colorClass} brutal-border p-4 md:p-6 brutal-shadow`}>
         <div className="font-mono text-xs uppercase">
-          Mission {String(m.number).padStart(2, "0")} · World {w.number}
+          Mission {String(m.number).padStart(3, "0")}
         </div>
         <h1 className="text-4xl md:text-6xl mt-2">{m.title}</h1>
         <p className="font-mono mt-2 text-base md:text-lg">{m.tagline}</p>

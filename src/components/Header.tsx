@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
 import { RankBadge } from "./HomeWidgets";
@@ -247,6 +248,7 @@ export function Header() {
           <RankBadge compact />
 
           {/* Profile / sign-in */}
+          <ThemeSwitcher compact />
           {user ? (
             <Link
               to="/profile"

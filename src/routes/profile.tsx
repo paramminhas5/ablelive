@@ -8,6 +8,7 @@ import { useAuth, signOut } from "@/lib/auth";
 import { CHAPTERS, chaptersByWorld, WORLD_TROPHIES, MASTER_TROPHY } from "@/content/chapters";
 import { pathsByWorld } from "@/content/paths";
 import { RankBadge } from "@/components/HomeWidgets";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
@@ -246,6 +247,13 @@ function Profile() {
               </div>
             );
           })}
+        </section>
+
+        {/* Theme */}
+        <section>
+          <div className="font-mono text-[10px] uppercase opacity-40 mb-3">// APPEARANCE</div>
+          <h2 className="font-display text-3xl mb-4">Theme</h2>
+          <ThemeSwitcher />
         </section>
 
         {/* Badges */}
