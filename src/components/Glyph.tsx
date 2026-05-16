@@ -2,7 +2,7 @@
 // Each glyph is 24×24, currentColor stroke. Add to the GLYPHS map; render
 // with <Glyph name="..." className="..." />. Unknown names fall back to a
 // neutral dot.
-import type { SVGProps } from "react";
+import type { ReactElement, SVGProps } from "react";
 
 type GlyphName =
   | "wave"
@@ -36,7 +36,7 @@ type GlyphName =
 
 const STROKE = { strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
 
-const PATHS: Record<GlyphName, JSX.Element> = {
+const PATHS: Record<GlyphName, ReactElement> = {
   wave: (
     <path d="M2 12 Q5 4 8 12 T14 12 T20 12 T22 12" fill="none" stroke="currentColor" {...STROKE} />
   ),
@@ -225,7 +225,7 @@ interface Props extends Omit<SVGProps<SVGSVGElement>, "name"> {
 }
 
 export function Glyph({ name, size = 24, className, ...rest }: Props) {
-  const path = (PATHS as Record<string, JSX.Element>)[name] ?? PATHS.dot;
+  const path = (PATHS as Record<string, ReactElement>)[name] ?? PATHS.dot;
   return (
     <svg
       viewBox="0 0 24 24"
