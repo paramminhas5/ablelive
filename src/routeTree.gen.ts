@@ -20,18 +20,18 @@ import { Route as MissionsRouteImport } from './routes/missions'
 import { Route as MatchRouteImport } from './routes/match'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LearnRouteImport } from './routes/learn'
-import { Route as GlossaryRouteImport } from './routes/glossary'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
+import { Route as GlossaryRouteImport } from './routes/glossary'
+import { Route as DjRouteImport } from './routes/dj'
 import { Route as DevicesRouteImport } from './routes/devices'
+import { Route as BeginnerRouteImport } from './routes/beginner'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as WorldSlugRouteImport } from './routes/world.$slug'
 import { Route as PathSlugRouteImport } from './routes/path.$slug'
 import { Route as MissionSlugRouteImport } from './routes/mission.$slug'
-import { Route as DeviceSlugRouteImport } from './routes/device.$slug'
-import { Route as BeginnerRouteImport } from './routes/beginner'
-import { Route as BeginnerSlugRouteImport } from './routes/beginner.$slug'
-import { Route as DjRouteImport } from './routes/dj'
 import { Route as DjSlugRouteImport } from './routes/dj.$slug'
+import { Route as DeviceSlugRouteImport } from './routes/device.$slug'
+import { Route as BeginnerSlugRouteImport } from './routes/beginner.$slug'
 
 const WorldsRoute = WorldsRouteImport.update({
   id: '/worlds',
@@ -88,19 +88,29 @@ const LearnRoute = LearnRouteImport.update({
   path: '/learn',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GlossaryRoute = GlossaryRouteImport.update({
-  id: '/glossary',
-  path: '/glossary',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LeaderboardRoute = LeaderboardRouteImport.update({
   id: '/leaderboard',
   path: '/leaderboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GlossaryRoute = GlossaryRouteImport.update({
+  id: '/glossary',
+  path: '/glossary',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DjRoute = DjRouteImport.update({
+  id: '/dj',
+  path: '/dj',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DevicesRoute = DevicesRouteImport.update({
   id: '/devices',
   path: '/devices',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BeginnerRoute = BeginnerRouteImport.update({
+  id: '/beginner',
+  path: '/beginner',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -123,41 +133,58 @@ const MissionSlugRoute = MissionSlugRouteImport.update({
   path: '/mission/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DjSlugRoute = DjSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => DjRoute,
+} as any)
 const DeviceSlugRoute = DeviceSlugRouteImport.update({
   id: '/device/$slug',
   path: '/device/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BeginnerSlugRoute = BeginnerSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BeginnerRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/beginner': typeof BeginnerRouteWithChildren
   '/devices': typeof DevicesRoute
+  '/dj': typeof DjRouteWithChildren
   '/glossary': typeof GlossaryRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/learn': typeof LearnRoute
   '/login': typeof LoginRoute
   '/match': typeof MatchRoute
+  '/missions': typeof MissionsRoute
   '/paths': typeof PathsRoute
-  '/missions': typeof MissionsRoute
-  '/missions': typeof MissionsRoute
-  '/missions': typeof MissionsRoute
   '/playground': typeof PlaygroundRoute
   '/profile': typeof ProfileRoute
   '/shortcuts': typeof ShortcutsRoute
   '/signal-flow': typeof SignalFlowRoute
   '/train': typeof TrainRoute
   '/worlds': typeof WorldsRoute
+  '/beginner/$slug': typeof BeginnerSlugRoute
   '/device/$slug': typeof DeviceSlugRoute
+  '/dj/$slug': typeof DjSlugRoute
   '/mission/$slug': typeof MissionSlugRoute
   '/path/$slug': typeof PathSlugRoute
   '/world/$slug': typeof WorldSlugRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/beginner': typeof BeginnerRouteWithChildren
   '/devices': typeof DevicesRoute
+  '/dj': typeof DjRouteWithChildren
   '/glossary': typeof GlossaryRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/learn': typeof LearnRoute
   '/login': typeof LoginRoute
   '/match': typeof MatchRoute
+  '/missions': typeof MissionsRoute
   '/paths': typeof PathsRoute
   '/playground': typeof PlaygroundRoute
   '/profile': typeof ProfileRoute
@@ -165,7 +192,9 @@ export interface FileRoutesByTo {
   '/signal-flow': typeof SignalFlowRoute
   '/train': typeof TrainRoute
   '/worlds': typeof WorldsRoute
+  '/beginner/$slug': typeof BeginnerSlugRoute
   '/device/$slug': typeof DeviceSlugRoute
+  '/dj/$slug': typeof DjSlugRoute
   '/mission/$slug': typeof MissionSlugRoute
   '/path/$slug': typeof PathSlugRoute
   '/world/$slug': typeof WorldSlugRoute
@@ -173,11 +202,15 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/beginner': typeof BeginnerRouteWithChildren
   '/devices': typeof DevicesRoute
+  '/dj': typeof DjRouteWithChildren
   '/glossary': typeof GlossaryRoute
+  '/leaderboard': typeof LeaderboardRoute
   '/learn': typeof LearnRoute
   '/login': typeof LoginRoute
   '/match': typeof MatchRoute
+  '/missions': typeof MissionsRoute
   '/paths': typeof PathsRoute
   '/playground': typeof PlaygroundRoute
   '/profile': typeof ProfileRoute
@@ -185,7 +218,9 @@ export interface FileRoutesById {
   '/signal-flow': typeof SignalFlowRoute
   '/train': typeof TrainRoute
   '/worlds': typeof WorldsRoute
+  '/beginner/$slug': typeof BeginnerSlugRoute
   '/device/$slug': typeof DeviceSlugRoute
+  '/dj/$slug': typeof DjSlugRoute
   '/mission/$slug': typeof MissionSlugRoute
   '/path/$slug': typeof PathSlugRoute
   '/world/$slug': typeof WorldSlugRoute
@@ -194,84 +229,91 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/beginner'
     | '/devices'
+    | '/dj'
     | '/glossary'
+    | '/leaderboard'
     | '/learn'
     | '/login'
     | '/match'
-    | '/paths'
     | '/missions'
+    | '/paths'
     | '/playground'
     | '/profile'
     | '/shortcuts'
     | '/signal-flow'
     | '/train'
     | '/worlds'
+    | '/beginner/$slug'
     | '/device/$slug'
+    | '/dj/$slug'
     | '/mission/$slug'
     | '/path/$slug'
     | '/world/$slug'
-    | '/beginner'
-    | '/beginner/$slug'
-    | '/dj'
-    | '/dj/$slug'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/beginner'
     | '/devices'
+    | '/dj'
     | '/glossary'
+    | '/leaderboard'
     | '/learn'
     | '/login'
     | '/match'
-    | '/paths'
     | '/missions'
+    | '/paths'
     | '/playground'
     | '/profile'
     | '/shortcuts'
     | '/signal-flow'
     | '/train'
     | '/worlds'
+    | '/beginner/$slug'
     | '/device/$slug'
+    | '/dj/$slug'
     | '/mission/$slug'
     | '/path/$slug'
     | '/world/$slug'
-    | '/beginner'
-    | '/beginner/$slug'
-    | '/dj'
-    | '/dj/$slug'
   id:
     | '__root__'
     | '/'
+    | '/beginner'
     | '/devices'
+    | '/dj'
     | '/glossary'
+    | '/leaderboard'
     | '/learn'
     | '/login'
     | '/match'
-    | '/paths'
     | '/missions'
+    | '/paths'
     | '/playground'
     | '/profile'
     | '/shortcuts'
     | '/signal-flow'
     | '/train'
     | '/worlds'
+    | '/beginner/$slug'
     | '/device/$slug'
+    | '/dj/$slug'
     | '/mission/$slug'
     | '/path/$slug'
     | '/world/$slug'
-    | '/beginner'
-    | '/beginner/$slug'
-    | '/dj'
-    | '/dj/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BeginnerRoute: typeof BeginnerRouteWithChildren
   DevicesRoute: typeof DevicesRoute
+  DjRoute: typeof DjRouteWithChildren
   GlossaryRoute: typeof GlossaryRoute
+  LeaderboardRoute: typeof LeaderboardRoute
   LearnRoute: typeof LearnRoute
   LoginRoute: typeof LoginRoute
   MatchRoute: typeof MatchRoute
+  MissionsRoute: typeof MissionsRoute
   PathsRoute: typeof PathsRoute
   PlaygroundRoute: typeof PlaygroundRoute
   ProfileRoute: typeof ProfileRoute
@@ -283,21 +325,10 @@ export interface RootRouteChildren {
   MissionSlugRoute: typeof MissionSlugRoute
   PathSlugRoute: typeof PathSlugRoute
   WorldSlugRoute: typeof WorldSlugRoute
-  BeginnerRoute: typeof BeginnerRoute
-  BeginnerSlugRoute: typeof BeginnerSlugRoute
-  DjRoute: typeof DjRoute
-  DjSlugRoute: typeof DjSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/leaderboard': {
-      id: '/leaderboard'
-      path: '/leaderboard'
-      fullPath: '/leaderboard'
-      preLoaderRoute: typeof LeaderboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/worlds': {
       id: '/worlds'
       path: '/worlds'
@@ -340,15 +371,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlaygroundRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/missions': {
-      preloadedRoute: undefined,
-      id: '/missions',
-    },
     '/paths': {
       id: '/paths'
       path: '/paths'
       fullPath: '/paths'
       preLoaderRoute: typeof PathsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/missions': {
+      id: '/missions'
+      path: '/missions'
+      fullPath: '/missions'
+      preLoaderRoute: typeof MissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/match': {
@@ -372,6 +406,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LearnRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/leaderboard': {
+      id: '/leaderboard'
+      path: '/leaderboard'
+      fullPath: '/leaderboard'
+      preLoaderRoute: typeof LeaderboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/glossary': {
       id: '/glossary'
       path: '/glossary'
@@ -379,11 +420,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GlossaryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dj': {
+      id: '/dj'
+      path: '/dj'
+      fullPath: '/dj'
+      preLoaderRoute: typeof DjRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/devices': {
       id: '/devices'
       path: '/devices'
       fullPath: '/devices'
       preLoaderRoute: typeof DevicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/beginner': {
+      id: '/beginner'
+      path: '/beginner'
+      fullPath: '/beginner'
+      preLoaderRoute: typeof BeginnerRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -414,6 +469,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MissionSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dj/$slug': {
+      id: '/dj/$slug'
+      path: '/$slug'
+      fullPath: '/dj/$slug'
+      preLoaderRoute: typeof DjSlugRouteImport
+      parentRoute: typeof DjRoute
+    }
     '/device/$slug': {
       id: '/device/$slug'
       path: '/device/$slug'
@@ -421,69 +483,50 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DeviceSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/beginner': {
-      id: '/beginner'
-      path: '/beginner'
-      fullPath: '/beginner'
-      preLoaderRoute: typeof BeginnerRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/beginner/$slug': {
       id: '/beginner/$slug'
-      path: '/beginner/$slug'
+      path: '/$slug'
       fullPath: '/beginner/$slug'
       preLoaderRoute: typeof BeginnerSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dj': {
-      id: '/dj'
-      path: '/dj'
-      fullPath: '/dj'
-      preLoaderRoute: typeof DjRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dj/$slug': {
-      id: '/dj/$slug'
-      path: '/dj/$slug'
-      fullPath: '/dj/$slug'
-      preLoaderRoute: typeof DjSlugRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof BeginnerRoute
     }
   }
 }
 
+interface BeginnerRouteChildren {
+  BeginnerSlugRoute: typeof BeginnerSlugRoute
+}
 
-const BeginnerRoute = BeginnerRouteImport.update({
-  id: '/beginner',
-  path: '/beginner',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BeginnerSlugRoute = BeginnerSlugRouteImport.update({
-  id: '/beginner/$slug',
-  path: '/beginner/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DjRoute = DjRouteImport.update({
-  id: '/dj',
-  path: '/dj',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DjSlugRoute = DjSlugRouteImport.update({
-  id: '/dj/$slug',
-  path: '/dj/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
+const BeginnerRouteChildren: BeginnerRouteChildren = {
+  BeginnerSlugRoute: BeginnerSlugRoute,
+}
+
+const BeginnerRouteWithChildren = BeginnerRoute._addFileChildren(
+  BeginnerRouteChildren,
+)
+
+interface DjRouteChildren {
+  DjSlugRoute: typeof DjSlugRoute
+}
+
+const DjRouteChildren: DjRouteChildren = {
+  DjSlugRoute: DjSlugRoute,
+}
+
+const DjRouteWithChildren = DjRoute._addFileChildren(DjRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BeginnerRoute: BeginnerRouteWithChildren,
   DevicesRoute: DevicesRoute,
+  DjRoute: DjRouteWithChildren,
   GlossaryRoute: GlossaryRoute,
   LeaderboardRoute: LeaderboardRoute,
   LearnRoute: LearnRoute,
   LoginRoute: LoginRoute,
   MatchRoute: MatchRoute,
+  MissionsRoute: MissionsRoute,
   PathsRoute: PathsRoute,
-  MissionsRoute,
   PlaygroundRoute: PlaygroundRoute,
   ProfileRoute: ProfileRoute,
   ShortcutsRoute: ShortcutsRoute,
@@ -494,15 +537,7 @@ const rootRouteChildren: RootRouteChildren = {
   MissionSlugRoute: MissionSlugRoute,
   PathSlugRoute: PathSlugRoute,
   WorldSlugRoute: WorldSlugRoute,
-  BeginnerRoute: BeginnerRoute,
-  BeginnerSlugRoute: BeginnerSlugRoute,
-  DjRoute: DjRoute,
-  DjSlugRoute: DjSlugRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-// ── NEW ROUTES: Beginner + DJ Path ─────────────────────────────────────────
-// These are manually added to the generated route tree since the router
-// generator hasn't run yet. They follow the same pattern as the generated code.
