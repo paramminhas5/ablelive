@@ -380,21 +380,6 @@ function MissionPage() {
         )}
       </section>
 
-      {advanced && deep?.sources && deep.sources.length > 0 && (
-        <div className="brutal-border bg-bone p-3">
-          <div className="font-mono text-xs uppercase font-bold mb-1">
-            ▸ REFERENCES — Ableton Live 12 Reference Manual
-          </div>
-          <ul className="font-mono text-xs space-y-1">
-            {deep.sources.map((s, i) => (
-              <li key={i}>
-                · {s.section} — {s.label}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
       <div className="flex justify-between gap-2 font-mono text-xs uppercase">
         {prev ? (
           <Link

@@ -290,7 +290,7 @@ const w2: Mission[] = [
   {
     slug: "session-view",
     world: "two-views",
-    number: 6,
+    number: 1,
     title: "Session View",
     tagline: "The clip grid.",
     xp: 70,
@@ -346,7 +346,7 @@ const w2: Mission[] = [
   {
     slug: "arrangement-view",
     world: "two-views",
-    number: 7,
+    number: 2,
     title: "Arrangement View",
     tagline: "The timeline.",
     xp: 70,
@@ -396,7 +396,7 @@ const w2: Mission[] = [
   {
     slug: "clips",
     world: "two-views",
-    number: 8,
+    number: 3,
     title: "Clips 101 — MIDI vs Audio",
     tagline: "Two clip types. Wildly different powers.",
     xp: 70,
@@ -484,7 +484,7 @@ const w2: Mission[] = [
   {
     slug: "tracks",
     world: "two-views",
-    number: 9,
+    number: 4,
     title: "Tracks",
     tagline: "Audio. MIDI. Return. Group. Master.",
     xp: 50,
@@ -531,7 +531,7 @@ const w2: Mission[] = [
   {
     slug: "scenes-follow",
     world: "two-views",
-    number: 10,
+    number: 5,
     title: "Scenes & Follow Actions",
     tagline: "Make clips play themselves.",
     xp: 70,
@@ -584,7 +584,7 @@ const w3: Mission[] = [
   {
     slug: "midi-piano-roll",
     world: "midi-audio",
-    number: 11,
+    number: 1,
     title: "MIDI Piano Roll",
     tagline: "Click. Drag. Compose.",
     xp: 80,
@@ -640,7 +640,7 @@ const w3: Mission[] = [
   {
     slug: "audio-clips",
     world: "midi-audio",
-    number: 12,
+    number: 2,
     title: "Audio Clips",
     tagline: "Samples that bend to your will.",
     xp: 60,
@@ -690,7 +690,7 @@ const w3: Mission[] = [
   {
     slug: "warping",
     world: "midi-audio",
-    number: 13,
+    number: 3,
     title: "Warping",
     tagline: "Lock any sample to your tempo.",
     xp: 90,
@@ -747,7 +747,7 @@ const w3: Mission[] = [
   {
     slug: "recording-audio",
     world: "midi-audio",
-    number: 14,
+    number: 4,
     title: "Recording Audio",
     tagline: "Get sound in.",
     xp: 60,
@@ -803,7 +803,7 @@ const w3: Mission[] = [
   {
     slug: "comping",
     world: "midi-audio",
-    number: 15,
+    number: 5,
     title: "Comping",
     tagline: "Stitch the perfect take.",
     xp: 70,
@@ -853,7 +853,7 @@ const w3: Mission[] = [
   {
     slug: "slicing",
     world: "midi-audio",
-    number: 16,
+    number: 6,
     title: "Slicing to MIDI",
     tagline: "Turn any loop into a playable kit.",
     xp: 70,
@@ -910,7 +910,7 @@ const w4: Mission[] = [
   {
     slug: "instruments-overview",
     world: "devices",
-    number: 17,
+    number: 1,
     title: "Instruments Overview",
     tagline: "Your built-in synths.",
     xp: 60,
@@ -958,7 +958,7 @@ const w4: Mission[] = [
   {
     slug: "drum-rack",
     world: "devices",
-    number: 18,
+    number: 2,
     title: "Drum Rack",
     tagline: "16 pads, infinite kits.",
     xp: 70,
@@ -1009,7 +1009,7 @@ const w4: Mission[] = [
   {
     slug: "wavetable",
     world: "devices",
-    number: 19,
+    number: 3,
     title: "Wavetable",
     tagline: "Modern synthesis, made friendly.",
     xp: 70,
@@ -1055,7 +1055,7 @@ const w4: Mission[] = [
   {
     slug: "operator",
     world: "devices",
-    number: 20,
+    number: 4,
     title: "Operator",
     tagline: "FM synthesis demystified.",
     xp: 80,
@@ -1105,7 +1105,7 @@ const w4: Mission[] = [
   {
     slug: "sampler-simpler",
     world: "devices",
-    number: 21,
+    number: 5,
     title: "Sampler & Simpler",
     tagline: "Play any sound as an instrument.",
     xp: 60,
@@ -1150,7 +1150,7 @@ const w4: Mission[] = [
   {
     slug: "eq-eight",
     world: "devices",
-    number: 22,
+    number: 6,
     title: "EQ Eight",
     tagline: "Shape every frequency.",
     xp: 70,
@@ -1206,7 +1206,7 @@ const w4: Mission[] = [
   {
     slug: "compressor",
     world: "devices",
-    number: 23,
+    number: 7,
     title: "Compressor",
     tagline: "Tame dynamics. Add punch.",
     xp: 80,
@@ -1260,7 +1260,7 @@ const w4: Mission[] = [
   {
     slug: "reverb-delay",
     world: "devices",
-    number: 24,
+    number: 8,
     title: "Reverb & Delay",
     tagline: "Space and echo.",
     xp: 60,
@@ -1307,7 +1307,7 @@ const w4: Mission[] = [
   {
     slug: "saturator-distortion",
     world: "devices",
-    number: 25,
+    number: 9,
     title: "Saturator & Distortion",
     tagline: "Add grit. Add glue.",
     xp: 60,
@@ -1353,7 +1353,7 @@ const w4: Mission[] = [
   {
     slug: "midi-effects",
     world: "devices",
-    number: 26,
+    number: 10,
     title: "MIDI Effects",
     tagline: "Process notes before sound.",
     xp: 50,
@@ -1400,7 +1400,7 @@ const w4: Mission[] = [
   {
     slug: "racks-macros",
     world: "devices",
-    number: 27,
+    number: 11,
     title: "Racks & Macros",
     tagline: "Wrap chains. Map controls.",
     xp: 80,
@@ -1454,7 +1454,7 @@ const w5: Mission[] = [
   {
     slug: "the-mixer",
     world: "mixing",
-    number: 28,
+    number: 1,
     title: "The Mixer",
     tagline: "Faders, pans, meters.",
     xp: 70,
@@ -1501,7 +1501,7 @@ const w5: Mission[] = [
   {
     slug: "sends-returns",
     world: "mixing",
-    number: 29,
+    number: 2,
     title: "Sends & Returns",
     tagline: "Share effects. Save CPU.",
     xp: 70,
@@ -1551,7 +1551,7 @@ const w5: Mission[] = [
   {
     slug: "groups-routing",
     world: "mixing",
-    number: 30,
+    number: 3,
     title: "Groups & Routing",
     tagline: "Sub-mixes and signal flow.",
     xp: 80,
@@ -1597,7 +1597,7 @@ const w5: Mission[] = [
   {
     slug: "automation",
     world: "mixing",
-    number: 31,
+    number: 4,
     title: "Automation",
     tagline: "Make parameters move.",
     xp: 80,
@@ -1648,7 +1648,7 @@ const w5: Mission[] = [
   {
     slug: "modulation-lanes",
     world: "mixing",
-    number: 32,
+    number: 5,
     title: "Modulation Lanes",
     tagline: "Beyond automation.",
     xp: 70,
@@ -1697,7 +1697,7 @@ const w5: Mission[] = [
   {
     slug: "sidechain",
     world: "mixing",
-    number: 33,
+    number: 6,
     title: "Sidechain Compression",
     tagline: "The pump.",
     xp: 90,
@@ -1753,7 +1753,7 @@ const w5: Mission[] = [
   {
     slug: "max-for-live",
     world: "mixing",
-    number: 34,
+    number: 7,
     title: "Max for Live",
     tagline: "Build your own devices.",
     xp: 60,
@@ -1802,7 +1802,7 @@ const w6: Mission[] = [
   {
     slug: "push-controllers",
     world: "performance",
-    number: 35,
+    number: 1,
     title: "Push & Controllers",
     tagline: "Get hands on.",
     xp: 60,
@@ -1847,7 +1847,7 @@ const w6: Mission[] = [
   {
     slug: "midi-mapping",
     world: "performance",
-    number: 36,
+    number: 2,
     title: "MIDI Mapping",
     tagline: "Map any knob to anything.",
     xp: 70,
@@ -1897,7 +1897,7 @@ const w6: Mission[] = [
   {
     slug: "tempo-following",
     world: "performance",
-    number: 37,
+    number: 3,
     title: "Tempo Following",
     tagline: "Live follows you.",
     xp: 60,
@@ -1946,7 +1946,7 @@ const w6: Mission[] = [
   {
     slug: "cv-tools",
     world: "performance",
-    number: 38,
+    number: 4,
     title: "CV Tools",
     tagline: "Talk to modular.",
     xp: 50,
@@ -1991,7 +1991,7 @@ const w6: Mission[] = [
   {
     slug: "ableton-link",
     world: "performance",
-    number: 39,
+    number: 5,
     title: "Ableton Link",
     tagline: "Sync apps over Wi-Fi.",
     xp: 50,
@@ -2040,7 +2040,7 @@ const w6: Mission[] = [
   {
     slug: "exporting",
     world: "performance",
-    number: 40,
+    number: 6,
     title: "Exporting",
     tagline: "Render the final file.",
     xp: 60,
@@ -2091,7 +2091,7 @@ const w6: Mission[] = [
   {
     slug: "live-sets-projects",
     world: "performance",
-    number: 41,
+    number: 7,
     title: "Live Sets & Projects",
     tagline: "Stay organised.",
     xp: 40,
@@ -2137,7 +2137,7 @@ const w6: Mission[] = [
   {
     slug: "troubleshooting",
     world: "performance",
-    number: 42,
+    number: 8,
     title: "Troubleshooting",
     tagline: "When things break.",
     xp: 50,
@@ -2186,7 +2186,7 @@ const wExtra: Mission[] = [
   {
     slug: "capture-midi",
     world: "first-contact",
-    number: 43,
+    number: 6,
     title: "Capture MIDI",
     tagline: "The take you didn't record — recovered.",
     xp: 60,
@@ -2241,7 +2241,7 @@ const wExtra: Mission[] = [
   {
     slug: "take-lanes",
     world: "two-views",
-    number: 44,
+    number: 6,
     title: "Take Lanes & Comping",
     tagline: "Stack takes. Pick the best bits. Make one perfect take.",
     xp: 80,
@@ -2297,7 +2297,7 @@ const wExtra: Mission[] = [
   {
     slug: "mpe-tuning",
     world: "midi-audio",
-    number: 45,
+    number: 7,
     title: "MPE & Tuning Systems",
     tagline: "Per-note bends. Microtonal scales. Beyond 12-EDO.",
     xp: 90,
@@ -2352,7 +2352,7 @@ const wExtra: Mission[] = [
   {
     slug: "meld",
     world: "devices",
-    number: 46,
+    number: 12,
     title: "Meld",
     tagline: "Live 12's MPE-first dual-engine synth.",
     xp: 80,
@@ -2407,7 +2407,7 @@ const wExtra: Mission[] = [
   {
     slug: "drum-sampler",
     world: "devices",
-    number: 47,
+    number: 13,
     title: "Drum Sampler",
     tagline: "Modern, multi-sample drum hits with built-in shaping.",
     xp: 70,
@@ -2462,7 +2462,7 @@ const wExtra: Mission[] = [
   {
     slug: "hybrid-reverb",
     world: "devices",
-    number: 48,
+    number: 14,
     title: "Hybrid Reverb",
     tagline: "Convolution + algorithmic, blended in one device.",
     xp: 70,
@@ -2517,7 +2517,7 @@ const wExtra: Mission[] = [
   {
     slug: "roar",
     world: "devices",
-    number: 49,
+    number: 15,
     title: "Roar",
     tagline: "Multiband, modulated saturation. Tonal weapon.",
     xp: 70,
@@ -2572,7 +2572,7 @@ const wExtra: Mission[] = [
   {
     slug: "glue-compressor",
     world: "mixing",
-    number: 50,
+    number: 8,
     title: "Glue Compressor",
     tagline: "The bus compressor that makes a mix feel like one record.",
     xp: 70,
@@ -2627,7 +2627,7 @@ const wExtra: Mission[] = [
   {
     slug: "limiter-truepeak",
     world: "mixing",
-    number: 51,
+    number: 9,
     title: "Limiter & True Peak",
     tagline: "The last device on every master.",
     xp: 70,
@@ -2682,7 +2682,7 @@ const wExtra: Mission[] = [
   {
     slug: "warp-modes-deep",
     world: "midi-audio",
-    number: 52,
+    number: 8,
     title: "Warp Modes Deep Dive",
     tagline: "Beats, Tones, Texture, Re-Pitch, Complex, Complex Pro — when each wins.",
     xp: 80,
@@ -2739,7 +2739,7 @@ const wExtra: Mission[] = [
   {
     slug: "ableton-link-sync",
     world: "performance",
-    number: 53,
+    number: 9,
     title: "Ableton Link in Practice",
     tagline: "Network-sync your Lives, iOS apps, hardware.",
     xp: 70,
@@ -2794,7 +2794,7 @@ const wExtra: Mission[] = [
   {
     slug: "push3-workflow",
     world: "performance",
-    number: 54,
+    number: 10,
     title: "Push 3 Workflow",
     tagline: "Make a track without touching the mouse.",
     xp: 90,
@@ -2850,7 +2850,7 @@ const wExtra: Mission[] = [
   {
     slug: "macro-variations",
     world: "performance",
-    number: 55,
+    number: 11,
     title: "Macro Variations",
     tagline: "Snapshot, recall, morph — patches that perform.",
     xp: 70,
@@ -2911,7 +2911,7 @@ const w7: Mission[] = [
   {
     slug: "sampler-deep",
     world: "midi-instruments",
-    number: 56,
+    number: 1,
     title: "Sampler — Deep",
     tagline: "Multisamples, zones, modulation. Sampler ≠ Simpler.",
     xp: 70,
@@ -2967,7 +2967,7 @@ const w7: Mission[] = [
   {
     slug: "drift",
     world: "midi-instruments",
-    number: 57,
+    number: 2,
     title: "Drift",
     tagline: "Small synth, big personality.",
     xp: 60,
@@ -3022,7 +3022,7 @@ const w7: Mission[] = [
   {
     slug: "granulator-iii",
     world: "midi-instruments",
-    number: 58,
+    number: 3,
     title: "Granulator III",
     tagline: "Time stretching into texture.",
     xp: 70,
@@ -3077,7 +3077,7 @@ const w7: Mission[] = [
   {
     slug: "collision-tension-electric",
     world: "midi-instruments",
-    number: 59,
+    number: 4,
     title: "Collision · Tension · Electric · Analog",
     tagline: "Physical modelling + virtual analog.",
     xp: 80,
@@ -3133,7 +3133,7 @@ const w7: Mission[] = [
   {
     slug: "bass-poli",
     world: "midi-instruments",
-    number: 60,
+    number: 5,
     title: "Bass & Poli (Live 12)",
     tagline: "Curated synths, one knob away from great.",
     xp: 60,
@@ -3188,7 +3188,7 @@ const w7: Mission[] = [
   {
     slug: "instrument-rack",
     world: "midi-instruments",
-    number: 61,
+    number: 6,
     title: "Instrument Rack",
     tagline: "Stack, layer, split, morph.",
     xp: 70,
@@ -3244,7 +3244,7 @@ const w7: Mission[] = [
   {
     slug: "midi-effects-tour",
     world: "midi-instruments",
-    number: 62,
+    number: 7,
     title: "MIDI Effects Tour",
     tagline: "Arpeggiator, Chord, Scale, Random, Note Echo.",
     xp: 60,
@@ -3302,7 +3302,7 @@ const w7: Mission[] = [
   {
     slug: "external-instrument",
     world: "midi-instruments",
-    number: 63,
+    number: 8,
     title: "External Instrument",
     tagline: "Treat hardware like a plugin.",
     xp: 60,
@@ -3363,7 +3363,7 @@ const w8: Mission[] = [
   {
     slug: "stem-separation",
     world: "live12-power",
-    number: 64,
+    number: 1,
     title: "Stem Separation",
     tagline: "Drop a song. Get drums, bass, vocals, melodies.",
     xp: 90,
@@ -3418,7 +3418,7 @@ const w8: Mission[] = [
   {
     slug: "midi-transforms",
     world: "live12-power",
-    number: 65,
+    number: 2,
     title: "MIDI Transformations",
     tagline: "Connect, Arpeggiate, Strum, Recombine, Ornament.",
     xp: 80,
@@ -3476,7 +3476,7 @@ const w8: Mission[] = [
   {
     slug: "scale-awareness",
     world: "live12-power",
-    number: 66,
+    number: 3,
     title: "Scale Awareness",
     tagline: "The whole project speaks one scale.",
     xp: 70,
@@ -3532,7 +3532,7 @@ const w8: Mission[] = [
   {
     slug: "sound-similarity",
     world: "live12-power",
-    number: 67,
+    number: 4,
     title: "Sound Similarity Search",
     tagline: "Find sounds that sound like this one.",
     xp: 60,
@@ -3587,7 +3587,7 @@ const w8: Mission[] = [
   {
     slug: "comping-flow",
     world: "live12-power",
-    number: 68,
+    number: 5,
     title: "Comping Flow",
     tagline: "Take lanes → one perfect take.",
     xp: 80,
@@ -3643,7 +3643,7 @@ const w8: Mission[] = [
   {
     slug: "groove-pool",
     world: "live12-power",
-    number: 69,
+    number: 6,
     title: "Groove Pool",
     tagline: "Borrow the swing of any loop.",
     xp: 70,
@@ -3699,7 +3699,7 @@ const w8: Mission[] = [
   {
     slug: "linked-track-editing",
     world: "live12-power",
-    number: 70,
+    number: 7,
     title: "Linked-Track Editing",
     tagline: "Edit several tracks as one.",
     xp: 60,
@@ -3754,7 +3754,7 @@ const w8: Mission[] = [
   {
     slug: "push3-standalone",
     world: "live12-power",
-    number: 71,
+    number: 8,
     title: "Push 3 Standalone",
     tagline: "Live's engine inside a piece of hardware.",
     xp: 80,
@@ -3809,7 +3809,7 @@ const w8: Mission[] = [
   {
     slug: "cpu-audio-setup",
     world: "live12-power",
-    number: 72,
+    number: 9,
     title: "CPU & Audio Setup",
     tagline: "Buffers, freeze, flatten, multichannel.",
     xp: 60,
@@ -3865,7 +3865,7 @@ const w8: Mission[] = [
   {
     slug: "accessibility-features",
     world: "live12-power",
-    number: 73,
+    number: 10,
     title: "Accessibility in Live",
     tagline: "Screen reader, narrate, contrast, keyboard.",
     xp: 50,

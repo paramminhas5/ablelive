@@ -59,6 +59,17 @@ const GrooveExtractorSim = lazy(() =>
   import("./GrooveExtractorSim").then((m) => ({ default: m.GrooveExtractorSim })),
 );
 const Push3Sim = lazy(() => import("./Push3Sim").then((m) => ({ default: m.Push3Sim })));
+const BeatBuilderSim = lazy(() => import("./BeatBuilderSim").then((m) => ({ default: m.BeatBuilderSim })));
+const NoteExplorerSim = lazy(() => import("./NoteExplorerSim").then((m) => ({ default: m.NoteExplorerSim })));
+const ChordStackerSim = lazy(() => import("./ChordStackerSim").then((m) => ({ default: m.ChordStackerSim })));
+const BasslineLabSim = lazy(() => import("./BasslineLabSim").then((m) => ({ default: m.BasslineLabSim })));
+const MelodyShaperSim = lazy(() => import("./MelodyShaperSim").then((m) => ({ default: m.MelodyShaperSim })));
+const SongStructureSim = lazy(() => import("./SongStructureSim").then((m) => ({ default: m.SongStructureSim })));
+const SubtractiveSynthSim = lazy(() => import("./SubtractiveSynthSim").then((m) => ({ default: m.SubtractiveSynthSim })));
+const BeatmatchTrainerSim = lazy(() => import("./BeatmatchTrainerSim").then((m) => ({ default: m.BeatmatchTrainerSim })));
+const HotCueDrillSim = lazy(() => import("./HotCueDrillSim").then((m) => ({ default: m.HotCueDrillSim })));
+const LoopRollSim = lazy(() => import("./LoopRollSim").then((m) => ({ default: m.LoopRollSim })));
+const HarmonicMixWheelSim = lazy(() => import("./HarmonicMixWheelSim").then((m) => ({ default: m.HarmonicMixWheelSim })));
 
 function SimSkeleton() {
   return (
@@ -161,6 +172,28 @@ function SimInner({ type, preset }: { type: SimType; preset?: Record<string, unk
       return <GrooveExtractorSim />;
     case "push3":
       return <Push3Sim />;
+    case "beat-builder":
+      return <BeatBuilderSim />;
+    case "note-explorer":
+      return <NoteExplorerSim />;
+    case "chord-stacker":
+      return <ChordStackerSim />;
+    case "bassline-lab":
+      return <BasslineLabSim />;
+    case "melody-shaper":
+      return <MelodyShaperSim />;
+    case "song-structure":
+      return <SongStructureSim />;
+    case "subtractive-synth":
+      return <SubtractiveSynthSim />;
+    case "beatmatch-trainer":
+      return <BeatmatchTrainerSim />;
+    case "hot-cue-drill":
+      return <HotCueDrillSim />;
+    case "loop-roll":
+      return <LoopRollSim />;
+    case "harmonic-mix-wheel":
+      return <HarmonicMixWheelSim />;
     default:
       return (
         <div className="brutal-border bg-bone p-6 font-mono text-xs uppercase">
