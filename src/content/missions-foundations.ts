@@ -7,7 +7,7 @@ const soundPath: Mission[] = [
   {
     slug: "what-is-sound",
     world: "foundations",
-    number: 201,
+    number: 1,
     title: "What Is Sound?",
     tagline: "Invisible waves that shake your ears.",
     xp: 40,
@@ -29,7 +29,7 @@ const soundPath: Mission[] = [
   {
     slug: "frequency-pitch",
     world: "foundations",
-    number: 202,
+    number: 2,
     title: "Frequency & Pitch",
     tagline: "Why a bass note is low and a flute is high.",
     xp: 40,
@@ -50,7 +50,7 @@ const soundPath: Mission[] = [
   {
     slug: "amplitude-volume",
     world: "foundations",
-    number: 203,
+    number: 3,
     title: "Amplitude & Volume",
     tagline: "How we measure and control loudness.",
     xp: 40,
@@ -71,7 +71,7 @@ const soundPath: Mission[] = [
   {
     slug: "timbre-tone",
     world: "foundations",
-    number: 204,
+    number: 4,
     title: "Timbre & Tone Colour",
     tagline: "Why a piano and guitar sound different on the same note.",
     xp: 40,
@@ -91,7 +91,7 @@ const soundPath: Mission[] = [
   {
     slug: "waveforms",
     world: "foundations",
-    number: 205,
+    number: 5,
     title: "Waveforms",
     tagline: "The four fundamental shapes of sound.",
     xp: 40,
@@ -111,7 +111,7 @@ const soundPath: Mission[] = [
   {
     slug: "sound-in-space",
     world: "foundations",
-    number: 206,
+    number: 6,
     title: "Sound in Space",
     tagline: "Reverb, reflection, and why rooms have character.",
     xp: 40,
@@ -131,7 +131,7 @@ const soundPath: Mission[] = [
   {
     slug: "overtones-harmonics",
     world: "foundations",
-    number: 207,
+    number: 7,
     title: "Overtones & Harmonics",
     tagline: "The hidden notes inside every note.",
     xp: 40,
@@ -151,7 +151,7 @@ const soundPath: Mission[] = [
   {
     slug: "how-we-hear",
     world: "foundations",
-    number: 208,
+    number: 8,
     title: "How We Hear",
     tagline: "Ears, brains, and why context changes everything.",
     xp: 40,
@@ -172,7 +172,7 @@ const soundPath: Mission[] = [
 ];
 
 const rhythmPath: Mission[] = [
-  { slug: "what-is-rhythm", world: "foundations", number: 209, title: "What Is Rhythm?", tagline: "Pattern, pulse and the feel of time.", xp: 40, badge: { slug: "time-keeper", name: "Time Keeper" },
+  { slug: "what-is-rhythm", world: "foundations", number: 9, title: "What Is Rhythm?", tagline: "Pattern, pulse and the feel of time.", xp: 40, badge: { slug: "time-keeper", name: "Time Keeper" },
     explainer: [
       { kind: "lead", text: "Rhythm is the organisation of sounds in time — when notes happen and when they do not. The fundamental element is the pulse: a steady regular beat underlying most music. Source: learningmusic.ableton.com/make-beats" },
       { kind: "list", items: ["Pulse — the steady underlying beat (like a heartbeat or clock)", "Tempo — how fast the pulse is (measured in BPM)", "Metre — how pulses group into recurring patterns (4/4, 3/4, etc.)", "Accent — emphasis on certain beats that creates the feel", "Groove — the human feel around the rhythm"] },
@@ -185,7 +185,7 @@ const rhythmPath: Mission[] = [
       { q: "What is groove in rhythm?", options: ["Playing exactly on the grid", "The human feel around the beat — timing variations that create motion", "The BPM of a track", "A type of software"], answer: 1, explain: "Groove is the subtle timing variations around the beat grid that make rhythm feel human and alive.", hint: "A drum machine plays exactly on grid. A human drummer has groove." },
       { q: "What is metre in music?", options: ["The speed of a track", "How pulses group into recurring patterns", "The pitch of the bass note", "The length of a song"], answer: 1, explain: "Metre describes how beats group together in recurring patterns. 4/4 = four beats per bar. 3/4 = three per bar.", hint: "How many counts before the pattern repeats?" }
     ] },
-  { slug: "tempo-bpm", world: "foundations", number: 210, title: "Tempo and BPM", tagline: "Measuring the speed of music.", xp: 40,
+  { slug: "tempo-bpm", world: "foundations", number: 10, title: "Tempo and BPM", tagline: "Measuring the speed of music.", xp: 40,
     explainer: [
       { kind: "lead", text: "Tempo is the speed of music measured in BPM (Beats Per Minute). 60 BPM = one beat per second. 120 BPM = two beats per second. Source: learningmusic.ableton.com/make-beats" },
       { kind: "list", items: ["50-70 BPM — very slow, ballads, ambient", "70-95 BPM — slow groove, blues, R&B, hip-hop", "95-115 BPM — mid-tempo, pop, lo-fi", "115-130 BPM — dance, house, 4x4 club music", "130-145 BPM — techno, hard house, trance", "160-180 BPM — drum and bass, jungle"] },
@@ -198,7 +198,7 @@ const rhythmPath: Mission[] = [
       { q: "At 120 BPM there are __ beats per second.", options: ["1", "2", "4", "0.5"], answer: 1, explain: "120 BPM divided by 60 seconds = 2 beats per second.", hint: "120 BPM divided by 60 seconds per minute." },
       { q: "Drum and bass typically runs at", options: ["120-130 BPM", "140-150 BPM", "160-180 BPM", "200+ BPM"], answer: 2, explain: "Drum and bass (DnB) typically runs at 160-180 BPM — the fastest mainstream dance genre.", hint: "The fastest mainstream dance genre." }
     ] },
-  { slug: "bars-time-signatures", world: "foundations", number: 211, title: "Bars and Time Signatures", tagline: "How music is divided into repeating groups.", xp: 40,
+  { slug: "bars-time-signatures", world: "foundations", number: 11, title: "Bars and Time Signatures", tagline: "How music is divided into repeating groups.", xp: 40,
     explainer: [
       { kind: "lead", text: "A bar contains a set number of beats. The time signature tells you how many beats are in each bar and what note value counts as one beat. Source: learningmusic.ableton.com/make-beats" },
       { kind: "list", items: ["4/4 — four quarter-note beats per bar. Pop, rock, house, hip-hop, techno", "3/4 — three beats per bar. Waltz, some ballads", "6/8 — six eighth-note beats grouped in two threes. Gospel, blues", "5/4 — five beats (Dave Brubeck Take Five, prog rock)", "7/8 — seven beats, Balkan music, math rock"] },
@@ -211,7 +211,7 @@ const rhythmPath: Mission[] = [
       { q: "A waltz uses which time signature?", options: ["4/4", "3/4", "6/8", "5/4"], answer: 1, explain: "A waltz is in 3/4 — three beats per bar. ONE two three ONE two three.", hint: "Waltz: one-two-three, one-two-three. How many in a group?" },
       { q: "In a DAW, why do bars matter?", options: ["They set the volume level", "They determine clip lengths, loop points and arrangement structure", "They control the pitch", "They define the stereo width"], answer: 1, explain: "Everything in a DAW is bar-based. Clip lengths are multiples of bars. Automation aligns to bars. Bars are the building blocks.", hint: "The grid in your DAW? That is bars." }
     ] },
-  { slug: "groove-feel", world: "foundations", number: 212, title: "Groove and Feel", tagline: "Why a drum machine does not always sound human.", xp: 40,
+  { slug: "groove-feel", world: "foundations", number: 12, title: "Groove and Feel", tagline: "Why a drum machine does not always sound human.", xp: 40,
     explainer: [
       { kind: "lead", text: "Groove is the subtle timing variation around the beat grid that makes rhythm feel alive. When every note lands exactly on the mathematical grid, music can sound rigid and lifeless. Source: Ableton Live manual — Groove Pool." },
       { kind: "list", items: ["Laid back — notes placed slightly after the beat. Relaxed, deep, hip-hop feel", "Pushing — notes placed slightly before the beat. Urgent, excited, forward motion", "Velocity variation — different hit strengths for natural dynamics", "Humanise — random small timing variations added to a rigid MIDI pattern", "Quantise — snapping notes to the grid (removes human variation)"] },
@@ -224,7 +224,7 @@ const rhythmPath: Mission[] = [
       { q: "A laid back groove means notes are placed", options: ["Exactly on the beat", "Slightly before the beat", "Slightly after the beat", "Randomly throughout the bar"], answer: 2, explain: "Laid back = notes land slightly after the mathematical beat. Creates a relaxed deep feel — classic in hip-hop, soul, blues.", hint: "Laid back = relaxed. Late to the party." },
       { q: "The Groove Pool in Ableton", options: ["Generates random beats", "Extracts groove timing from audio and applies it to MIDI", "Sets the master BPM", "Records audio loops"], answer: 1, explain: "The Groove Pool lets you drag any audio clip in, extract its rhythmic feel, and apply that groove to any MIDI clip. Source: Ableton Live manual.", hint: "Steal the feel from a real drum break." }
     ] },
-  { slug: "syncopation", world: "foundations", number: 213, title: "Syncopation", tagline: "Hitting the off-beat — where energy hides.", xp: 40,
+  { slug: "syncopation", world: "foundations", number: 13, title: "Syncopation", tagline: "Hitting the off-beat — where energy hides.", xp: 40,
     explainer: [
       { kind: "lead", text: "Syncopation is placing accents on beats or subdivisions that are typically unaccented — the off-beats between the main pulse. It creates rhythmic surprise, forward motion and tension. Most popular music is built on syncopation. Source: learningmusic.ableton.com", },
       { kind: "list", items: ["Backbeat — emphasis on beats 2 and 4 (pop/rock snare, handclap)", "Off-beat eighth notes — accenting the and between beats", "Anticipated beat — hitting just before the bar line (common in funk bass)", "Tied syncopation — a note starts on an off-beat and holds through the strong beat", "Clave — the foundational syncopated pattern of Afro-Cuban music"] },
@@ -237,7 +237,7 @@ const rhythmPath: Mission[] = [
       { q: "Which tradition is the primary origin of syncopation in popular music?", options: ["European classical music", "West African rhythmic traditions", "Indian classical music", "East Asian music"], answer: 1, explain: "West African musical traditions, carried through the transatlantic slave trade, gave popular music its syncopated rhythmic DNA.", hint: "Afro-Cuban clave, blues, jazz — trace their rhythmic roots." },
       { q: "An anticipated beat hits", options: ["Slightly late", "Just before the downbeat creating forward momentum", "Tied over a bar line", "Exactly on the beat"], answer: 1, explain: "An anticipated beat hits just before the bar line — arriving early to create a feeling of rushing forward into the next bar. Very common in funk bass.", hint: "It anticipates what is coming — arrives early." }
     ] },
-  { slug: "polyrhythm", world: "foundations", number: 214, title: "Polyrhythm", tagline: "Two rhythms at once — and why it hypnotises.", xp: 50,
+  { slug: "polyrhythm", world: "foundations", number: 14, title: "Polyrhythm", tagline: "Two rhythms at once — and why it hypnotises.", xp: 50,
     explainer: [
       { kind: "lead", text: "Polyrhythm is the simultaneous use of two or more contrasting rhythms. The most common example is 3 against 2 — one voice plays three evenly-spaced notes while another plays two over the same duration." },
       { kind: "list", items: ["3:2 — three beats against two (the fundamental polyrhythm)", "4:3 — four against three", "Hemiola — alternating between groupings of 3 and 2 within 6/8", "African clave — a 3:2 syncopated pattern foundational to Cuban and jazz music", "Trap hi-hats — often places a 3-beat hi-hat pattern over a 4-beat kick grid"] },
@@ -250,7 +250,7 @@ const rhythmPath: Mission[] = [
       { q: "Polyrhythm originated primarily in", options: ["European classical music", "Indian classical music", "West African drumming traditions", "Medieval church music"], answer: 2, explain: "West African drumming ensembles are built entirely on polyrhythm — multiple interlocking rhythmic patterns layered simultaneously.", hint: "Djembe circles. Talking drums. Ewe, Yoruba, Akan drumming traditions." },
       { q: "How do some trap producers use polyrhythm?", options: ["By using 7/8 time", "By placing a 3-beat hi-hat pattern over a 4-beat kick grid", "By removing all percussion", "By using multiple tempos"], answer: 1, explain: "A common trap technique is programming hi-hats in groups of three sixteenth notes over a standard 4/4 kick — creating a 3-against-4 polyrhythm.", hint: "Count hi-hats: 1-2-3 1-2-3 over a 1-2-3-4 kick." }
     ] },
-  { slug: "note-values", world: "foundations", number: 215, title: "Note Values and Subdivision", tagline: "Whole notes, halves, quarters, eighths — the maths of rhythm.", xp: 40,
+  { slug: "note-values", world: "foundations", number: 15, title: "Note Values and Subdivision", tagline: "Whole notes, halves, quarters, eighths — the maths of rhythm.", xp: 40,
     explainer: [
       { kind: "lead", text: "Note values describe how long a note is held relative to the bar. In 4/4 time, a whole note fills an entire bar (4 beats). A half note = 2 beats. A quarter note = 1 beat. An eighth note = half a beat. Source: learningmusic.ableton.com/make-beats" },
       { kind: "list", items: ["Whole note (semibreve) — 4 beats in 4/4", "Half note (minim) — 2 beats", "Quarter note (crotchet) — 1 beat — the standard BPM pulse", "Eighth note (quaver) — 1/2 beat — 8 per bar in 4/4", "Sixteenth note (semiquaver) — 1/4 beat — 16 per bar in 4/4", "Triplets — three notes in the space of two (gives swing feel)"] },
@@ -263,7 +263,7 @@ const rhythmPath: Mission[] = [
       { q: "Sixteenth notes are how many per bar in 4/4?", options: ["8", "12", "16", "32"], answer: 2, explain: "Sixteenth note = 1/4 beat. 4 beats x 4 sixteenth notes per beat = 16 per bar.", hint: "16 per bar — hence the name." },
       { q: "A dotted quarter note lasts", options: ["1 beat", "1.5 beats", "2 beats", "0.75 beats"], answer: 1, explain: "A dot adds half the note value. Quarter note = 1 beat. Half of 1 beat = 0.5 beats. Dotted quarter = 1.5 beats.", hint: "Dot = add half again. 1 + (1 divided by 2) = 1.5." }
     ] },
-  { slug: "rhythm-in-production", world: "foundations", number: 216, title: "Rhythm in Production", tagline: "How rhythm works inside a DAW.", xp: 40, badge: { slug: "rhythm-builder", name: "Rhythm Builder" },
+  { slug: "rhythm-in-production", world: "foundations", number: 16, title: "Rhythm in Production", tagline: "How rhythm works inside a DAW.", xp: 40, badge: { slug: "rhythm-builder", name: "Rhythm Builder" },
     explainer: [
       { kind: "lead", text: "In a DAW, rhythm is managed through the piano roll (for MIDI), the drum rack (for individual drum hits), and the audio clip editor. Understanding note values and bar structure lets you work confidently in any of these. Source: Ableton Live manual." },
       { kind: "list", items: ["Step sequencer — grid of boxes each representing a subdivision", "Piano roll — horizontal grid where you draw notes of any length at any position", "MIDI clip — stores note data that an instrument plays back at the project tempo", "Drum rack — maps individual drum sounds to MIDI notes, one pad = one sound", "Quantise — snap MIDI notes to the nearest grid division to tighten timing"] },
@@ -279,7 +279,7 @@ const rhythmPath: Mission[] = [
 ];
 
 const melodyPath: Mission[] = [
-  { slug: "notes-and-octaves", world: "foundations", number: 217, title: "Notes and Octaves", tagline: "The 12 notes and why the pattern repeats.", xp: 40, badge: { slug: "note-finder", name: "Note Finder" },
+  { slug: "notes-and-octaves", world: "foundations", number: 17, title: "Notes and Octaves", tagline: "The 12 notes and why the pattern repeats.", xp: 40, badge: { slug: "note-finder", name: "Note Finder" },
     explainer: [
       { kind: "lead", text: "Western music uses 12 pitch classes arranged in a repeating cycle called the chromatic scale. Source: learningmusic.ableton.com/notes-and-scales" },
       { kind: "list", items: ["Middle C is C4 — roughly the centre of a standard 88-key piano", "Sharps (#) raise a note by one semitone — C# is one above C", "Flats (b) lower a note by one semitone — Bb is one below B", "Enharmonic equivalents — same pitch, different name (C# = Db)", "Scientific pitch notation — C4, D4, E4 (number = octave number)"] },
@@ -292,7 +292,7 @@ const melodyPath: Mission[] = [
       { q: "C# and Db are", options: ["Different pitches", "The same pitch — enharmonic equivalents", "An octave apart", "A perfect fifth apart"], answer: 1, explain: "C# (C sharp) and Db (D flat) are enharmonic equivalents — the same pitch on a keyboard, just named differently depending on context.", hint: "Same black key, two names." },
       { q: "Going up one octave multiplies the frequency by", options: ["10", "3", "2", "1.5"], answer: 2, explain: "One octave up = frequency x 2. A4 = 440 Hz, A5 = 880 Hz. Each octave doubles the frequency.", hint: "Double the frequency = same note one octave higher." }
     ] },
-  { slug: "major-scale", world: "foundations", number: 218, title: "The Major Scale", tagline: "Do Re Mi — the brightest most universal scale.", xp: 40,
+  { slug: "major-scale", world: "foundations", number: 18, title: "The Major Scale", tagline: "Do Re Mi — the brightest most universal scale.", xp: 40,
     explainer: [
       { kind: "lead", text: "The major scale is the most fundamental pitch collection in Western music. Seven notes in a specific pattern of whole steps (W) and half steps (H): W W H W W W H. Starting on C: C D E F G A B. Source: learningmusic.ableton.com/notes-and-scales" },
       { kind: "list", items: ["C major: C D E F G A B (all white keys)", "G major: G A B C D E F# (one sharp)", "F major: F G A Bb C D E (one flat)", "Pattern: W W H W W W H from any starting note", "Each note has a number (scale degree): 1 2 3 4 5 6 7"] },
@@ -305,7 +305,7 @@ const melodyPath: Mission[] = [
       { q: "The major scale sounds happy or bright primarily because of its", options: ["Minor third (3 semitones)", "Major third (4 semitones)", "Perfect fifth", "Minor seventh"], answer: 1, explain: "The major third (4 semitones from root to 3rd scale degree) gives major scales their bright quality. The minor scale lowers this by one semitone.", hint: "The 3rd degree is the key difference between major and minor." },
       { q: "What is a scale degree?", options: ["The volume of a note", "The numbered position of a note within a scale (1-7)", "The frequency in Hz", "The octave number"], answer: 1, explain: "Scale degrees number the notes of a scale from 1 (tonic) to 7 (leading tone). Using numbers means the same patterns apply regardless of key.", hint: "1 = home. 5 = tension. 7 = leading tone." }
     ] },
-  { slug: "minor-scale", world: "foundations", number: 219, title: "The Minor Scale", tagline: "Darkness, mystery and emotional depth.", xp: 40,
+  { slug: "minor-scale", world: "foundations", number: 19, title: "The Minor Scale", tagline: "Darkness, mystery and emotional depth.", xp: 40,
     explainer: [
       { kind: "lead", text: "The natural minor scale follows: W H W W H W W. Starting on A: A B C D E F G — the relative minor of C major, using the same notes but with A as home. Source: learningmusic.ableton.com/notes-and-scales" },
       { kind: "list", items: ["Natural minor: W H W W H W W (darkest, most basic)", "Harmonic minor: raises the 7th by a semitone — dramatic pull to tonic", "Melodic minor: raises both 6th and 7th when ascending — smoother melodic motion", "Relative minor — every major key has a relative minor starting from the 6th degree", "Parallel minor — same root, different notes (C major vs C minor)"] }
@@ -317,7 +317,7 @@ const melodyPath: Mission[] = [
       { q: "The harmonic minor scale is distinctive because it has", options: ["A lowered 5th", "A raised 7th creating a 1.5-step interval", "No sharps or flats", "A raised 3rd"], answer: 1, explain: "Harmonic minor raises the 7th by a semitone, creating a gap of 1.5 steps between the 6th and 7th degrees. Very common in flamenco, classical, and metal.", hint: "The exotic sounding minor. Eastern or dramatic flavour." },
       { q: "Which genres frequently use minor keys?", options: ["Happy birthday songs only", "Dark melancholic dramatic music — metal, dark EDM, blues, film scores", "Only classical music", "Only jazz"], answer: 1, explain: "Minor keys are used wherever darkness, sadness, tension or drama are needed.", hint: "Darkness = minor. Think sad film music." }
     ] },
-  { slug: "intervals", world: "foundations", number: 220, title: "Intervals", tagline: "The distance between notes and why it matters.", xp: 40,
+  { slug: "intervals", world: "foundations", number: 20, title: "Intervals", tagline: "The distance between notes and why it matters.", xp: 40,
     explainer: [
       { kind: "lead", text: "An interval is the distance in pitch between two notes. Intervals determine whether two notes sound stable or tense, consonant or dissonant. Every melody, chord and harmony is built from specific intervals. Source: learningmusic.ableton.com/notes-and-scales" },
       { kind: "list", items: ["Minor 2nd (1 semitone) — very dissonant, tense (Jaws theme)", "Major 2nd (2 semitones) — stepwise motion, neutral", "Minor 3rd (3 semitones) — minor colour, slightly sad", "Major 3rd (4 semitones) — bright, major colour, stable", "Perfect 4th (5 semitones) — strong, open", "Tritone (6 semitones) — most dissonant, devil interval", "Perfect 5th (7 semitones) — powerful, open, stable", "Octave (12 semitones) — perfect consonance"] }
@@ -329,7 +329,7 @@ const melodyPath: Mission[] = [
       { q: "A power chord is built from", options: ["Root major 3rd and 5th", "Root and 5th only — no 3rd", "Root minor 3rd and 5th", "Root and octave only"], answer: 1, explain: "Power chord = root + perfect 5th only. No 3rd = no major or minor quality — just raw powerful ambiguity.", hint: "Root + 5th. No 3rd. Ambiguous = powerful." },
       { q: "Consonant intervals feel", options: ["Tense and unstable", "Stable and pleasant — they do not need to resolve", "Always louder", "Only usable in major keys"], answer: 1, explain: "Consonant intervals (octaves, 5ths, 4ths, 3rds) feel stable and complete. Dissonant intervals create tension wanting resolution.", hint: "Consonant = at rest. Dissonant = restless needing to move." }
     ] },
-  { slug: "pentatonic-scales", world: "foundations", number: 221, title: "Pentatonic Scales", tagline: "Five notes. Every culture. Infinite melodies.", xp: 40, badge: { slug: "pentatonic-explorer", name: "Pentatonic Explorer" },
+  { slug: "pentatonic-scales", world: "foundations", number: 21, title: "Pentatonic Scales", tagline: "Five notes. Every culture. Infinite melodies.", xp: 40, badge: { slug: "pentatonic-explorer", name: "Pentatonic Explorer" },
     explainer: [
       { kind: "lead", text: "The pentatonic scale is a five-note scale that appears in virtually every musical culture on earth independently. It works because it avoids the most dissonant intervals. Source: learningmusic.ableton.com/notes-and-scales" },
       { kind: "list", items: ["Major pentatonic (C): C D E G A — bright uplifting country/folk/pop", "Minor pentatonic (A): A C D E G — bluesy dark rock/blues/R&B/hip-hop", "Works over major AND minor chords — very flexible", "No tritone interval — no wrong combinations between these 5 notes", "Chinese, Celtic, African, Native American scales are all pentatonic variants"] },
@@ -342,7 +342,7 @@ const melodyPath: Mission[] = [
       { q: "Why do pentatonic scales appear in so many cultures independently?", options: ["They were invented in China", "They avoid the most dissonant intervals — they are naturally consonant", "They use only 5 fingers", "They are easier to write down"], answer: 1, explain: "Pentatonic scales remove the most dissonant intervals. The remaining notes are all consonant with each other.", hint: "No wrong notes in pentatonic — it is harmonically safe." },
       { q: "The major pentatonic is the major scale with which degrees removed?", options: ["1st and 5th", "3rd and 7th", "4th and 7th", "2nd and 6th"], answer: 2, explain: "Major pentatonic = major scale minus the 4th and 7th degrees — the most dissonant members.", hint: "Remove the two most tense notes: the 4 and the 7." }
     ] },
-  { slug: "melody-writing", world: "foundations", number: 222, title: "Writing a Melody", tagline: "Contour, phrases and what makes a hook.", xp: 50,
+  { slug: "melody-writing", world: "foundations", number: 22, title: "Writing a Melody", tagline: "Contour, phrases and what makes a hook.", xp: 50,
     explainer: [
       { kind: "lead", text: "A great melody is a small story told in pitch and rhythm. It has contour (going up and down), phrasing (breathing in and out), and usually a climax and resolution. Source: learningmusic.ableton.com/notes-and-scales" },
       { kind: "list", items: ["Stepwise motion — notes move to adjacent scale degrees (smooth, vocal-friendly)", "Leaps — notes jump by a 3rd or more (dramatic, interesting)", "Phrase — a complete melodic idea like a sentence (usually 2 or 4 bars)", "Question and answer — first phrase ends unresolved second completes it", "Motif — a short 3-5 note idea that repeats and transforms throughout the melody"] },
@@ -355,7 +355,7 @@ const melodyPath: Mission[] = [
       { q: "A question and answer melody structure means", options: ["The first verse is a question the chorus is the answer", "The first phrase ends with tension the second resolves it", "Two different singers trade lines", "An instrumental and vocal trade off"], answer: 1, explain: "The question phrase ends on an unresolved note. The answer phrase resolves to the tonic.", hint: "First phrase: rises feels unfinished. Second phrase: falls home." },
       { q: "What makes a melodic hook memorable?", options: ["Being as complex as possible", "Using as many notes as possible", "A balance of surprise and familiarity", "Using only pentatonic notes"], answer: 2, explain: "The sweet spot is predictable enough to follow but surprising enough to be interesting. One unexpected note in an otherwise simple phrase is the classic formula.", hint: "Simple + one surprise = memorable. Complex throughout = forgettable." }
     ] },
-  { slug: "ear-training", world: "foundations", number: 223, title: "Ear Training Basics", tagline: "Training your ear to recognise what you hear.", xp: 40,
+  { slug: "ear-training", world: "foundations", number: 23, title: "Ear Training Basics", tagline: "Training your ear to recognise what you hear.", xp: 40,
     explainer: [
       { kind: "lead", text: "Ear training connects what you hear to what you know — recognising intervals, chords, scale degrees, and rhythms by sound alone. Source: learningmusic.ableton.com" },
       { kind: "list", items: ["Relative pitch — recognising the relationship between notes (interval recognition)", "Interval recognition — hearing the colour of each interval", "Chord quality recognition — hearing major vs minor vs diminished vs dominant 7th", "Rhythmic dictation — clapping back what you hear, identifying note values"] },
@@ -368,7 +368,7 @@ const melodyPath: Mission[] = [
       { q: "The main benefit of ear training for a producer is", options: ["Memorising music theory", "Shrinking the gap between what you can imagine and what you can execute", "Learning to read sheet music", "Playing faster"], answer: 1, explain: "Ear training connects your inner musical imagination to your technical execution.", hint: "Imagine a melody then find it on the keyboard. Ear training makes that faster." },
       { q: "How often should you do ear training for it to be effective?", options: ["Once a week for 2 hours", "Daily even just 10 minutes", "Only when learning a new instrument", "Only before recording sessions"], answer: 1, explain: "Short daily ear training sessions are far more effective than occasional long sessions.", hint: "Consistency beats intensity. Daily drills not rare marathons." }
     ] },
-  { slug: "transposition-modes", world: "foundations", number: 224, title: "Transposition and Modes", tagline: "Moving music to a new key and new moods.", xp: 40, badge: { slug: "key-changer", name: "Key Changer" },
+  { slug: "transposition-modes", world: "foundations", number: 24, title: "Transposition and Modes", tagline: "Moving music to a new key and new moods.", xp: 40, badge: { slug: "key-changer", name: "Key Changer" },
     explainer: [
       { kind: "lead", text: "Transposition means moving a melody or chord up or down by a fixed interval — keeping all relationships the same at a different pitch level. Source: Ableton Live manual — Transposing MIDI." },
       { kind: "list", items: ["Ionian (major) — bright stable happy", "Dorian — minor but with a bright 6th — jazz funk soul (Miles Davis So What)", "Phrygian — dark Spanish flamenco flavour", "Lydian — dreamy floating superhero feel (John Williams themes)", "Mixolydian — major but with a flat 7th — rock blues Beatles", "Aeolian (natural minor) — dark melancholic", "Locrian — extremely tense rarely used"] },
@@ -385,7 +385,7 @@ const melodyPath: Mission[] = [
 
 
 const harmonyPath: Mission[] = [
-  { slug: "what-are-chords", world: "foundations", number: 225, title: "What Are Chords?", tagline: "Multiple notes together and the feeling they create.", xp: 40, badge: { slug: "chord-builder", name: "Chord Builder" },
+  { slug: "what-are-chords", world: "foundations", number: 25, title: "What Are Chords?", tagline: "Multiple notes together and the feeling they create.", xp: 40, badge: { slug: "chord-builder", name: "Chord Builder" },
     explainer: [
       { kind: "lead", text: "A chord is three or more notes played simultaneously. The combination creates a harmonic colour — major chords sound bright and stable, minor chords darker, diminished chords tense. Source: learningmusic.ableton.com/chords" },
       { kind: "list", items: ["Root position — lowest note is the root (C E G)", "First inversion — lowest note is the 3rd (E G C)", "Second inversion — lowest note is the 5th (G C E)", "Spread voicing — notes across octaves", "Close voicing — notes packed within one octave"] },
@@ -398,7 +398,7 @@ const harmonyPath: Mission[] = [
       { q: "A power chord contains", options: ["Root, 3rd and 5th", "Root and 5th only — no 3rd", "Root and 3rd only", "Root and octave only"], answer: 1, explain: "Power chord = root + perfect 5th. No 3rd = no major or minor quality — just raw powerful ambiguity.", hint: "Root + 5th. No 3rd. Ambiguous = powerful." },
       { q: "First inversion of C major (C E G) has __ as the lowest note.", options: ["C", "E", "G", "A"], answer: 1, explain: "First inversion = 3rd on the bottom. For C major the 3rd is E. So first inversion = E G C.", hint: "First inversion = 3rd on the bottom. For C major the 3rd is E." }
     ] },
-  { slug: "chord-types", world: "foundations", number: 226, title: "Chord Types", tagline: "Major, minor, diminished, augmented and beyond.", xp: 40,
+  { slug: "chord-types", world: "foundations", number: 26, title: "Chord Types", tagline: "Major, minor, diminished, augmented and beyond.", xp: 40,
     explainer: [
       { kind: "lead", text: "Different chord types produce different emotional qualities. Source: learningmusic.ableton.com/chords/chords.html" },
       { kind: "list", items: ["Major triad — bright stable happy. Root + major 3rd + 5th", "Minor triad — dark sad. Root + minor 3rd + 5th", "Diminished — very tense. Root + minor 3rd + diminished 5th", "Augmented — dreamy floating. Root + major 3rd + augmented 5th", "Dominant 7th (V7) — major triad + minor 7th. Bluesy tense wants to resolve.", "Major 7th — rich lush jazz. Major triad + major 7th", "Minor 7th — smooth soulful. Minor triad + minor 7th", "Sus2/Sus4 — open ambiguous modern. 3rd replaced by 2nd or 4th"] },
@@ -411,7 +411,7 @@ const harmonyPath: Mission[] = [
       { q: "What makes a diminished chord tense?", options: ["It has four notes", "It contains a tritone interval", "It uses the major 3rd", "It is played faster"], answer: 1, explain: "Diminished triad = minor 3rd + diminished 5th (tritone). The tritone is the most dissonant interval.", hint: "Tritone = devil interval. Diminished chords are full of them." },
       { q: "Sus chords replace the 3rd with", options: ["The 7th", "The 2nd or 4th degree", "An octave", "Nothing"], answer: 1, explain: "Suspended chords replace the 3rd with the 2nd or 4th. Since the 3rd determines major/minor quality, Sus chords are tonally ambiguous.", hint: "Sus = suspended. The 3rd is suspended." }
     ] },
-  { slug: "chord-progressions", world: "foundations", number: 227, title: "Chord Progressions", tagline: "The journey through harmony — how chords move.", xp: 50,
+  { slug: "chord-progressions", world: "foundations", number: 27, title: "Chord Progressions", tagline: "The journey through harmony — how chords move.", xp: 50,
     explainer: [
       { kind: "lead", text: "A chord progression is a sequence of chords creating tension and release. Roman numerals describe progressions universally. Source: learningmusic.ableton.com/chords/chords.html" },
       { kind: "list", items: ["I-V-vi-IV — the most used progression: C G Am F (Let It Be, Africa, etc.)", "I-IV-V-I — 12-bar blues: foundation of rock blues country", "ii-V-I — the jazz cadence (Dm7 G7 Cmaj7): strongest resolution in jazz", "I-vi-IV-V — 50s progression: C Am F G", "vi-IV-I-V — minor first: Am F C G — slightly darker"] },
@@ -424,7 +424,7 @@ const harmonyPath: Mission[] = [
       { q: "A deceptive cadence is when V resolves to", options: ["I as expected", "vi instead of I creating surprise", "IV", "The same chord"], answer: 1, explain: "V to vi instead of V to I. The ear expects I but gets vi — emotional ambiguity.", hint: "The ear expects I. It gets vi instead. Deceived." },
       { q: "Roman numerals in chord progressions are useful because", options: ["They look professional", "They describe chord relationships independent of key", "They only apply to classical music", "They describe chord volume"], answer: 1, explain: "Roman numerals describe relationships independently of key. I-IV-V-I in C has the same relationships as in G major.", hint: "Same pattern any key." }
     ] },
-  { slug: "keys-tonality", world: "foundations", number: 228, title: "Keys and Tonality", tagline: "Where home is and why it matters.", xp: 40,
+  { slug: "keys-tonality", world: "foundations", number: 28, title: "Keys and Tonality", tagline: "Where home is and why it matters.", xp: 40,
     explainer: [
       { kind: "lead", text: "A key establishes a tonal centre — a home base note and chord that everything gravitates toward. Source: learningmusic.ableton.com/notes-and-scales" },
       { kind: "list", items: ["Tonic (I) — home. Most stable chord.", "Dominant (V) — farthest from home. Maximum tension.", "Subdominant (IV) — away but not tense. Reflective.", "Key signature — the sharps or flats defining the 7 notes in the key", "Modulation — deliberately moving from one key to another during a song"] },
@@ -437,7 +437,7 @@ const harmonyPath: Mission[] = [
       { q: "When a song modulates it", options: ["Changes tempo", "Changes time signature", "Moves from one key to another during the song", "Adds more instruments"], answer: 2, explain: "Modulation is a deliberate key change mid-song. Classic: up a whole step before the final chorus.", hint: "Whitney Houston raising the key before the final chorus = modulation." },
       { q: "How many keys major and minor are there in total?", options: ["12", "14", "24", "48"], answer: 2, explain: "12 major + 12 minor = 24 keys total.", hint: "12 major + 12 minor = 24." }
     ] },
-  { slug: "tension-resolution", world: "foundations", number: 229, title: "Tension and Resolution", tagline: "The push and pull that makes music go somewhere.", xp: 40,
+  { slug: "tension-resolution", world: "foundations", number: 29, title: "Tension and Resolution", tagline: "The push and pull that makes music go somewhere.", xp: 40,
     explainer: [
       { kind: "lead", text: "Music creates emotional engagement through tension and resolution — the same mechanism as storytelling. Source: learningmusic.ableton.com" },
       { kind: "list", items: ["Harmonic tension — dissonant chords resolve to consonant chords", "Melodic tension — the leading tone (7th degree) resolves up to the tonic", "Rhythmic tension — syncopation resolves to the downbeat", "Dynamic tension — quiet builds to loud then resolves", "Textural tension — complexity resolves by stripping back"] },
@@ -450,7 +450,7 @@ const harmonyPath: Mission[] = [
       { q: "The leading tone (7th scale degree) creates tension because", options: ["It is the loudest note", "It is only a semitone below the tonic and wants to resolve upward", "It has a lower frequency", "It is outside the scale"], answer: 1, explain: "The leading tone is only one semitone below the tonic. This proximity creates a magnetic pull to resolve.", hint: "B to C. One semitone up. The ear demands it." },
       { q: "A filter sweep creates tension by", options: ["Adding reverb", "Gradually removing frequencies creating a muffled tunnel effect before the drop", "Changing the key", "Slowing the tempo"], answer: 1, explain: "A closing filter progressively removes high frequencies. When it opens at the drop the energy release is massive.", hint: "Muffled then building then OPEN. Classic pre-drop technique." }
     ] },
-  { slug: "harmony-in-production", world: "foundations", number: 230, title: "Harmony in Production", tagline: "How to use chords in your tracks practically.", xp: 40, badge: { slug: "harmony-maker", name: "Harmony Maker" },
+  { slug: "harmony-in-production", world: "foundations", number: 30, title: "Harmony in Production", tagline: "How to use chords in your tracks practically.", xp: 40, badge: { slug: "harmony-maker", name: "Harmony Maker" },
     explainer: [
       { kind: "lead", text: "Understanding harmony theoretically is one thing. Applying it in a session is another. Source: learningmusic.ableton.com/chords" },
       { kind: "list", items: ["Chord stabs — short rhythmically punchy chord hits (house disco funk)", "Pad — long sustained chord texture providing harmonic background", "Arpeggio — chord notes played individually in a pattern", "Bassline — root notes of chords with rhythmic elaboration", "Melodic top line — the melody that sits above the harmonic bed"] },
@@ -463,7 +463,7 @@ const harmonyPath: Mission[] = [
       { q: "Why check your mix in mono?", options: ["To hear the stereo image", "To reveal phase cancellation and harmonic clashing between chord voices", "Mono sounds better", "To check reverb"], answer: 1, explain: "Mono summing reveals frequency clashing and phase cancellation hidden by stereo separation.", hint: "Mono collapses stereo revealing frequency clashes." },
       { q: "The Chord MIDI effect in Ableton", options: ["Adds reverb", "Adds intervals above a played note turning single notes into chords", "Random note variations", "Key detection"], answer: 1, explain: "Chord MIDI device adds configurable intervals above each note you play, transforming single notes into chords. Source: Ableton Live manual.", hint: "Play one note hear a chord." }
     ] },
-  { slug: "song-structure", world: "foundations", number: 231, title: "Song Structure", tagline: "Verse chorus bridge — the architecture of music.", xp: 40,
+  { slug: "song-structure", world: "foundations", number: 31, title: "Song Structure", tagline: "Verse chorus bridge — the architecture of music.", xp: 40,
     explainer: [
       { kind: "lead", text: "Song structure is the roadmap of a piece of music — how the sections are ordered. Structure creates expectation, delivers payoff, and guides a listener through an emotional arc. Source: learningmusic.ableton.com/song-structure" },
       { kind: "list", items: ["Intro — establishes mood before the main content", "Verse — storytelling section repeated with different lyrics", "Pre-chorus — builds energy into the chorus", "Chorus — highest energy most memorable section repeated multiple times", "Bridge — contrasting section that breaks repetition", "Outro — winds the track down", "Drop — in electronic music the main event — maximum energy section"] }
@@ -475,7 +475,7 @@ const harmonyPath: Mission[] = [
       { q: "In electronic music the drop is", options: ["A tempo reduction", "The point of maximum energy arrival after a build-up", "A bass note going down", "The end"], answer: 1, explain: "The drop is the main event — when tension resolves as the full beat bass and arrangement returns.", hint: "BUILD BUILD BUILD then it DROPS." },
       { q: "Why is structure important in electronic music?", options: ["Required by copyright law", "Creates an emotional arc that engages listeners", "Reduces file size", "Makes mixing easier"], answer: 1, explain: "Structure transforms repeated material into a narrative. Even great loops get boring without structure.", hint: "Structure creates the journey." }
     ] },
-  { slug: "listening-actively", world: "foundations", number: 232, title: "Listening Actively", tagline: "Hear everything not just the song.", xp: 40, badge: { slug: "active-listener", name: "Active Listener" },
+  { slug: "listening-actively", world: "foundations", number: 32, title: "Listening Actively", tagline: "Hear everything not just the song.", xp: 40, badge: { slug: "active-listener", name: "Active Listener" },
     explainer: [
       { kind: "lead", text: "Passive listening is enjoying music. Active listening is studying it — identifying the individual elements how they interact and what decisions were made. Source: learningmusic.ableton.com" },
       { kind: "list", items: ["Solo each instrument mentally — what is the kick doing? The bass?", "Count bars — where do sections begin?", "Identify the key — major or minor?", "Listen to the mix — where is each instrument in the stereo field?", "Analyse structure — how long is the intro? When does the drop arrive?", "Notice effects — what is on the vocals? On the snare?"] },
@@ -491,7 +491,7 @@ const harmonyPath: Mission[] = [
 ];
 
 const techPath: Mission[] = [
-  { slug: "daw-explained", world: "foundations", number: 233, title: "The DAW Explained", tagline: "Your entire studio inside a laptop.", xp: 40, badge: { slug: "studio-bootup", name: "Studio Boot-Up" },
+  { slug: "daw-explained", world: "foundations", number: 33, title: "The DAW Explained", tagline: "Your entire studio inside a laptop.", xp: 40, badge: { slug: "studio-bootup", name: "Studio Boot-Up" },
     explainer: [
       { kind: "lead", text: "A Digital Audio Workstation (DAW) is software that replaces an entire recording studio. Source: learningmusic.ableton.com" },
       { kind: "list", items: ["Ableton Live — performance-focused, session grid + arrangement, electronic music standard", "FL Studio — pattern-based, hip-hop and electronic", "Logic Pro — Mac only, comprehensive", "Pro Tools — industry standard for professional recording studios", "GarageBand — free on Mac/iOS, beginner-friendly"] },
@@ -504,7 +504,7 @@ const techPath: Mission[] = [
       { q: "The best DAW for a beginner is", options: ["Pro Tools", "The most expensive one", "The one you will actually use consistently and learn deeply", "Ableton Live always"], answer: 2, explain: "The best DAW is the one you know well. Consistency and depth of knowledge matter more than the tool.", hint: "Consistency and depth of knowledge matter more than the tool itself." },
       { q: "What can ALL DAWs do?", options: ["Only record audio", "Record audio, host virtual instruments, run effects, arrange and export", "Only create MIDI sequences", "Only mix live performances"], answer: 1, explain: "All DAWs — record audio, host virtual instruments, run effects, arrange, and export a stereo file.", hint: "Record, arrange, mix, export. The universal DAW workflow." }
     ] },
-  { slug: "midi-explained", world: "foundations", number: 234, title: "MIDI Explained", tagline: "The language that instruments use to talk to each other.", xp: 40,
+  { slug: "midi-explained", world: "foundations", number: 34, title: "MIDI Explained", tagline: "The language that instruments use to talk to each other.", xp: 40,
     explainer: [
       { kind: "lead", text: "MIDI (Musical Instrument Digital Interface) is a protocol — instructions, not audio: play note C4, velocity 80, for 500ms. Those instructions drive a virtual instrument to make the actual sound. Source: learningmusic.ableton.com" },
       { kind: "list", items: ["Note On/Off — which note to play and when to stop", "Velocity — how hard the note was struck (0-127). Controls loudness and timbre.", "Channel — 1-16. Route different instruments to different channels.", "CC (Control Change) — values for knobs, mod wheel (0-127)", "Pitch Bend — a smooth continuous pitch variation message", "MIDI Clock — tempo synchronisation between devices"] },
@@ -517,7 +517,7 @@ const techPath: Mission[] = [
       { q: "Why is MIDI more flexible than recorded audio?", options: ["It sounds better", "It can be edited note by note — tempo pitch instrument can all change without re-recording", "It uses less disk space always", "It automatically sounds professional"], answer: 1, explain: "Because MIDI is instructions you can change any parameter after recording: fix a wrong note, transpose the key, change the tempo, switch the instrument.", hint: "Change the instrument, the tempo, the key — no re-recording." },
       { q: "CC (Control Change) messages carry", options: ["Note pitches", "Tempo information", "Continuous parameter data like mod wheel, filter cutoff, volume", "Audio data"], answer: 2, explain: "MIDI CC messages carry continuous 0-127 values for parameters like modulation wheel, filter cutoff, volume, pan, and any assignable knob.", hint: "Knob positions, pedal values, mod wheel — all CC messages." }
     ] },
-  { slug: "digital-audio", world: "foundations", number: 235, title: "Digital Audio", tagline: "How sound becomes numbers and back again.", xp: 40,
+  { slug: "digital-audio", world: "foundations", number: 35, title: "Digital Audio", tagline: "How sound becomes numbers and back again.", xp: 40,
     explainer: [
       { kind: "lead", text: "Digital audio converts continuous sound waves into sequences of numbers. Sample rate = how many times per second the audio is measured. Bit depth = how many values each sample can have. Source: Ableton Live manual." },
       { kind: "list", items: ["Sample rate (kHz) — snapshots per second. 44.1 kHz = 44100 per second.", "Bit depth — 16-bit = 65536 values. 24-bit = 16777216 values.", "16-bit 44.1 kHz — CD quality. Sufficient for release.", "24-bit 48 kHz — standard for modern production. More headroom.", "WAV — uncompressed audio. Full quality. Large file size.", "MP3/AAC — compressed. Smaller files. Some quality loss."] },
@@ -530,7 +530,7 @@ const techPath: Mission[] = [
       { q: "24-bit audio is preferred for production over 16-bit because", options: ["It sounds brighter", "It provides more dynamic range and headroom for editing", "It uses less CPU", "Required by streaming platforms"], answer: 1, explain: "24-bit has a much lower noise floor than 16-bit. This extra headroom is crucial when applying multiple effects and making level adjustments.", hint: "More bits = more dynamic range = more headroom." },
       { q: "WAV vs MP3", options: ["WAV is newer", "WAV = uncompressed full quality large file. MP3 = lossy compressed smaller file some quality loss.", "MP3 is better quality always", "They are the same format"], answer: 1, explain: "WAV stores every sample uncompressed — full quality, large files. MP3 uses perceptual coding to achieve smaller files with some quality loss.", hint: "WAV = perfect quality big file. MP3 = smaller file some quality lost." }
     ] },
-  { slug: "samples-loops", world: "foundations", number: 236, title: "Samples and Loops", tagline: "Building blocks from recorded audio.", xp: 40,
+  { slug: "samples-loops", world: "foundations", number: 36, title: "Samples and Loops", tagline: "Building blocks from recorded audio.", xp: 40,
     explainer: [
       { kind: "lead", text: "A sample is any piece of recorded audio used in a new production. A loop is a sample designed to repeat seamlessly — starts and ends at the exact same point so it cycles without gaps. Source: Ableton Live manual — Working with Samples." },
       { kind: "list", items: ["One-shot — single sound: drum hit, bass pluck, vocal stab", "Loop — seamless repeating audio: drum loop, bass loop, chord loop", "Sample pack — curated collection of related sounds, usually royalty-free", "Royalty-free — cleared for commercial use without per-use payments", "Warp — time-stretching audio in Ableton to match project tempo without pitch change"] },
@@ -543,7 +543,7 @@ const techPath: Mission[] = [
       { q: "Royalty-free sample packs are", options: ["Always free to download", "Cleared for commercial use without per-use royalty payments", "Samples from before 1923", "Samples that cost royalties to use"], answer: 1, explain: "Royalty-free = cleared for commercial use. You can use the sounds in any production without additional per-use fees.", hint: "Free OF royalties. Use commercially without per-song payments." },
       { q: "Why can using a recognisable section of a released song be problematic?", options: ["It always improves the track", "Copyright infringement — you need clearance from rights holders", "Streaming platforms do not support samples", "Samples sound lower quality"], answer: 1, explain: "Recorded music is protected by copyright. Using without permission is infringement — takedowns and lawsuits.", hint: "Their recording, their rights. Use without permission = copyright infringement." }
     ] },
-  { slug: "signal-chain", world: "foundations", number: 237, title: "The Signal Chain", tagline: "How audio flows from source to your ears.", xp: 40,
+  { slug: "signal-chain", world: "foundations", number: 37, title: "The Signal Chain", tagline: "How audio flows from source to your ears.", xp: 40,
     explainer: [
       { kind: "lead", text: "A signal chain is the path audio takes from its source through all processing to its destination. Understanding signal flow is fundamental — it determines what order effects should go in and why certain things sound wrong. Source: Ableton Live manual." },
       { kind: "list", items: ["Source — the original sound (voice, instrument, sample)", "Transducer — microphone or pickup converts sound to electrical signal", "Preamp — amplifies the weak signal to usable level", "ADC — audio interface converts analogue to digital for the DAW", "Channel processing — EQ, compression, effects on the individual track", "Bus processing — EQ/compression on grouped tracks", "Master bus — final processing before output (limiting, metering)", "DAC + speakers — converts digital back to analogue, drives speakers"] },
@@ -556,7 +556,7 @@ const techPath: Mission[] = [
       { q: "An ADC does", options: ["Amplifies the signal", "Converts analogue electrical signals to digital data a computer can process", "Adds compression", "Controls monitors"], answer: 1, explain: "An ADC (in your audio interface) converts the analogue electrical signal from a microphone or instrument into a digital binary stream.", hint: "Analogue to Digital. What an audio interface input stage does." },
       { q: "The master bus is", options: ["A hardware mixing desk", "The final stereo output path that carries the summed mix to speakers/export", "A MIDI bus", "A type of audio cable"], answer: 1, explain: "The master bus is where all tracks merge into the final stereo signal. Final limiting, metering, and overall shaping happen here.", hint: "All tracks to master bus to speakers/export. The final destination." }
     ] },
-  { slug: "effects-overview", world: "foundations", number: 238, title: "Audio Effects Overview", tagline: "EQ, compression, reverb, delay — what they all do.", xp: 40,
+  { slug: "effects-overview", world: "foundations", number: 38, title: "Audio Effects Overview", tagline: "EQ, compression, reverb, delay — what they all do.", xp: 40,
     explainer: [
       { kind: "lead", text: "Audio effects change a sound's character, feel, or place in a mix. The four most important: EQ (tonal shaping), compression (dynamic control), reverb (spatial placement), delay (time-based repetition). Source: Ableton Live manual — Audio Effects." },
       { kind: "list", items: ["EQ (Equaliser) — boosts or cuts specific frequency ranges", "Compression — reduces dynamic range. Controls punch and consistency.", "Reverb — simulates acoustic spaces. Places sound in a room or hall.", "Delay — repeats the signal after a set time. Rhythmic or textural.", "Saturation/Distortion — adds harmonic content. Warmth or aggression.", "Chorus/Flanger/Phaser — modulation effects that create thickness and movement.", "Limiter — hard ceiling that prevents the signal exceeding a set level."] },
@@ -569,7 +569,7 @@ const techPath: Mission[] = [
       { q: "Saturation adds to a sound by", options: ["Removing low frequencies", "Generating additional harmonic content — warmth or grit depending on the amount", "Creating spatial depth", "Making the sound quieter"], answer: 1, explain: "Saturation adds even and odd harmonics by pushing the signal slightly beyond linear range. A little = warmth and presence. A lot = aggressive distortion.", hint: "Harmonics added = warmth, presence, character." },
       { q: "Why is EQ cutting often preferred over boosting?", options: ["Cuts use less CPU", "Cutting removes problematic frequencies without adding gain and potential resonance issues", "Boosts change the tempo", "No difference"], answer: 1, explain: "Cutting removes problems cleanly. Boosting can increase gain and sometimes add resonance. Pro approach: cut what is wrong, boost sparingly.", hint: "Subtractive = more natural. Remove the mud." }
     ] },
-  { slug: "mixing-basics", world: "foundations", number: 239, title: "Mixing Basics", tagline: "Balancing all the parts into a whole.", xp: 40,
+  { slug: "mixing-basics", world: "foundations", number: 39, title: "Mixing Basics", tagline: "Balancing all the parts into a whole.", xp: 40,
     explainer: [
       { kind: "lead", text: "Mixing is the process of balancing all tracks in a production so they work cohesively. Source: learningmusic.ableton.com and Ableton Live manual — Mixing." },
       { kind: "list", items: ["Gain staging — set appropriate levels before processing (-18 dBFS average per track)", "Frequency balance — each instrument in its natural frequency range without excessive overlap", "Stereo placement — panning to place elements left/right; bass elements centred", "Dynamic consistency — compression to control unruly peaks", "Reverb/delay for depth — wet signals feel behind dry ones"] },
@@ -582,7 +582,7 @@ const techPath: Mission[] = [
       { q: "A track at -18 dBFS average before processing is", options: ["Too quiet", "Correctly gain-staged — leaving headroom for effects and mixing moves", "Already at mix level", "Too loud"], answer: 1, explain: "-18 dBFS average leaves plenty of headroom for effects, compression, and summing without clipping.", hint: "Headroom = space above average level before 0 dBFS ceiling." },
       { q: "Checking your mix in mono reveals", options: ["The stereo width", "Phase cancellation and frequency clashes hidden by stereo separation", "The tempo", "Reverb levels"], answer: 1, explain: "Mono summing reveals frequency clashing and phase cancellation that stereo separation hides. A good mix works in both.", hint: "Mono reveals problems stereo hides." }
     ] },
-  { slug: "music-tech-integration", world: "foundations", number: 240, title: "Putting It All Together", tagline: "Sound, Rhythm, Melody, Harmony, Production = Music.", xp: 50, badge: { slug: "foundations-complete", name: "Foundations Complete" },
+  { slug: "music-tech-integration", world: "foundations", number: 40, title: "Putting It All Together", tagline: "Sound, Rhythm, Melody, Harmony, Production = Music.", xp: 50, badge: { slug: "foundations-complete", name: "Foundations Complete" },
     explainer: [
       { kind: "lead", text: "You now have the vocabulary of music. Sound, rhythm, melody, harmony, and production technology. These are not separate subjects — they are one integrated system. Source: learningmusic.ableton.com" },
       { kind: "list", items: ["Sound knowledge — helps you make sounds and hear what is wrong", "Rhythm knowledge — helps you programme beats and understand groove", "Melody knowledge — helps you write hooks and understand what makes them stick", "Harmony knowledge — helps you write chord progressions and understand emotional colour", "Tech knowledge — helps you translate musical ideas into a finished production"] },
