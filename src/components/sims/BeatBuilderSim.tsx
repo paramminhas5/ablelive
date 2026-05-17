@@ -1,14 +1,15 @@
 // BeatBuilderSim — 4×16 step sequencer (kick/snare/hat/perc) with swing slider.
 // Models the learningmusic.ableton.com "Beats" exercise.
 import { useEffect, useRef, useState } from "react";
-import { getCtx, getMaster, triggerSample, type SampleName } from "@/lib/audio";
+import { getCtx, getMaster, playKick, playSnare, playHat, playClap } from "@/lib/audio";
 
-type Row = { id: string; label: string; sample: SampleName; color: string };
+type Voice = (dest: AudioNode) => void;
+type Row = { id: string; label: string; play: Voice; color: string };
 const ROWS: Row[] = [
-  { id: "k", label: "KICK",  sample: "kick",  color: "bg-acid" },
-  { id: "s", label: "SNARE", sample: "snare", color: "bg-hot text-bone" },
-  { id: "h", label: "HAT",   sample: "hat",   color: "bg-volt text-bone" },
-  { id: "p", label: "PERC",  sample: "clap",  color: "bg-sun" },
+  { id: "k", label: "KICK",  play: (d) => playKick(0, d),  color: "bg-acid" },
+  { id: "s", label: "SNARE", play: (d) => playSnare(0, d), color: "bg-hot text-bone" },
+  { id: "h", label: "HAT",   play: (d) => playHat(0, false, d), color: "bg-volt text-bone" },
+  { id: "p", label: "PERC",  play: (d) => playClap(0, d),  color: "bg-sun" },
 ];
 const STEPS = 16;
 
@@ -49,7 +50,7 @@ export function BeatBuilderSim() {
       const i = stepRef.current % STEPS;
       setStep(i);
       ROWS.forEach((row, ri) => {
-        if (grid[ri][i]) triggerSample(row.sample, getMaster(), 0.7);
+        if (grid[ri][i]) row.play(getMaster());
       });
       stepRef.current++;
       const sixteenth = (60 / bpm) / 4 * 1000;
