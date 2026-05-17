@@ -1,15 +1,21 @@
 // Inline glossary term: dotted underline + hover/tap popover with definition
 // and a "View in glossary" link. Works on touch (tap) and desktop (hover).
+import { createContext, useContext, useMemo, useRef } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Link } from "@tanstack/react-router";
-import { lookupTerm, slugTerm, type GlossaryTerm } from "@/content/glossary";
+import {
+  lookupTerm,
+  slugTerm,
+  AUTO_WRAP_KEYS,
+  type GlossaryTerm,
+} from "@/content/glossary";
 
 export function Term({
   children,
   term,
 }: {
   children: React.ReactNode;
-  term?: string; // explicit lookup key; otherwise uses children text
+  term?: string;
 }) {
   const key = term ?? (typeof children === "string" ? children : "");
   const found: GlossaryTerm | undefined = lookupTerm(key);
@@ -48,40 +54,50 @@ export function Term({
   );
 }
 
-// Auto-wrap a string with <Term> components for any glossary matches.
-// Caps occurrences per term per render to avoid noise (first match wins).
-import { AUTO_WRAP_KEYS } from "@/content/glossary";
+// --- Shared dedup scope ----------------------------------------------------
+// Wrap a mission/page in <GlossaryScope> so every <Glossarized> below it
+// shares one "already seen" set — each term is auto-linked AT MOST ONCE per
+// scope, regardless of how many text blocks render it.
+type Scope = { seen: Set<string> };
+const ScopeCtx = createContext<Scope | null>(null);
 
-const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-
-// Build the megaregex once.
-let CACHED_RE: RegExp | null = null;
-function getRe() {
-  if (CACHED_RE) return CACHED_RE;
-  const pattern = AUTO_WRAP_KEYS.map(escapeRe).join("|");
-  CACHED_RE = new RegExp(`\\b(${pattern})\\b`, "gi");
-  return CACHED_RE;
+export function GlossaryScope({ children, resetKey }: { children: React.ReactNode; resetKey?: string }) {
+  // Reset the set whenever resetKey changes (e.g. mission slug).
+  const ref = useRef<{ key: string | undefined; scope: Scope }>({
+    key: resetKey,
+    scope: { seen: new Set() },
+  });
+  if (ref.current.key !== resetKey) {
+    ref.current = { key: resetKey, scope: { seen: new Set() } };
+  }
+  return <ScopeCtx.Provider value={ref.current.scope}>{children}</ScopeCtx.Provider>;
 }
 
-export function Glossarized({
-  text,
-  maxPerTerm = 1,
-}: {
-  text: string;
-  maxPerTerm?: number;
-}) {
+// --- Auto-wrap text --------------------------------------------------------
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+let CACHED_SRC: string | null = null;
+function getReSrc() {
+  if (CACHED_SRC) return CACHED_SRC;
+  CACHED_SRC = AUTO_WRAP_KEYS.map(escapeRe).join("|");
+  return CACHED_SRC;
+}
+
+export function Glossarized({ text }: { text: string }) {
+  const scope = useContext(ScopeCtx);
+  // Fall back to a fresh local set if no scope is present.
+  const localScope = useMemo<Scope>(() => ({ seen: new Set() }), [text]);
+  const seen = (scope ?? localScope).seen;
+
   if (!text) return null;
-  const re = new RegExp(getRe().source, "gi");
-  const seen = new Map<string, number>();
+  const re = new RegExp(`\\b(${getReSrc()})\\b`, "gi");
   const out: React.ReactNode[] = [];
   let last = 0;
   let m: RegExpExecArray | null;
   let key = 0;
   while ((m = re.exec(text)) !== null) {
     const lower = m[0].toLowerCase();
-    const count = seen.get(lower) ?? 0;
-    if (count >= maxPerTerm) continue;
-    seen.set(lower, count + 1);
+    if (seen.has(lower)) continue;
+    seen.add(lower);
     if (m.index > last) out.push(text.slice(last, m.index));
     out.push(
       <Term key={`t${key++}`} term={lower}>
