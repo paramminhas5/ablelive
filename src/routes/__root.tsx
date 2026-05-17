@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import { initTheme } from "@/lib/theme";
+import { DEFAULT_THEME } from "@/content/themes";
 import {
   Outlet,
   Link,
@@ -19,7 +19,11 @@ import { CommandPalette } from "@/components/CommandPalette";
 import { Onboarding } from "@/components/HomeWidgets";
 
 function ThemeInit() {
-  useEffect(() => { initTheme(); }, []);
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const saved = localStorage.getItem("ccd.theme") || DEFAULT_THEME;
+    document.documentElement.setAttribute("data-theme", saved);
+  }, []);
   return null;
 }
 
