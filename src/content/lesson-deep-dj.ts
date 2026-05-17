@@ -1054,4 +1054,1096 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
     ],
     sources: [{ label: "rekordbox 6 Operating Manual", section: "Waveform display & phrase analysis" }],
   },
+
+  // ============================================================
+  // PATH 3 — MIXING TECHNIQUE
+  // ============================================================
+  "beatmatching-manual": {
+    hook: "Beatmatching by ear is the foundation. Sync is a shortcut; ears are the safety net.",
+    beginner: {
+      what: [
+        "Beatmatching means making two tracks play at the exact same tempo and with their kick drums landing at the same instant.",
+        "Two jobs: get the BPM equal (tempo fader), then nudge the second track so its kicks land on top of the first track's kicks (jog wheel).",
+        "When it's right, you hear one steady beat. When it's wrong, you hear a gallop or a flam.",
+      ],
+      why: ["Sync can fail on bad grids — your ears can't.", "Manual beatmatching trains rhythm and trust in your hands.", "Every legendary DJ learned this first."],
+      analogy: "Two people clapping the same rhythm. First match the speed, then the moment of the clap.",
+    },
+    advanced: {
+      what: [
+        "Beatmatching = matching BPM (tempo) and phase (where in the bar each beat falls). Tempo fader handles speed; jog wheel handles phase.",
+        "Drift: even matched tracks drift over time on analog gear because crystals are imperfect. Listen and re-nudge every 16–32 bars.",
+      ],
+      edgeCases: [
+        "Tracks with swung or shuffled drums confuse the ear — match the kick, ignore the hats.",
+        "Tracks with no kick (ambient intros) — match the snare or the bassline instead.",
+      ],
+      engineerNotes: [
+        "Pioneer jog wheels in VINYL mode = scratch; in CDJ mode = pitch bend. Pitch bend is what you want for beatmatching.",
+        "Tempo fader resolution: ±6%, ±10%, ±16%, WIDE. Use ±6% for the finest control during practice.",
+      ],
+    },
+    flow: "Match BPM → Sync phase with jog → Verify in cue → Bring fader up → Re-check every 16 bars",
+    walkthrough: [
+      { do: "Load a familiar track to Deck 1 and play it through the master.", listen: "Lock onto its kick drum mentally — that is your reference." },
+      { do: "Load Deck 2, press play with headphones on Deck 2 only.", listen: "Hear both kicks at once — they'll be out of phase and probably different speeds." },
+      { do: "Adjust Deck 2's tempo until the BPM numbers match, then listen — if it's galloping, the BPM is still off.", listen: "A steady 'thump-thump' means tempo is right; 'tha-thump tha-thump' means it's still off." },
+      { do: "Nudge the jog wheel forward or back to align the kick onsets.", listen: "When they land together, the two kicks become one fatter kick — that's lock." },
+      { do: "Bring channel 2 up over 8 bars; watch it drift after 32 and re-nudge.", listen: "If it drifts, the BPM wasn't perfect — fine-tune the tempo fader." },
+    ],
+    listenFor: ["Galloping = BPM mismatch", "Flamming = phase off by ~10–30 ms", "One fat kick = locked", "Slow drift = small BPM error"],
+    mistakes: ["Adjusting tempo with the jog wheel — jog is for phase, fader is for speed.", "Trusting the BPM display alone. Numbers can round.", "Bringing the new fader up before it's locked. The room hears every wobble."],
+    proMoves: ["Beatmatch with the screen off. Forces you to use ears.", "Practice with tracks whose BPMs differ by 4+ — bigger pitch changes train your ear faster.", "Record practice and listen for drift in the recording."],
+    quizHard: [
+      { q: "If two kicks 'gallop' at you, the problem is", options: ["Phase only", "Tempo (BPM) — the tracks are at different speeds", "EQ", "Volume"], answer: 1, explain: "Gallop = uneven spacing = different tempos drifting against each other.", hint: "Uneven spacing means uneven speed." },
+      { q: "Jog wheel in CDJ mode does what during a mix?", options: ["Scratches the track", "Temporary pitch bend — speeds or slows the deck briefly to nudge phase", "Adjusts tempo permanently", "Triggers a loop"], answer: 1, explain: "Pitch bend mode nudges only while you push; release and tempo returns to fader setting.", hint: "Temporary nudge, not a permanent change." },
+      { q: "Why use ±6% tempo range rather than ±16%?", options: ["±6% is louder", "Finer resolution per millimetre of fader travel = more precise BPM control", "It allows faster mixing", "It's required for SYNC"], answer: 1, explain: "Narrower range spreads the same fader length over fewer BPM = finer touch.", hint: "Same fader, smaller range, more precision." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Tempo slider & jog mode" }],
+  },
+
+  "sync-function": {
+    hook: "SYNC isn't cheating — it's a tool. Knowing when not to trust it is the skill.",
+    beginner: {
+      what: [
+        "SYNC is a button that automatically matches the BPM and phase of one deck to another.",
+        "Press it and the deck locks to the master deck's tempo and beat position instantly.",
+        "It's reliable when beat grids are accurate. It's wrong when grids are wrong.",
+      ],
+      why: ["Frees your hands for EQ, effects, four-deck work.", "Lets beginners focus on track selection and energy.", "Standard in modern club DJing — using it is normal."],
+      analogy: "Cruise control on a car. Great on a smooth highway, dangerous on a winding road. The road is your beat grid.",
+    },
+    advanced: {
+      what: [
+        "SYNC reads BPM and downbeat position from the analyzed grid. It corrects pitch and triggers a phase realignment.",
+        "Beat Sync (rekordbox) vs Tempo Sync — Beat Sync aligns both tempo and downbeat; Tempo Sync only matches BPM, you align phase manually.",
+      ],
+      edgeCases: [
+        "Tracks with tempo changes (live drums, rock, hip-hop) often have shifting grids — SYNC will drift mid-track.",
+        "Bad downbeat placement causes SYNC to lock on beat 2 or 4 — track will be 'on the offbeat'.",
+        "When two SYNC'd decks share the master role, switching master mid-mix can cause a tiny pitch jolt.",
+      ],
+      engineerNotes: [
+        "Quantize mode + SYNC = perfectly aligned cue triggers. Without quantize, hot cues fire on the exact press moment.",
+        "Master tempo (key-lock) should be ON when using large tempo shifts to avoid chipmunk pitch.",
+      ],
+    },
+    flow: "Verify grid → Press SYNC → Confirm phase aurally → Use EQ/fader as normal → Disengage if grid drifts",
+    walkthrough: [
+      { do: "Load a track with a clean grid to Deck 1 and play it.", listen: "Steady tempo — no drift." },
+      { do: "Load Deck 2 and press SYNC.", listen: "BPM display jumps to match Deck 1; tracks lock instantly." },
+      { do: "Cue Deck 2 and listen alongside Deck 1.", listen: "Kicks land together — verify, don't assume." },
+      { do: "Mid-blend, watch the grid markers — if they slip, the original analysis is bad.", listen: "Audible drift = grid problem, not SYNC failure." },
+      { do: "If drift starts, disengage SYNC and finish manually with the jog wheel.", listen: "Manual control restored; crisis avoided." },
+    ],
+    listenFor: ["Snap-to alignment when SYNC engages", "Grid markers staying lined up over time", "Pitch jolt when master changes", "Drift = grid is wrong"],
+    mistakes: ["Trusting SYNC on unanalysed or hastily-analysed tracks.", "Forgetting key-lock — high-tempo SYNC sounds like chipmunks.", "Never learning manual beatmatching as a fallback."],
+    proMoves: ["Audit every SYNC track in advance — flag bad grids with My Tag 'GRID-BAD'.", "Use SYNC to free your left hand for EQ + FX; the value isn't avoiding work, it's redirecting it.", "Practice manual every week so SYNC failure never panics you."],
+    quizHard: [
+      { q: "SYNC drifts during a track. Most likely cause?", options: ["Software bug", "Beat grid was incorrectly analysed and slips against the audio over time", "Wrong cable", "Tempo fader broke"], answer: 1, explain: "SYNC follows the grid. Bad grid = SYNC follows the wrong reference.", hint: "Garbage in, garbage out — what's the input SYNC reads?" },
+      { q: "Master Tempo (key-lock) ON does what?", options: ["Locks the deck as master", "Keeps the musical key constant when you change tempo, instead of pitch-shifting", "Disables SYNC", "Locks the cue point"], answer: 1, explain: "Key-lock uses time-stretching so pitch stays put when tempo moves.", hint: "Tempo changes but key doesn't." },
+      { q: "Quantize ON affects", options: ["Loudness", "When triggered actions (cues, loops, FX) fire — snapping them to the nearest beat", "Track length", "Headphone level"], answer: 1, explain: "Quantize snaps action timing to grid points so everything lands on the beat.", hint: "Snap-to-grid for action timing." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Sync & Quantize" }],
+  },
+
+  "cue-points-dj": {
+    hook: "Cue points are the chapter markers of your tracks. Set them well and you'll never lose your spot.",
+    beginner: {
+      what: [
+        "A cue point is a saved location in a track — press a button and you jump there instantly.",
+        "Memory cues are stored navigation points; hot cues (1–8) are colourful instant-jump buttons on the deck.",
+        "Set them on intros, drops, breakdowns and outros — the structural moments you mix from.",
+      ],
+      why: ["Lets you start a track exactly where you need it.", "Enables creative re-edits live by jumping between sections.", "Removes the 'where do I cue this up' panic mid-set."],
+      analogy: "Bookmarks in a book. You don't read every chapter from page 1 — you jump to the bits you need.",
+    },
+    advanced: {
+      what: [
+        "rekordbox supports 8 hot cues per track (A–H, formerly 1–8), each colour-coded and labelled.",
+        "Memory cues are unlimited; they appear as small triangles in the waveform. Both transfer to USB.",
+        "Hot Cue Auto-Load (CDJ-3000) makes hot cues active on track load — no setup needed live.",
+      ],
+      edgeCases: [
+        "Cues set with Quantize OFF can be ~10–30 ms off the beat — re-set with Quantize ON for clean triggering.",
+        "Cues on tracks with bad grids may sound wrong when triggered into another deck via Beat Jump.",
+      ],
+      engineerNotes: [
+        "Convention: hot cue 1 = intro start, 2 = first drop, 3 = breakdown, 4 = second drop, 5–8 = creative re-cues.",
+        "Colour convention: green = safe entry, orange = build, red = drop, blue = breakdown. Train your eye to read it pre-attentively.",
+      ],
+    },
+    flow: "Listen to track → Identify structure → Pause at point → CUE + MEMORY → Label and colour → Save to USB",
+    walkthrough: [
+      { do: "Load a track in rekordbox and play it through.", listen: "Note where the intro ends, where the first drop hits, where the breakdown starts." },
+      { do: "Pause exactly on the first downbeat of the intro and click MEMORY (or hot cue 1).", listen: "A marker appears on the waveform — that's cue 1." },
+      { do: "Find the drop, hit MEMORY again as hot cue 2, colour red.", listen: "Now you have intro + drop saved." },
+      { do: "Enable Quantize and re-trigger to confirm cues snap to the beat.", listen: "Triggers land tight on the kick." },
+      { do: "Export to USB; on the CDJ, hot cues light up automatically.", listen: "You can now start the track at any structural point with one button." },
+    ],
+    listenFor: ["Cue triggers landing on the kick = good placement", "Cue triggers landing off-beat = move them with Quantize", "Colour reading speed in live use"],
+    mistakes: ["Setting too many cues — 8 is enough; clutter slows decisions.", "Not labelling — 'red cue 3' tells you nothing in a panic.", "Setting cues on phrase boundaries that are 1 bar off — always verify by triggering live."],
+    proMoves: ["Adopt one colour convention across your whole library — pre-attentive reading saves seconds.", "Set 'safety cue' on the last possible re-entry before a vocal — for emergencies.", "Hot Cue Auto-Load + colour convention = zero prep time on familiar tracks."],
+    quizHard: [
+      { q: "Difference between memory cue and hot cue?", options: ["No difference", "Memory cues are navigation markers; hot cues are colour-coded instant-trigger buttons (1–8)", "Memory cues are for loops only", "Hot cues don't save to USB"], answer: 1, explain: "Memory = unlimited markers for navigation. Hot cues = bound to physical pads for instant triggering.", hint: "One is for navigating, one is for performing." },
+      { q: "Quantize OFF when setting cues causes", options: ["Crash", "Cues land exactly where you pressed — possibly 10–30 ms off the beat", "Higher quality cues", "Cues to be removed"], answer: 1, explain: "Without Quantize, cues are placed at the press moment, not snapped to a beat.", hint: "Without snap, you get press-timing accuracy only." },
+      { q: "Why use a colour convention for hot cues?", options: ["Looks pretty", "Pre-attentive reading — you process colour faster than text or position, vital under stage lights at 2am", "Required by the software", "Saves disk space"], answer: 1, explain: "Colour is read pre-attentively (~200 ms) — faster than reading a label.", hint: "Visual processing speed in stress." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Memory & Hot Cue" }],
+  },
+
+  "eq-mixing-dj": {
+    hook: "EQ is the surgeon's scalpel. Subtract first, add later.",
+    beginner: {
+      what: [
+        "Every channel on the mixer has 3 EQ knobs: LOW (bass), MID (vocals/snare), HIGH (cymbals/air).",
+        "Turning a knob down (cut) reduces those frequencies on that deck. Turning up (boost) adds them.",
+        "Most mixes use cuts: kill the bass on Deck B while bringing it in, swap basses between the two tracks.",
+      ],
+      why: ["Two basslines fighting = mud. Cutting one fixes it instantly.", "EQ shapes energy without changing volume.", "Lets you blend tracks that don't naturally fit."],
+      analogy: "EQ is like layering clothes. You don't wear two heavy coats — you take one off when you add the other.",
+    },
+    advanced: {
+      what: [
+        "Pioneer DJM mixers use isolator-style EQ: full counter-clockwise = full kill (-∞ dB) of that band.",
+        "Crossover frequencies: typically LOW <200 Hz, MID 200–2500 Hz, HIGH >2500 Hz. Varies by mixer.",
+        "Bass swap technique: cut Deck B bass, bring channel up, on the phrase boundary cut Deck A bass and uncut Deck B simultaneously.",
+      ],
+      edgeCases: [
+        "EQ boosts (above 12 o'clock) add gain — can clip the channel. Cut before you boost.",
+        "Tracks with sub-bass below 60 Hz may not respond audibly on small monitors — trust meters and headphones.",
+      ],
+      engineerNotes: [
+        "Bass clashes are the #1 cause of muddy mixes. Always kill one bass before the other comes in.",
+        "EQ rides during long blends: shave 2–4 dB off the outgoing track's MID over 8 bars to clear room for the incoming vocal.",
+      ],
+    },
+    flow: "Cue Deck B → Kill Deck B bass → Bring fader up → On phrase: swap basses → Slowly lower Deck A mid + high → Out",
+    walkthrough: [
+      { do: "Cue Deck B in headphones; full-cut its LOW EQ (knob fully counter-clockwise).", listen: "Deck B has no bass — sounds thin in headphones." },
+      { do: "Bring Deck B's fader up to full while Deck A plays through master.", listen: "You hear Deck A's bass + Deck B's mids and highs layered cleanly." },
+      { do: "On the next 16-bar phrase boundary, kill Deck A's LOW and restore Deck B's LOW in one motion.", listen: "Bass has swapped — Deck B now drives the low end." },
+      { do: "Over the next 8 bars, gradually lower Deck A's MID then HIGH to wash it out.", listen: "Deck A fades cleanly without a level dip." },
+      { do: "Pull Deck A's channel fader down, restore its EQs to 12 o'clock for next time.", listen: "Mix complete; deck reset for reload." },
+    ],
+    listenFor: ["Mud when both basses are full = bass clash", "Hollow sound when only mid+high = correct intermediate state", "Vocal clarity during blend = mid management"],
+    mistakes: ["Boosting EQs to make a track 'louder' — boosts clip; use gain instead.", "Forgetting to reset EQs after a mix — next mix starts in the wrong state.", "Killing all three EQs at once — same as a fader cut, defeats the point."],
+    proMoves: ["Practice the bass swap on a phrase boundary until it's muscle memory.", "Use HIGH cut to remove harsh hats from an outgoing track in the last 4 bars.", "Read EQ on the meters — if peak hits red on a boost, pull gain down 2 dB."],
+    quizHard: [
+      { q: "Why kill the bass on the incoming deck before raising its fader?", options: ["Looks pro", "Two basslines at full level cause phase cancellation and muddy low-end — sweeping bass swap avoids this", "Saves CPU", "Required by the mixer"], answer: 1, explain: "Bass clash = low-end mud and phase issues. Killing one bass at a time keeps the low end clean.", hint: "Two basses fighting at 60 Hz." },
+      { q: "Pioneer DJM full-cut EQ means", options: ["-6 dB", "-12 dB", "-∞ dB (complete removal of that band)", "+12 dB"], answer: 2, explain: "Pioneer isolator EQs go to -∞ at full-counter-clockwise — total band kill.", hint: "Isolator EQs go all the way." },
+      { q: "Boosting EQ above 12 o'clock can cause", options: ["Better sound", "Channel clipping because EQ boost adds gain", "Slower mix", "Loop errors"], answer: 1, explain: "EQ boost = positive gain. Above unity, peak can exceed the channel ceiling.", hint: "Boost is gain. Gain plus loud signal equals clip." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Mixer EQ" }],
+  },
+
+  "crossfader-technique": {
+    hook: "The crossfader is a scalpel for turntablists and a switch for everyone else.",
+    beginner: {
+      what: [
+        "The crossfader is the horizontal slider between the channels. Left = only left deck; right = only right deck; middle = both.",
+        "Most club DJs leave it in the middle and mix with channel faders + EQ.",
+        "Turntablists use it for cuts and scratches — quick left-right movements for rhythmic chops.",
+      ],
+      why: ["Channel faders give finer per-deck control for long blends.", "Crossfader excels at fast cuts and scratch patterns.", "Curve choice changes feel — sharp for scratches, smooth for blends."],
+      analogy: "Channel faders are dimmer switches; crossfader is a light switch with a slider in the middle.",
+    },
+    advanced: {
+      what: [
+        "Crossfader curve: 'sharp' (full level achieved within 5% of travel — for scratching) vs 'smooth' (gradual — for blends).",
+        "Crossfader assign: each channel can be assigned to crossfader side A, side B, or thru (bypass).",
+        "Hamster switch: reverses crossfader direction — left becomes right. Standard scratch DJ tool.",
+      ],
+      edgeCases: [
+        "Worn crossfaders bleed — even at full one side, the other deck leaks through. Replace or use channel faders only.",
+        "Some house DJs assign both channels to thru and never touch the crossfader.",
+      ],
+      engineerNotes: [
+        "Innofader / Pro X Fade upgrades give magnetic, contactless faders with adjustable curve and tension — standard for scratch DJs.",
+        "Cut-in distance: the % of travel before signal appears. Tight cut-in (3%) for scratch, loose (10–15%) for blends.",
+      ],
+    },
+    flow: "Set curve → Assign channels → Use for cuts/scratches OR leave centered → Reset curve after",
+    walkthrough: [
+      { do: "Locate the crossfader curve switch on the mixer (front panel usually).", listen: "Three positions: sharp / mid / smooth." },
+      { do: "Set to smooth, play Deck A through master, slowly slide crossfader to right.", listen: "Deck A fades out gradually; Deck B fades in — usable for transitions." },
+      { do: "Switch to sharp, repeat — the cut is instant.", listen: "On/off behaviour — scratch territory." },
+      { do: "Practice a 'baby scratch': play a single sample on Deck B, push/pull jog while flicking crossfader.", listen: "You hear the sample chopped into rhythmic stabs." },
+      { do: "Reset crossfader to middle when done; centre channel faders for next mix.", listen: "Mixer at neutral, ready for next deck." },
+    ],
+    listenFor: ["Bleed = worn fader", "Clean cuts = sharp curve + good fader", "Pop on cut = level mismatch between decks"],
+    mistakes: ["Using crossfader for long blends — channel faders + EQ give more control.", "Leaving curve on sharp for a club set — accidentally cuts a deck dead.", "Forgetting one channel was assigned off-crossfader and panicking when it won't fade."],
+    proMoves: ["For scratch sets, install an Innofader and dial cut-in to ~3% with sharp curve.", "Map FX dry/wet to crossfader for creative transitions in performance mode.", "Always check curve setting before your set — venue mixers get left in random states."],
+    quizHard: [
+      { q: "Crossfader 'sharp' curve is preferred for", options: ["Long blends", "Scratching — full level reached within ~5% of travel for fast on/off cuts", "Loop triggers", "EQ rides"], answer: 1, explain: "Scratch needs on/off behaviour; sharp curve delivers that.", hint: "Scratch = fast on/off." },
+      { q: "A crossfader 'bleeds' when", options: ["It's brand new", "Worn contacts let the off-side signal through — you hear the silent deck faintly when fader is full to the other side", "It's miswired", "EQ is boosted"], answer: 1, explain: "Bleed = leakage. Worn analog faders develop this; replace or upgrade to magnetic.", hint: "Off should be silent. If it isn't…" },
+      { q: "Hamster mode does what?", options: ["Doubles BPM", "Reverses crossfader direction so left input plays when fader is right", "Adds chipmunk pitch", "Enables loop roll"], answer: 1, explain: "Hamster reverses fader polarity — a turntablist preference based on dominant hand and setup orientation.", hint: "Reversal switch." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Crossfader assign & curve" }],
+  },
+
+  "long-mix-blend": {
+    hook: "A 64-bar blend is half conversation, half choreography. Plan the arc, then ride it.",
+    beginner: {
+      what: [
+        "A long blend is a mix that lasts 32, 64 or even 128 bars — the two tracks overlap for over a minute.",
+        "Used for deep, melodic and progressive genres where structure matters more than energy spikes.",
+        "Requires both tracks to be harmonically compatible and structurally aligned (intro of B over outro of A).",
+      ],
+      why: ["Crowd doesn't notice the change — the journey feels seamless.", "Showcases two tracks as one extended piece.", "Less risky in the moment — you have time to react if something goes wrong."],
+      analogy: "Two rivers slowly joining — by the time you cross, you can't tell where one ended.",
+    },
+    advanced: {
+      what: [
+        "Anatomy: 16 bars under outgoing track / 32 bars true overlap / 16 bars under incoming = 64-bar blend.",
+        "EQ choreography: B bass cut → B fader up → bass swap on bar 33 → A high cut → A mid cut → A out.",
+        "Harmonic requirement: same key, relative major/minor, or perfect 5th (Camelot ±1) — anything else clashes over a long overlap.",
+      ],
+      edgeCases: [
+        "Tracks with vocals are risky for long blends — two vocals overlap and the words clash.",
+        "Tempo drift over 64 bars is audible at >0.1 BPM difference — SYNC or precise manual matching required.",
+      ],
+      engineerNotes: [
+        "Phrase awareness is critical: incoming drop must land where outgoing breakdown ends, not over its peak.",
+        "Pre-plan blends in rekordbox using related tracks playlists — saves cognitive load live.",
+      ],
+    },
+    flow: "Verify key + structure → Cue B + kill bass → Fader up at bar 0 → Swap bass at bar 32 → Cut A highs/mids → Pull A at bar 64",
+    walkthrough: [
+      { do: "Pick a 128-BPM house track A in 8A and a B track in 8A or 9A.", listen: "Same or adjacent Camelot — safe harmonically." },
+      { do: "Identify outro of A (last 32 bars, breakdown) and intro of B (first 32 bars, beat-only).", listen: "Find the structural overlap window." },
+      { do: "Cue B at intro start, kill its bass, raise fader to full as A enters its outro.", listen: "Both tracks audible; bass only from A." },
+      { do: "On bar 33 (midpoint), swap basses — A's LOW kill, B's LOW restore.", listen: "Bass now driven by B." },
+      { do: "Over bars 33–56, gradually cut A's HIGH then MID. Pull A's fader at bar 64.", listen: "A washes out cleanly; B continues alone." },
+    ],
+    listenFor: ["Vocal clashes mid-blend", "Tempo drift after 32 bars", "Phrase misalignment on bar 33 (the bass swap moment)"],
+    mistakes: ["Blending tracks with clashing keys — sounds wrong even if BPMs match.", "Bringing B in too loud — masks A and ruins the gradual reveal.", "Not planning structurally — bass swap on bar 27 instead of 33 = phrase break."],
+    proMoves: ["Mark blend points with memory cues on both tracks beforehand.", "Use My Tag 'LONG-BLEND' to flag tracks with clean 32-bar intros/outros.", "Record long blends and listen to the midpoint — is the transition magical or just functional?"],
+    quizHard: [
+      { q: "Why is harmonic compatibility more critical for long blends than short cuts?", options: ["It isn't", "Long overlap = sustained interval clash audible for 60+ seconds; short cuts hide the clash", "Long blends use no EQ", "Short cuts are key-locked"], answer: 1, explain: "Time exposes harmonic conflict. Quick cuts hide it under transient noise.", hint: "More time = more clash exposure." },
+      { q: "Bass swap on bar 33 of a 64-bar blend lands on what structural moment?", options: ["The drop", "The midpoint phrase boundary — the most musically natural handover point", "The intro end", "A random bar"], answer: 1, explain: "Bar 33 = start of second 32-bar phrase = natural pivot.", hint: "Halfway through a 64-bar arc." },
+      { q: "Tempo drift of 0.15 BPM over 64 bars at 128 BPM equals roughly", options: ["No drift", "About 1 beat of phase drift across the blend — audible to trained ears", "Half a bar drift", "Doesn't affect the mix"], answer: 1, explain: "0.15 BPM × ~30s = ~1 beat phase shift. Manual nudges or SYNC required.", hint: "Small numbers add up over long times." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Long mix techniques" }],
+  },
+
+  "transitions-cut-dj": {
+    hook: "A cut transition is an honest punch. No fade — just the next track, on the beat.",
+    beginner: {
+      what: [
+        "A cut is the opposite of a blend: you stop track A and start track B at the same instant.",
+        "Works when both tracks share strong, similar energy and the cut lands on a downbeat.",
+        "Common in hip-hop, scratch sets, and high-energy dance moments where surprise = excitement.",
+      ],
+      why: ["Adds drama — the crowd feels the change.", "Useful when tracks don't blend cleanly (different keys, structure).", "Faster — you cover more tracks in a set."],
+      analogy: "A film cut from one scene to the next. No fade-to-black, just slam to the new scene.",
+    },
+    advanced: {
+      what: [
+        "Types: hard cut (channel fader slam), echo-out cut (FX tail covers the swap), spinback cut (Deck A spun back as B enters).",
+        "Beat-juggle cut: alternating 1-bar samples between decks using cues + crossfader.",
+        "Drop-on-drop: cut from outgoing drop directly into incoming drop — peak-time tool.",
+      ],
+      edgeCases: [
+        "Cuts on phrase mid-bar feel like a mistake — always land on bar 1.",
+        "Level mismatch between decks at cut moment = audible jump in volume.",
+      ],
+      engineerNotes: [
+        "Echo-out FX: 1/2 beat echo with feedback ramp covers the cut and bridges energy.",
+        "Quantize ON + hot cue on Deck B downbeat = perfect cut every time.",
+      ],
+    },
+    flow: "Match levels → Cue Deck B on downbeat hot cue → Quantize ON → On bar 1: cut A fader / trigger B cue simultaneously",
+    walkthrough: [
+      { do: "Pick two tracks with similar energy, set hot cue 1 on Deck B's first kick of a drop.", listen: "Cue lit on the downbeat." },
+      { do: "Match levels — both deck channel meters should peak similarly.", listen: "No level jump expected on cut." },
+      { do: "Enable Quantize so the hot cue snaps to beat.", listen: "Trigger timing handled by software." },
+      { do: "On bar 1 of an A phrase, pull A's fader to zero and hit Deck B hot cue 1 in one motion.", listen: "Instant slam to new track — clean cut." },
+      { do: "Practice with an echo-out: apply 1/2-beat echo to A for 2 bars before cut, then slam B in.", listen: "FX tail covers any transition gap." },
+    ],
+    listenFor: ["Level jump = gain mismatch", "Off-beat cut = sounds like a mistake", "Drop-on-drop = peak excitement moment"],
+    mistakes: ["Cutting mid-phrase — feels jarring and wrong.", "Forgetting Quantize — finger-press latency makes the cut land slightly late.", "Cutting between two low-energy tracks — no drama, just confusing."],
+    proMoves: ["Drop-on-drop cuts at the climax of a set — the cheapest way to send a crowd over the edge.", "Practice echo-out cuts with 1/4 beat to 1/2 beat ramp — bridges any tempo difference.", "Use a spinback (slow Deck A jog backwards while cutting) for a film-style transition."],
+    quizHard: [
+      { q: "Why must a cut land on bar 1?", options: ["Aesthetic only", "Phrase boundaries are where the crowd expects change — landing elsewhere reads as a mistake", "Required by software", "BPM lock"], answer: 1, explain: "Crowds feel phrase structure. A cut on bar 5 of an 8-bar phrase sounds wrong even if technically clean.", hint: "Crowds count in 8s without knowing it." },
+      { q: "Echo-out cut technique uses", options: ["A reverb tail", "A delay/echo applied to outgoing deck with feedback, masking the cut moment and bridging tempo", "EQ kill", "Filter sweep"], answer: 1, explain: "Echo with feedback creates a sustained tail that overlaps the start of the new track.", hint: "FX tail covers the gap." },
+      { q: "Drop-on-drop is risky because", options: ["It always works", "Two peak-energy tracks need to be in compatible keys + similar intensity or the cut feels chaotic, not climactic", "It requires SYNC off", "It uses extra CPU"], answer: 1, explain: "Energy stacking only works if both tracks are arrived-at peak; harmonic clash at peak is brutal.", hint: "Stacking peaks needs harmonic agreement." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Cue triggering & quantize" }],
+  },
+
+  "loop-function-dj": {
+    hook: "A loop turns 4 bars into infinite bars. Use it to buy time, build tension, or rebuild a track live.",
+    beginner: {
+      what: [
+        "A loop repeats a section of the track endlessly until you exit.",
+        "Set IN (loop start) and OUT (loop end), or use auto-loop (4-beat, 8-beat, 16-beat presets).",
+        "Used to extend an intro, hold a breakdown, or skip a weak section of a track.",
+      ],
+      why: ["Lets you wait for the right moment to drop the next track.", "Creates new arrangements live by re-looping interesting parts.", "Saves a transition when the next track isn't ready."],
+      analogy: "A pause button that keeps the music playing. You stay on the same page until you turn it.",
+    },
+    advanced: {
+      what: [
+        "Beat loops: 1/16, 1/8, 1/4, 1/2, 1, 2, 4, 8, 16, 32 beats. Each button halves or doubles the length.",
+        "Manual loops: IN/OUT buttons let you capture an irregular section (e.g. 3-bar vocal phrase).",
+        "Loop roll: triggers the loop while continuing the playhead — when you release, track resumes where it would have been (a 'stutter' effect).",
+      ],
+      edgeCases: [
+        "Loops on tracks with bad grids drift — manually adjust IN/OUT to fix.",
+        "Long loops (16+ bars) over a vocal will repeat words obviously — only safe on instrumental sections.",
+      ],
+      engineerNotes: [
+        "Loop slip mode (rekordbox): exits the loop and jumps to where the playhead would have been — preserves musical timeline.",
+        "Saved loops can be stored as memory cues with loop length attached — recall in one button press.",
+      ],
+    },
+    flow: "Find clean 4-bar instrumental → Press 4-beat loop on downbeat → Hold for tension → Halve loop length to build → Exit on phrase",
+    walkthrough: [
+      { do: "Load a track with a clear instrumental section, play to that point.", listen: "Drums + bass, no vocals." },
+      { do: "On the downbeat, press auto-loop 4-beat.", listen: "Track repeats every 4 beats — endless groove." },
+      { do: "Halve the loop to 2-beat, then 1-beat.", listen: "Loop tightens — feels like a build." },
+      { do: "Use this time to cue Deck B, prep the mix, then exit the loop on a phrase boundary.", listen: "Track resumes naturally; transition follows." },
+      { do: "Try loop roll: hold the 1/8-beat button briefly, release, and the track resumes where it would have been.", listen: "Stutter effect with no timeline jump." },
+    ],
+    listenFor: ["Vocal repetition = bad loop placement", "Phase break on exit = exited on the wrong beat", "Tightening build = halving loop length"],
+    mistakes: ["Looping over a vocal — words repeat obviously.", "Exiting mid-phrase — sounds like a mistake.", "Using long loops as a crutch instead of preparing properly."],
+    proMoves: ["Halve loop length progressively (4 → 2 → 1 → 1/2 → 1/4) as a built-in tension build.", "Loop a missing section from a different track and layer it via a third deck — instant live edit.", "Save go-to loops as memory points labelled 'BUILD-LOOP'."],
+    quizHard: [
+      { q: "Loop roll differs from a normal loop because", options: ["No difference", "On exit, the playhead jumps to where the track would have been if not looped — preserving timeline", "Roll loops are longer", "Roll loops affect tempo"], answer: 1, explain: "Roll = stutter effect; track continues underneath silently, resumes seamlessly.", hint: "Imagine the track still played while you looped." },
+      { q: "Progressively halving loop length (4 → 2 → 1 → 1/2 beats) creates", options: ["A pause", "A perceptual tension build — faster repetition reads as rising intensity", "An EQ sweep", "A key change"], answer: 1, explain: "Halving loop length accelerates apparent rhythm = tension.", hint: "Faster repetition = more energy." },
+      { q: "Why avoid loops on vocal sections?", options: ["Software limitation", "Words repeat audibly — the crowd notices the loop because language is repetitive", "EQ breaks", "Loops can't loop vocals"], answer: 1, explain: "Loops on instrumental are invisible; loops on vocals are obvious.", hint: "Words are memorable; drums are wallpaper." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Loop & Slip mode" }],
+  },
+
+  // ============================================================
+  // PATH 4 — PERFORMANCE & CRAFT
+  // ============================================================
+  "reading-the-crowd": {
+    hook: "The crowd is your second set of monitors. Watch the floor, then play to it.",
+    beginner: {
+      what: [
+        "Reading the crowd means watching what people do and adjusting your next track choice based on it.",
+        "Signals: density of the dance floor, where people are looking, whether they're talking or dancing, energy of movement.",
+        "Goal: keep most of them dancing, gradually moving energy in the direction you want the night to go.",
+      ],
+      why: ["The pre-planned set is a hypothesis; the crowd is the test.", "A great selection in a vacuum is a bad selection if it empties the floor.", "Reading well = repeat bookings."],
+      analogy: "A stand-up comic watches the audience between jokes. If they aren't laughing at puns, no more puns.",
+    },
+    advanced: {
+      what: [
+        "Floor density curve: track % of capacity dancing every 15 minutes — a steady curve up = correct trajectory.",
+        "Body language hierarchy: hands up > heads up > swaying > nodding > talking > phones > leaving.",
+        "Genre tolerance: each crowd has a tempo + style band they accept. Stepping outside loses them; stepping just to the edge excites them.",
+      ],
+      edgeCases: [
+        "Early in the night, low engagement is normal — don't panic and drop bangers at 10 PM.",
+        "A spike in phones-out = a viral moment incoming (drop) or boredom (mids). Read context.",
+      ],
+      engineerNotes: [
+        "Set markers in your mental model: 'first time hands go up', 'first time someone leaves the floor' — calibrate against these.",
+        "DJs who stare at the screen only read the screen — keep eyes up at least 50% of the time.",
+      ],
+    },
+    flow: "Glance at floor → Note density + body language → Compare to expected curve → Adjust next 2 track choices → Repeat every 5 min",
+    walkthrough: [
+      { do: "At your next set, look up at the floor at the start of every track.", listen: "How many are dancing? Where are they looking?" },
+      { do: "When energy dips, switch from your planned next track to a stronger one one Camelot step up.", listen: "Crowd response should rise within 16 bars." },
+      { do: "When energy peaks, hold there with similar-energy tracks rather than escalating further.", listen: "Sustained peaks are more memorable than constant climbs." },
+      { do: "If you see phones drop and hands rise, you just nailed a moment — note the track for your repertoire.", listen: "Catalogue your hits." },
+      { do: "If the floor empties, abandon the next planned track and go to something proven.", listen: "Floor refills within 2 tracks if the recovery is right." },
+    ],
+    listenFor: ["Floor density changes track-to-track", "Phones up = warning OR viral moment", "Sustained peak vs constant climb"],
+    mistakes: ["Sticking to the pre-planned set when the crowd is telling you to change.", "Reading 'no one dancing' as 'play harder' — often it means play more familiar.", "Treating a peak as a launchpad — sometimes it's the ceiling."],
+    proMoves: ["Build 3 versions of each set: starter, peak, recovery. Switch versions based on read.", "Glance at the bar — empty bar = engaged floor; full bar = lost the room.", "After the set, recall the 3 strongest crowd moments and what track + transition caused them."],
+    quizHard: [
+      { q: "Best signal that the floor is engaged?", options: ["Phones in the air", "Heads up, eyes forward, hands moving — 'attentive engagement'", "People at the bar", "Photo flash"], answer: 1, explain: "Attentive body language beats raised hands as a reliable engagement signal.", hint: "Where are they looking?" },
+      { q: "Floor empties mid-set. Best response?", options: ["Play harder", "Abandon planned next track, play a proven crowd track to recover", "Stop the set", "Lower volume"], answer: 1, explain: "Recovery = play to the lowest common denominator briefly, then rebuild.", hint: "Floor goes, planned set goes." },
+      { q: "Sustained peak vs constant climb — which is more memorable?", options: ["Constant climb always wins", "Sustained peak — the crowd needs time to be in the moment before you escalate", "Both same", "Neither matters"], answer: 1, explain: "Memory forms during sustained engagement, not during transitions. Hold peaks.", hint: "Memory needs time to form." },
+    ],
+    sources: [{ label: "Club DJ practice", section: "Crowd reading" }],
+  },
+
+  "set-structure-dj": {
+    hook: "A set is a story. Intro, build, peak, recovery, outro — same shape as every film you've ever loved.",
+    beginner: {
+      what: [
+        "A DJ set has structure: warm-up (low energy), build (rising), peak (highest), come-down (lower energy), close.",
+        "BPM and intensity usually rise gradually then peak around 2/3 through, then taper.",
+        "Length determines pacing: a 1-hour set has one arc; a 4-hour set has multiple peaks and valleys.",
+      ],
+      why: ["Crowds need contrast — constant peak = no peak.", "Pacing creates anticipation, which creates memorable drops.", "Structure makes a set feel intentional, not random."],
+      analogy: "Like cooking a meal. Appetiser, main, dessert. Serve dessert first and the meal makes no sense.",
+    },
+    advanced: {
+      what: [
+        "1-hour opener: start 10 BPM under peak target, climb 2–3 BPM per 15 min, peak at 50-min mark, soft outro.",
+        "3-hour headline: 6 mini-arcs (~30 min each) with progressive peaks; biggest peak at hour 2.",
+        "Genre transition strategy: don't jump genres at peak — use a breakdown to pivot.",
+      ],
+      edgeCases: [
+        "If the prior DJ ended hot, you can't start cold — match their energy then redirect.",
+        "Festival sets are different — 60 minutes of peaks because the audience demands it.",
+      ],
+      engineerNotes: [
+        "Plan 'anchor tracks' — 3–5 known-winners spaced through the set as guaranteed peaks.",
+        "Leave 30% of slots empty in your pre-plan for crowd-driven decisions.",
+      ],
+    },
+    flow: "Identify slot length + role → Map energy curve → Place anchor tracks → Fill arcs around them → Leave 30% flexible",
+    walkthrough: [
+      { do: "Pick a slot: 90 min, peak time.", listen: "Peak slot = climb early, hold high, big finish." },
+      { do: "Place 4 anchor tracks (proven winners) at minutes 25, 50, 70, 85.", listen: "Anchors guarantee peaks even if filler is improvised." },
+      { do: "Map BPM: start at 124, climb to 128 by anchor 1, 130 by anchor 3.", listen: "Predictable BPM curve = predictable energy rise." },
+      { do: "Fill between anchors with progressively energetic tracks from your prepped folder.", listen: "Filler should flow up to each anchor." },
+      { do: "Leave 3 slots empty in your written set — to react to the crowd.", listen: "Real sets always swap 30%+ live." },
+    ],
+    listenFor: ["Energy gaps between anchors", "Genre jumps at peaks (don't)", "Crowd response at each anchor (calibrate next time)"],
+    mistakes: ["Peaking too early — leaves nowhere to go.", "All anchors, no breath — exhausting and forgettable.", "Sticking 100% to the plan when crowd says otherwise."],
+    proMoves: ["After each gig, re-rate anchor tracks: did they peak or fizz? Update your library.", "Map a 'panic recovery' anchor at minute 40 in case the set is losing energy.", "Study sets you love on Soundcloud — annotate their energy curves."],
+    quizHard: [
+      { q: "Why peak around 2/3 of the way through, not at the very end?", options: ["Tradition", "Crowds need a come-down period to consolidate the peak as a memory before the close", "Software requires it", "Battery saving"], answer: 1, explain: "Endings without resolution feel abrupt; peak-then-come-down creates a memorable arc.", hint: "Movies don't end on the climax — there's denouement." },
+      { q: "An 'anchor track' in a set plan is", options: ["The first track", "A pre-selected proven track placed at strategic energy moments to guarantee a peak", "A loop point", "The closing track"], answer: 1, explain: "Anchors are insurance — the rest can flex around them.", hint: "Insurance peaks." },
+      { q: "Why leave 30% of slots empty in a pre-plan?", options: ["Lazy planning", "Live crowd reads require swapping tracks — over-planning makes you rigid and unresponsive", "Software limit", "Reduces fatigue"], answer: 1, explain: "Rigid plans fail when reality disagrees. Slack = responsiveness.", hint: "Plans meet reality; reality often wins." },
+    ],
+    sources: [{ label: "DJ Magazine - set craft articles", section: "Set structure" }],
+  },
+
+  "harmonic-mixing-dj": {
+    hook: "Mix in key and even mediocre transitions sound good. Mix out of key and even perfect blends sound wrong.",
+    beginner: {
+      what: [
+        "Harmonic mixing means choosing tracks whose musical keys are compatible.",
+        "Compatible keys: same key, the relative minor/major, or one position around the Camelot wheel (5th relationship).",
+        "Rekordbox shows the key on every track — letter notation (Am, C) and Camelot (8A, 8B).",
+      ],
+      why: ["Avoids dissonant clashes on long blends.", "Compatible keys feel emotionally consistent.", "Energy moves up the wheel = energy rises perceptually."],
+      analogy: "Painting with colours from the same palette. Mix red with red-orange — beautiful. Mix red with green and it screams.",
+    },
+    advanced: {
+      what: [
+        "Camelot Wheel: 12 outer (B = major) and 12 inner (A = minor) positions. Adjacent = compatible.",
+        "Energy boost: +1 step clockwise (8A → 9A) = up a perfect 5th = perceived energy lift.",
+        "Mood shift: switch between A (minor) and B (major) at same number = same key, different mood — emotional pivot.",
+      ],
+      edgeCases: [
+        "Detected key can be wrong on tracks with key changes or modal ambiguity — verify by ear.",
+        "Some genres (techno, minimal) are largely atonal — harmonic mixing matters less.",
+      ],
+      engineerNotes: [
+        "Key Shift (rekordbox): pitch-shift a track ±1 semitone to force harmonic compatibility.",
+        "Vocal tracks are most key-sensitive — never key-clash a vocal blend.",
+      ],
+    },
+    flow: "Look up current key (Camelot) → Pick next from {same, +1, -1, same number ±letter} → Verify by ear → Blend",
+    walkthrough: [
+      { do: "Play a track at 8A.", listen: "The Camelot label shows 8A in rekordbox." },
+      { do: "Browse compatible options: 8A (same), 9A (+5th), 7A (-5th), 8B (relative major).", listen: "All four sound harmonically clean against current." },
+      { do: "Pick 9A as next track — slight energy lift.", listen: "Blend feels like climbing one step." },
+      { do: "Mix in slowly — if vocal clash, abandon and pick a different 8A.", listen: "Your ears outrank the chart." },
+      { do: "After 3 tracks at 9A, jump to 9B (mood pivot to major) for a brighter peak.", listen: "Same key root, different colour." },
+    ],
+    listenFor: ["Vocal clash on melodic blend = key mismatch", "Energy lift on Camelot +1 = harmonic shift working", "Major/minor pivot = mood change"],
+    mistakes: ["Trusting the auto-detected key blindly — verify weird-sounding blends by ear.", "Never using same-number A↔B pivots — you miss easy mood shifts.", "Treating Camelot as a rigid rule. It's a guide, not a law."],
+    proMoves: ["Plan 'key journeys' across a set — start at 7A, climb to 11A, drop to 11B for the close.", "Use Key Shift to rescue an otherwise-perfect track that's one semitone off.", "Build playlists per key for fast harmonic browsing."],
+    quizHard: [
+      { q: "Camelot 8A → 8B is", options: ["Incompatible", "Same root, switch from minor to major — emotional/mood pivot, harmonically clean", "A semitone jump", "Sub-bass only"], answer: 1, explain: "8A = A-minor, 8B = C-major (relative major). Same notes, different mood.", hint: "Inner ring vs outer ring at same number." },
+      { q: "Camelot +1 step (8A → 9A) creates", options: ["A key clash", "A perfect 5th relationship — perceived energy lift, harmonically smooth", "A semitone drop", "Tempo change"], answer: 1, explain: "Clockwise step = perfect 5th up = brighter, more energetic feeling.", hint: "One step right = one step up energy." },
+      { q: "Why is auto-detected key sometimes wrong?", options: ["Software bugs", "Tracks with modulations, modal ambiguity, or atonal elements confuse the detection algorithm", "Always perfect", "Only old tracks"], answer: 1, explain: "Key detection assumes diatonic harmony — exceptions break it.", hint: "Algorithms assume simple cases." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Key & Key Shift" }],
+  },
+
+  "effects-performance-dj": {
+    hook: "FX are spice. A pinch transforms; a handful ruins.",
+    beginner: {
+      what: [
+        "DJ effects (FX) are real-time audio processors: filter, echo, reverb, flanger, roll, etc.",
+        "Applied to a deck or to the master output; controlled by dry/wet (amount) and beats (time division).",
+        "Used to transition, build tension, fill a gap, or recover a mistake.",
+      ],
+      why: ["Filter sweeps mask transitions.", "Echo extends a phrase by repeating it as the next track enters.", "Reverb adds depth to breakdowns."],
+      analogy: "FX are like film camera angles. Cut to a dramatic angle for emphasis; use one every shot and the film is unwatchable.",
+    },
+    advanced: {
+      what: [
+        "Beat-synced FX (Pioneer Beat FX): time-divided to BPM. 1/4 beat echo at 128 BPM = ~117 ms repeat.",
+        "Sound Colour FX (per-channel): filter, noise, dub echo, sweep, crush — twist the colour knob to engage.",
+        "Send FX (high-end mixers): bus FX with dedicated return, can apply FX without losing dry signal.",
+      ],
+      edgeCases: [
+        "Reverb on a busy mix = mud. Use sparingly on minimal sections.",
+        "Echo with feedback >50% builds quickly — disengage before it overwhelms.",
+      ],
+      engineerNotes: [
+        "Filter sweep transitions: high-pass on outgoing, low-pass on incoming — meets in the middle.",
+        "FX chains in rekordbox Performance Mode: stack multiple FX for unique combinations.",
+      ],
+    },
+    flow: "Pick FX → Set time division (beats) → Engage dry/wet gradually → Time release to phrase boundary",
+    walkthrough: [
+      { do: "Select Echo FX, set time to 1/2 beat.", listen: "Echo will repeat every half-beat at current BPM." },
+      { do: "Mid-track, slowly raise dry/wet from 0 to 60%.", listen: "Echo tail builds, fills space." },
+      { do: "On a phrase boundary, slam dry/wet to 0.", listen: "FX cuts dead, room punches back to dry signal — dramatic moment." },
+      { do: "Try filter sweep: low-pass cutoff swept from 20kHz to 200 Hz over 8 bars.", listen: "Track muffles progressively — transition build." },
+      { do: "Practice 'echo out': kick echo at 1 bar from end of phrase, let it tail into next track.", listen: "Phrase extends via echo into the next." },
+    ],
+    listenFor: ["Reverb mud = too much, too long", "Echo feedback runaway = need to disengage", "Filter sweep landing on phrase = clean transition"],
+    mistakes: ["Reverb on every track — every section sounds the same.", "Echo without disengaging before next track enters — clashes.", "FX as a panic button — masks technique problems instead of solving them."],
+    proMoves: ["Map dry/wet to a single knob you always know — muscle memory under stress.", "Use Sound Colour FX sparingly — they're meant to be one-shot punctuation.", "Plan one FX moment per 5 tracks; more than that = overuse."],
+    quizHard: [
+      { q: "Beat-synced echo at 1/2 beat at 128 BPM repeats every", options: ["117 ms", "234 ms", "468 ms", "1 second"], answer: 1, explain: "60000 / 128 = 469 ms per beat; 1/2 beat = ~234 ms.", hint: "60000 / BPM / 2." },
+      { q: "Filter sweep transition technique uses", options: ["Reverb on both decks", "High-pass on outgoing + low-pass on incoming, meeting at midpoint frequency", "Echo only", "Bass kill"], answer: 1, explain: "Frequency split = clean handover. Outgoing fades upward, incoming fades downward.", hint: "Two filters meeting in the middle of the spectrum." },
+      { q: "Echo feedback >50% causes", options: ["Quieter signal", "Self-feeding loop where each echo is louder than the last — runaway", "Bass loss", "Crash"], answer: 1, explain: "Feedback above unity = compounding repeats = audible runaway.", hint: "Each repeat louder = exponential growth." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Beat FX & Sound Colour FX" }],
+  },
+
+  "energy-management-dj": {
+    hook: "Energy isn't a number — it's a curve. Manage the curve, not the moment.",
+    beginner: {
+      what: [
+        "Energy = perceived intensity. Affected by BPM, density of arrangement, bass weight, vocal presence, harmonic tension.",
+        "A set's energy is a curve over time, not a constant. Even peak sets have moments of release.",
+        "Manage by alternating climb / hold / micro-release / climb — never flatline at maximum.",
+      ],
+      why: ["Constant peak desensitises crowds.", "Strategic dips make subsequent peaks feel bigger.", "Energy curves are how DJs become memorable."],
+      analogy: "A roller coaster. The big drop only feels big because you climbed first. A coaster that's all drop is just a fall.",
+    },
+    advanced: {
+      what: [
+        "Energy components: tempo (objective), arrangement density (objective), perceived intensity (subjective). All three contribute.",
+        "Tag your library: 1–10 energy scale (My Tag) — sortable for live decisions.",
+        "Build-release-build: 16 bars climb, 8 bars hold, 16 bars climb beats 40 bars constant climb every time.",
+      ],
+      edgeCases: [
+        "BPM ↑ doesn't always = energy ↑ — a 128 BPM banger feels bigger than a 140 BPM minimal.",
+        "Vocal entry = perceived energy spike even with no arrangement change.",
+      ],
+      engineerNotes: [
+        "Plan energy curve before set — sketch it on paper if needed.",
+        "Track-rating: re-rate after every gig based on live performance, not studio listen.",
+      ],
+    },
+    flow: "Sketch energy curve → Tag library by energy → Place tracks along curve → Adjust live based on read",
+    walkthrough: [
+      { do: "Take 10 favourite tracks, rate them 1–10 for energy, write down.", listen: "Forces you to articulate intensity." },
+      { do: "Sketch a 90-min curve: start at 4, climb to 8 by min 60, hold, peak at 9 at min 80, close at 6.", listen: "Visual plan to follow." },
+      { do: "Place your rated tracks on the curve — energy 7 track at minute 40, energy 9 at minute 80.", listen: "Curve fills with structure." },
+      { do: "Identify a 'micro-release' track (energy 6) to drop at minute 70 — pause before the peak.", listen: "Crowd takes a breath; peak hits harder." },
+      { do: "Play the set; mark deviations live; review after.", listen: "Real sets always reveal the gap between plan and execution." },
+    ],
+    listenFor: ["Plateau = need release", "Bass drop = guaranteed energy spike", "Vocal entry = perceived spike without arrangement change"],
+    mistakes: ["Constant peak = no peak.", "Releasing too often = no momentum.", "Confusing BPM with energy."],
+    proMoves: ["Energy-tag every track 1–10; refine after every gig.", "Design 'release tracks' — known crowd-favourites that lower intensity without losing engagement.", "Treat peak as something you visit, not somewhere you live."],
+    quizHard: [
+      { q: "Why does constant peak energy fail?", options: ["It doesn't — peak is best", "Sensory adaptation — sustained intensity normalises, perceived energy drops", "Software limits", "Hearing damage"], answer: 1, explain: "Brain adapts to sustained signals; contrast is what registers as intensity.", hint: "Sensory systems adapt to constants." },
+      { q: "A 128 BPM peak track can feel bigger than a 140 BPM track because", options: ["Always wrong", "Perceived energy depends on arrangement density, bass weight, and vocals — not BPM alone", "BPM doesn't matter", "140 BPM is too fast for clubs"], answer: 1, explain: "BPM is one input. Mix of all energy factors determines perception.", hint: "Energy is multi-dimensional." },
+      { q: "Micro-release before a peak makes the peak feel bigger because", options: ["Just luck", "Contrast — lower preceding intensity widens the gap, perceived as a bigger climb", "Loudness boost", "Tempo trick"], answer: 1, explain: "Perception is relative — bigger contrast = bigger felt jump.", hint: "Big drop needs a low to drop from." },
+    ],
+    sources: [{ label: "DJ Magazine - performance articles", section: "Energy management" }],
+  },
+
+  "genre-strategy-dj": {
+    hook: "One genre well > five genres badly. Specialise, then expand.",
+    beginner: {
+      what: [
+        "Picking a primary genre lets you build deep library, technique and reputation in that lane.",
+        "Genres differ in tempo, structure, mixing style, and crowd. Trying to play all = mastering none.",
+        "Once you're strong in one, adjacent genres become easier to add (house → tech house → minimal).",
+      ],
+      why: ["Specialists get booked over generalists.", "Mixing style is genre-shaped — same techniques don't work everywhere.", "Crowds remember a DJ for a sound, not a buffet."],
+      analogy: "A chef is known for a cuisine, not for every cuisine. Italian first; fusion later.",
+    },
+    advanced: {
+      what: [
+        "Tempo families: 90–105 (hip-hop, RnB), 110–124 (deep house), 124–132 (house, tech house), 130–140 (techno), 138–145 (trance), 150–180 (DnB).",
+        "Within a family, mixing technique transfers; across families requires bridge tracks.",
+        "Cross-genre sets work via 'pivot tracks' — tracks that share elements of both genres.",
+      ],
+      edgeCases: [
+        "Bass-heavy genres (DnB, dubstep) require different sound system handling than melodic (deep house).",
+        "Open-format slots (wedding, corporate) reward genre breadth; underground clubs reward depth.",
+      ],
+      engineerNotes: [
+        "Build sub-libraries per genre in rekordbox; never mix them in browsing.",
+        "Pivot tracks tagged 'BRIDGE' — invaluable for set evolution.",
+      ],
+    },
+    flow: "Pick primary genre → Build 300+ deep library → Master technique conventions → Add adjacent genre → Use pivots",
+    walkthrough: [
+      { do: "Choose one genre you love.", listen: "Commitment beats hedging." },
+      { do: "Spend 1 month buying only that genre — aim for 100 tracks.", listen: "Depth, not breadth." },
+      { do: "Study its mixing conventions: blend lengths, FX use, structure norms.", listen: "Tech house ≠ techno mixing." },
+      { do: "Play 5 sets in only that genre.", listen: "Repetition builds skill; constraint reveals nuance." },
+      { do: "Then add an adjacent genre — tech house if you started in deep house.", listen: "Adjacent transfer is fast; jump is slow." },
+    ],
+    listenFor: ["Style mismatches when mixing across genres", "Technique that doesn't transfer (e.g. long blends in DnB)", "Crowd confusion at genre pivots"],
+    mistakes: ["Jumping straight to multi-genre before mastering one.", "No pivot tracks for cross-genre = crowd loses thread.", "Treating all genres the same — tech house ≠ techno even at same BPM."],
+    proMoves: ["Master one genre in 6–12 months before expanding.", "Cultivate 'pivot' tracks for every cross-genre move you plan.", "Study sets from icons in your genre — annotate their structure and selection logic."],
+    quizHard: [
+      { q: "Why do specialists get booked over generalists?", options: ["Less competition", "Promoters book sounds, not skills — a specialist signals a known sound; a generalist signals risk", "Cheaper", "Faster setup"], answer: 1, explain: "Promoters need predictability; specialists deliver it.", hint: "Promoters book what they can describe." },
+      { q: "A pivot track is", options: ["The last track of a set", "A track sharing elements of two genres, used to bridge between them in a cross-genre set", "A scratch sample", "An FX preset"], answer: 1, explain: "Pivot = bridge. Eases the transition and tells the crowd 'we're going somewhere'.", hint: "Bridge between two sounds." },
+      { q: "Tempo families exist because", options: ["Random convention", "Genres developed around specific BPM ranges that suit their groove, instrumentation, and dance style", "BPM regulation", "Software limit"], answer: 1, explain: "Genre = tempo + groove + instrumentation. Tempo is part of the recipe.", hint: "BPM is part of the genre identity." },
+    ],
+    sources: [{ label: "DJ Mag - genre history articles", section: "Genre strategy" }],
+  },
+
+  "preparing-a-set-dj": {
+    hook: "An hour of prep beats four hours of panic. Walk in with a plan; walk out with a story.",
+    beginner: {
+      what: [
+        "Set prep = picking, analysing, organising and rehearsing tracks before the gig.",
+        "Steps: shortlist 2× the tracks you'll need, analyse all in rekordbox, sort into playlist by intended order, set cues + loops.",
+        "Rehearse 3–4 key transitions but leave room for live decisions.",
+      ],
+      why: ["Removes 90% of in-the-moment thinking — frees you to read crowd.", "Catches bad grids, missing tracks, key clashes in advance.", "Confidence boost — you've already mentally played the set."],
+      analogy: "A chef preps mise en place before service. Knives sharp, ingredients chopped, sauces ready. Then the cooking flows.",
+    },
+    advanced: {
+      what: [
+        "Shortlist: 2× set length in tracks (60-min set = ~25 tracks at 4-min each, shortlist 50).",
+        "Analyse all in rekordbox: BPM, key, beat grids, set hot cues 1–4 (intro/drop/breakdown/outro).",
+        "Playlist organisation: rough order, energy-tagged, marked anchors. Leave gaps for live picks.",
+      ],
+      edgeCases: [
+        "Festival / opener slots need 30% more shortlist — you may need to drop the planned set entirely.",
+        "Tracks discovered same-day rarely make the set live — pre-prep is non-negotiable.",
+      ],
+      engineerNotes: [
+        "Always carry the set on at least 2 USBs + a laptop backup. Hardware fails.",
+        "Verify USB compatibility with venue gear (FAT32, exFAT, file count limits).",
+      ],
+    },
+    flow: "Brief check (slot length, venue, genre) → Shortlist 2× tracks → Analyse + cue → Sort → Rehearse 3 transitions → Export to 2 USBs",
+    walkthrough: [
+      { do: "Confirm gig details: 90 min, peak slot, tech house.", listen: "Sets the lens for selection." },
+      { do: "Shortlist 50 tech-house tracks from your library.", listen: "More than you need — gives live flexibility." },
+      { do: "Analyse all in rekordbox, verify beat grids on the 20 strongest.", listen: "Bad grid = no SYNC, no clean cues." },
+      { do: "Create playlist 'Gig - VenueName - Date', drag tracks in intended order, mark 4 anchors.", listen: "Plan visible at a glance live." },
+      { do: "Export playlist to 2 USBs (FAT32), test load on a CDJ if possible, pack headphones.", listen: "Redundancy + verification = no panic at the booth." },
+    ],
+    listenFor: ["Unanalysed tracks in your set = bad grids waiting to happen", "Single USB only = single point of failure", "No anchor markers = navigation issue live"],
+    mistakes: ["Prepping the night before only.", "Trusting one USB.", "Leaving cues unset.", "Over-prepping rigidly with no live flexibility."],
+    proMoves: ["Have a 'panic playlist' of 10 guaranteed crowd-winners per genre — for emergencies.", "Test new USBs at home on real CDJs before a gig.", "Pre-set EQ tendencies per track in your mental notes — 'kill bass at 4 bars in'."],
+    quizHard: [
+      { q: "Why shortlist 2× the set length in tracks?", options: ["For variety", "Live crowd reads change track choices — having extras prevents running out of options mid-set", "Software requires it", "Tradition"], answer: 1, explain: "Plan deviation is the norm, not exception. Extras = options.", hint: "Plans change; you need spares." },
+      { q: "Carrying 2 USBs + laptop backup is", options: ["Excessive", "Standard pro practice — hardware fails and 'I lost my USB' is not an excuse a promoter accepts", "Wasteful", "Required by software"], answer: 1, explain: "Redundancy is professional minimum. USBs corrupt, get lost, fail to mount.", hint: "Single points of failure are unprofessional." },
+      { q: "Why analyse tracks in rekordbox before the gig and not at the venue?", options: ["Saves time", "Analysis at the venue takes seconds per track but interrupts flow; pre-analysis ensures grids, keys, BPM all loaded reliably", "It's faster live", "No reason"], answer: 1, explain: "Pre-analysis = ready-to-play. Live analysis = friction.", hint: "Friction in the booth = mistakes." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Playlists, analysis, export" }],
+  },
+
+  "live-mistakes-dj": {
+    hook: "Mistakes don't sink sets — visible panic does. Recover smoothly and the crowd never knew.",
+    beginner: {
+      what: [
+        "Every DJ makes mistakes live: wrong track, blown transition, key clash, deck stops.",
+        "Recovery is the skill. The crowd rarely notices a mistake; they always notice your reaction.",
+        "Common recoveries: pull the channel fader, drop to filter sweep, jump to a known cue, slam-cut to the next track.",
+      ],
+      why: ["Confidence in recovery = confidence in attempting harder mixes.", "Calm under pressure separates pros from amateurs.", "Most legendary 'creative moments' started as mistakes."],
+      analogy: "A musician on stage flubs a note; pros play through, amateurs stop. The crowd remembers the stoppage, not the note.",
+    },
+    advanced: {
+      what: [
+        "Mistake taxonomy: timing (off-beat cue), levels (clip), key clash, structural (vocal collision), gear (USB ejected, deck stopped).",
+        "Recovery moves: fader pull, EQ kill, FX cover (echo/filter), hot cue jump, slam cut, restart the deck.",
+        "Mental: never freeze. Decision in <2 seconds, execute, continue.",
+      ],
+      edgeCases: [
+        "USB unmount mid-track: hot-swap to second USB if pre-loaded; otherwise cut to other deck immediately.",
+        "Deck reboot: pull fader before reboot to silence; recover when ready.",
+      ],
+      engineerNotes: [
+        "Always keep one deck 'safe' (cued, loaded, EQ neutral) for emergency cut.",
+        "Practice recoveries deliberately at home — train muscle memory before they're needed live.",
+      ],
+    },
+    flow: "Detect mistake → Decision in 2 sec → Execute recovery (fader/EQ/FX/cue/cut) → Continue without flinching → Note for review",
+    walkthrough: [
+      { do: "Mid-mix, force a deliberate mistake: misalign Deck B by 1 beat.", listen: "Hear the gallop. Practice not freezing." },
+      { do: "Execute: pull Deck B fader to zero, re-cue, restart cleanly on next phrase.", listen: "Clean recovery." },
+      { do: "Try FX cover: apply 1/4 echo to outgoing track while you re-cue.", listen: "Echo bridges the silence." },
+      { do: "Slam-cut emergency: pull A fader, hit Deck B hot cue 1, raise B fader.", listen: "Instant new track, no dead air." },
+      { do: "Drill each recovery 10× at home until automatic.", listen: "Recovery = muscle memory." },
+    ],
+    listenFor: ["Dead air (worst sound in DJing)", "Off-beat clash after recovery (re-cue more carefully)", "Crowd response (if no head turns, recovery worked)"],
+    mistakes: ["Freezing — every second of silence is heard.", "Apologising via mic — draws attention to the mistake.", "Repeating the same mistake — diagnose at home, not live."],
+    proMoves: ["Practice recoveries weekly with deliberate mistakes.", "Have a 'panic track' loaded on a backup deck always — guaranteed safety net.", "Record sets and study mistakes — every error is a free lesson."],
+    quizHard: [
+      { q: "Worst sound in a DJ set?", options: ["Off-beat mix", "Dead air — total silence", "Wrong key", "Bass clash"], answer: 1, explain: "Mistakes are recoverable; silence is irrecoverable in the moment.", hint: "What's louder than wrong music? Nothing." },
+      { q: "Best recovery for a misaligned beatmatch?", options: ["Apologise on mic", "Pull the channel fader, re-cue silently, restart on next phrase", "Stop the set", "Reboot the deck"], answer: 1, explain: "Silent re-cue → clean restart = invisible recovery.", hint: "Make the mistake disappear, not announce it." },
+      { q: "Why practice recoveries deliberately at home?", options: ["Waste of time", "Muscle memory transfers under stress — untrained recoveries fail when it matters", "Required by venues", "Software needs it"], answer: 1, explain: "Stress collapses untrained skills. Train under low pressure to perform under high.", hint: "Train before you need it." },
+    ],
+    sources: [{ label: "DJ practice", section: "Live recovery" }],
+  },
+
+  // ============================================================
+  // PATH 5 — ADVANCED & PROFESSIONAL
+  // ============================================================
+  "effects-deep-dj": {
+    hook: "Deep FX is signal-processing in real time. Know the algorithm, control the result.",
+    beginner: {
+      what: [
+        "Beyond presets — combining FX, chaining them, automating dry/wet, syncing time divisions to musical structure.",
+        "Each FX type does a specific job: time-based (delay, reverb), modulation (flanger, phaser), distortion, filter.",
+        "Stacked FX (e.g. filter → delay → reverb) create unique results — chain order matters.",
+      ],
+      why: ["Custom FX combinations = your signature sound.", "Automation (FX rides) = drama without manual chaos.", "Understanding the algorithm = predicting the result."],
+      analogy: "Studio engineer's plugin chain. Order changes the sound. Compressor before reverb = punchy. Reverb before compressor = swimming.",
+    },
+    advanced: {
+      what: [
+        "Reverb: pre-delay, decay, EQ. Long decay on bass = mud; short decay on hats = air.",
+        "Delay/echo: time, feedback, filter (band-pass on returns avoids low-end pileup).",
+        "Modulation FX: LFO rate, depth, mix. Sweep rate matched to bar length for musical effect.",
+        "Distortion/bit-crush: drive level, output gain. Always compensate gain — distortion adds loudness.",
+      ],
+      edgeCases: [
+        "Long reverb on a busy track = washout. Apply to single elements (hi-hat, vocal) via send FX.",
+        "FX chains exceed CPU on older hardware — monitor performance in rekordbox.",
+      ],
+      engineerNotes: [
+        "rekordbox Performance Mode: FX banks per pad, dry/wet automation, MIDI mapping.",
+        "FX send via DJM-V10 or DJM-A9: route to outboard FX (Strymon, Eventide) for unique signature.",
+      ],
+    },
+    flow: "Choose FX → Set time/depth → Pre-listen in cue → Engage with dry/wet ride → Time release to phrase",
+    walkthrough: [
+      { do: "On a DJM-A9, route Deck 1 to send FX → Strymon BlueSky reverb.", listen: "Outboard reverb returns to mixer." },
+      { do: "Apply only to vocal stems via Performance Mode.", listen: "Reverb on vocal, dry drums — clean separation." },
+      { do: "Automate dry/wet via MIDI knob: 0 → 70% over 8 bars.", listen: "Vocal washes into space, drums stay tight." },
+      { do: "Chain: vocal → filter (high-pass sweep) → reverb.", listen: "Vocal lifts and dissolves." },
+      { do: "Release on phrase end — instant return to dry vocal.", listen: "Drama created, recovered cleanly." },
+    ],
+    listenFor: ["Mud from reverb on wide signals", "Echo pile-up from high feedback", "CPU strain in software FX chains"],
+    mistakes: ["Stacking FX without listening — chain order matters.", "Long reverb on bass — mud.", "FX as substitute for selection — never works."],
+    proMoves: ["Build 3 FX presets per genre — your signature toolkit.", "Use send FX to apply effects only to mid+high stems, sparing the low end.", "Study studio engineering — translates directly to live FX use."],
+    quizHard: [
+      { q: "Why does FX chain order matter?", options: ["It doesn't", "Each FX changes the signal before the next sees it — reverb→distortion ≠ distortion→reverb", "Software bug", "Saves CPU"], answer: 1, explain: "Serial processing = order-dependent. Different orders = different sounds.", hint: "First in line shapes what the next one processes." },
+      { q: "Long reverb on bass causes", options: ["Better depth", "Frequency masking and mud — sustained low-frequency tails build up in the low end", "Crisp sound", "No issue"], answer: 1, explain: "Low frequencies have long wavelengths; sustained = phase issues + masking.", hint: "Low frequencies are sticky." },
+      { q: "Send FX advantage over insert FX?", options: ["No difference", "Send FX run in parallel with dry signal — preserves dry presence while adding wet tail", "Always louder", "Less CPU"], answer: 1, explain: "Insert = serial (replaces signal). Send = parallel (adds to signal). Send preserves clarity.", hint: "Parallel preserves the original." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Performance Mode FX" }],
+  },
+
+  "loop-performance-dj": {
+    hook: "Loops are micro-edits. Chain them and you're not playing tracks — you're rebuilding them live.",
+    beginner: {
+      what: [
+        "Performance looping = using loops creatively to extend, re-edit or transform tracks live.",
+        "Techniques: loop rolls, beat-jump within a loop, layered loops across decks, loops as samples.",
+        "Goal: make the track feel like your edit, not just playback.",
+      ],
+      why: ["Crowds remember the unique moments — your edits stand out from the playlist.", "Fills gaps when no other track fits.", "Builds your performance identity."],
+      analogy: "A jazz musician quoting a phrase, then repeating, then twisting it. Same skill, different instrument.",
+    },
+    advanced: {
+      what: [
+        "Loop roll: triggered loop while slip mode keeps the timeline running. Stutter without losing position.",
+        "Beat-jump within loop: jump forward/back within the loop region — micro-edits.",
+        "Multi-deck loop layering: Loop a kick on Deck 3, melody on Deck 4, mix over Deck 1+2 as a 4-deck arrangement.",
+        "Loop length morphing: alternate 4-bar and 1-bar loops for build/release within a single phrase.",
+      ],
+      edgeCases: [
+        "Looping across a bar boundary that doesn't align with the grid = drift; manually trim.",
+        "Loop on a track with a tempo change inside the loop = audible glitch.",
+      ],
+      engineerNotes: [
+        "rekordbox saved loops + loop slot pads = bank of recall-able mini-edits.",
+        "Quantize ON + loop = always-aligned triggers.",
+      ],
+    },
+    flow: "Identify loopable section → Save loop as cue → Recall + automate length morph → Layer across decks",
+    walkthrough: [
+      { do: "On a track with a strong 2-bar drum break, save it as a loop on hot cue 5.", listen: "Recall trigger ready." },
+      { do: "Live, trigger the loop, then halve length: 4→2→1→1/2 beats.", listen: "Build via loop tightening." },
+      { do: "Release at phrase end with slip mode ON — track resumes in time.", listen: "Stutter ends cleanly, track continues." },
+      { do: "On 4-deck setup, layer a vocal loop on Deck 3 over a different deck pair.", listen: "Live remix — vocal from one track over drums from another." },
+      { do: "Practice loop morph 10× per session.", listen: "Builds muscle memory for the tension move." },
+    ],
+    listenFor: ["Drift on loop = grid issue", "Glitch on loop exit = slip mode off", "Layered loops out of phase = sync issue"],
+    mistakes: ["Looping at random — needs musical purpose.", "Forgetting slip mode — loop exit jumps time backwards.", "Layering loops without harmonic awareness."],
+    proMoves: ["Build a loop bank: 10 favourite samples saved as recallable loops across your library.", "Loop morphing as a signature transition tool.", "4-deck loop layering for headline sets — separates you from playlist DJs."],
+    quizHard: [
+      { q: "Slip mode + loop = ?", options: ["Slower playback", "Loop plays but underlying playhead continues; on exit, track resumes where it would have been — preserves timeline", "Crash", "Loop disabled"], answer: 1, explain: "Slip preserves position; loop becomes a stutter overlay rather than a time-warp.", hint: "Loop stutter without rewinding the track." },
+      { q: "Layered loops across 4 decks require", options: ["Nothing special", "All decks SYNC'd or manually beat-matched, plus harmonic compatibility across simultaneously sounding elements", "Only deck 1 SYNC", "Half-speed playback"], answer: 1, explain: "Multi-deck = multi-source = needs tempo + key alignment.", hint: "More decks = more alignment work." },
+      { q: "Why halve loop length for a build?", options: ["Sounds quieter", "Increasing repetition rate is perceptually equivalent to rising tension", "Required by software", "Saves CPU"], answer: 1, explain: "Faster repetition = higher perceived intensity. Same trick as a drum roll.", hint: "Drum roll principle." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Loop, slip, performance" }],
+  },
+
+  "harmonic-key-shift-dj": {
+    hook: "Key Shift turns 'almost compatible' into 'perfect'. One semitone, one new option.",
+    beginner: {
+      what: [
+        "Key Shift pitches a track up or down by semitones without changing its tempo.",
+        "Lets you force harmonic compatibility — shift a 9A track down 1 semitone to make it 8A and blend with your current 8A.",
+        "Available on CDJ-3000 and rekordbox Performance Mode.",
+      ],
+      why: ["Doubles or triples your harmonic options per track.", "Rescues a track that would otherwise clash.", "Lets you transition between distant keys via small steps."],
+      analogy: "A capo on a guitar. Same chord shapes, different actual pitch. The song now fits a different singer.",
+    },
+    advanced: {
+      what: [
+        "±2 semitones is safe — sounds natural. Beyond ±2 = audible artefacts (chipmunk or sluggish).",
+        "Key Shift works via time-stretching algorithms; quality varies by engine.",
+        "Camelot math: +1 semitone = +7 wheel positions modulo 12 (e.g. 8A +1 semitone = 3A).",
+      ],
+      edgeCases: [
+        "Vocals shift in pitch too — known singers become unrecognisable beyond ±1.",
+        "Tracks with heavy reverb show artefacts more — reverb tails get pitched too.",
+      ],
+      engineerNotes: [
+        "Rekordbox saves Key Shift state per-track if 'Lock' enabled.",
+        "Use Key Shift to plan key journeys across a set — small shifts unlock impossible jumps.",
+      ],
+    },
+    flow: "Identify desired harmonic target → Shift incoming track ±1 or ±2 semitones → Verify by ear → Mix in",
+    walkthrough: [
+      { do: "Current track at 8A; you want to play a 10A track next (incompatible).", listen: "10A vs 8A = full step apart on Camelot = clash." },
+      { do: "Shift the 10A track down 2 semitones → now 8A.", listen: "Now harmonically compatible." },
+      { do: "Pre-listen in cue — verify no audible artefacts.", listen: "±2 should be clean." },
+      { do: "Mix in normally — blend works.", listen: "Harmonic clash avoided." },
+      { do: "Practice plotting 'shift journeys' — distant key reachable via 2 shifts.", listen: "Composition skill on top of selection." },
+    ],
+    listenFor: ["Pitch artefacts beyond ±2 semitones", "Vocal unfamiliarity at extreme shifts", "Reverb tail artefacts"],
+    mistakes: ["Shifting beyond ±2 — sounds wrong.", "Forgetting to reset Key Shift after — next play uses shifted version.", "Shifting vocal-heavy tracks aggressively — unrecognisable."],
+    proMoves: ["Plan key journeys using shifts to reach 'impossible' transitions.", "Save shifted versions as dedicated tracks for set-specific use.", "Use ±1 shifts as default — invisible to most listeners."],
+    quizHard: [
+      { q: "Safe Key Shift range?", options: ["±5 semitones", "±2 semitones for natural sound", "±1 octave", "Unlimited"], answer: 1, explain: "Beyond ±2 = audible time-stretch artefacts.", hint: "More shift = more artefact." },
+      { q: "Camelot 8A + 1 semitone = ?", options: ["9A", "3A (because +1 semitone = +7 positions mod 12)", "8B", "7A"], answer: 1, explain: "Wheel math: 8 + 7 = 15; mod 12 = 3.", hint: "Semitones don't equal wheel steps." },
+      { q: "Why use Key Shift instead of just picking a compatible track?", options: ["Always avoid Key Shift", "When a specific track is structurally perfect but harmonically off, shifting beats picking a lesser substitute", "Sounds louder", "Required by SYNC"], answer: 1, explain: "Sometimes the right track is the wrong key. Shift to keep the right structure.", hint: "Right track, wrong key — shift it." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Key Shift" }],
+  },
+
+  "stem-djing": {
+    hook: "Stems break a track into pieces. Now you don't mix tracks — you mix instruments.",
+    beginner: {
+      what: [
+        "Stem DJing separates a track into 4 elements live: vocals, drums, bass, melody/other.",
+        "Each stem has its own volume knob. You can drop one element while keeping the others.",
+        "Available on rekordbox 6.6+, Stems-enabled CDJ-3000 firmware, and Serato Stems.",
+      ],
+      why: ["Lets you remove vocals from an outgoing track while bringing in another vocal track — no clash.", "Mix acapellas with instrumentals from any track in your library.", "Live remix without prep."],
+      analogy: "A pizza you can pick toppings off in real time. Don't want anchovies on this slice? Gone.",
+    },
+    advanced: {
+      what: [
+        "AI-driven stem separation — runs in real time on the deck or app.",
+        "Quality varies by source: cleanly produced tracks separate well; lo-fi/dense mixes have bleed.",
+        "Vocal stem isolation = instant acapellas; drum stem = instant beatmatch reference.",
+      ],
+      edgeCases: [
+        "Backing vocals often classified as 'melody' — vocal kill may leave backing vocals audible.",
+        "Sub-bass below ~60 Hz sometimes bleeds into drum stem.",
+        "Stem CPU load is high — older laptops choke during multi-deck stem use.",
+      ],
+      engineerNotes: [
+        "Use vocal stem kill to overlay incoming vocal cleanly with outgoing instrumental.",
+        "Stem swap technique: kill bass on Deck A via stems, raise bass on Deck B — clean swap with no EQ involvement.",
+      ],
+    },
+    flow: "Enable Stems on deck → Identify stems to drop (vocal/drum/bass/other) → Use stem knobs alongside EQ → Watch CPU",
+    walkthrough: [
+      { do: "Enable Stems on Deck 1, play a vocal house track.", listen: "4 stem knobs appear on the deck/app." },
+      { do: "Kill the vocal stem.", listen: "Track plays as instrumental only." },
+      { do: "Bring in Deck 2 (different track with vocals).", listen: "Two vocals avoided — only Deck 2 vocal heard." },
+      { do: "Try stem swap: kill Deck A bass stem, raise Deck B normally.", listen: "Bass swap without EQ touch." },
+      { do: "Watch CPU meter — disable stems on idle decks to save load.", listen: "Performance protection." },
+    ],
+    listenFor: ["Backing vocal bleed when 'vocal off'", "Drum stem bass bleed", "CPU strain causing audio glitches"],
+    mistakes: ["Assuming clean stem separation — quality varies.", "Leaving stems on all decks — CPU overload.", "Treating stems as a gimmick — they're a transition tool."],
+    proMoves: ["Use vocal-kill for clean vocal-on-vocal transitions impossible otherwise.", "Stem-isolate drums of a track as 'beat reference' for live beatmatching of a key-clashy track.", "Build stem-aware playlists — flag tracks that separate cleanly."],
+    quizHard: [
+      { q: "Why might vocal kill leave backing vocals?", options: ["Bug", "AI classifier groups backing vocals with melody/other stem — only lead vocal is isolated", "Volume issue", "Sample rate"], answer: 1, explain: "Stem classifier categorises by dominant character, not by every vocal element.", hint: "AI sorts what it can identify clearly." },
+      { q: "Best use of stems in a live mix?", options: ["Showing off", "Vocal-on-vocal transitions without clash — kill outgoing vocal, bring in new vocal", "Permanent track edits", "Replacing EQ"], answer: 1, explain: "Stems solve the vocal-clash problem better than any other technique.", hint: "Two vocals = bad. Stems fix it." },
+      { q: "Why does stem DJing strain CPU?", options: ["No reason", "Real-time AI separation per deck per stem = heavy parallel processing", "Just badly coded", "Disk I/O"], answer: 1, explain: "Separation is computed live, per stem, per deck.", hint: "AI in real time = expensive." },
+    ],
+    sources: [{ label: "rekordbox 6.6 Stems documentation", section: "Stem playback" }],
+  },
+
+  "recording-your-set-dj": {
+    hook: "If you didn't record it, it didn't happen. Recording is your mirror, your demo, your evidence.",
+    beginner: {
+      what: [
+        "Record every practice and gig. The recording is the truthful version — your memory edits.",
+        "Sources: rekordbox internal record, mixer record-out into Audacity/Ableton, or a venue recording.",
+        "Listen back the next day — mistakes you missed live become obvious.",
+      ],
+      why: ["Practice without recording = no feedback loop.", "Recordings = demos for promoters and labels.", "Long-form sets reveal pacing problems invisible in the moment."],
+      analogy: "An athlete watching game tape. The play feels different than it looked from the field.",
+    },
+    advanced: {
+      what: [
+        "Recording paths: rekordbox internal (REC button → WAV) / mixer USB record (DJM-A9) / split out to DAW.",
+        "Audio quality: WAV 44.1kHz 16-bit minimum for SoundCloud; 24-bit for further mastering.",
+        "Post: light limiter (-1 dB ceiling), maybe a touch of bus compression, no major EQ — represents the live sound.",
+      ],
+      edgeCases: [
+        "Recording at venue sometimes captures hum or DJ booth bleed — test setup before commit.",
+        "Long sets (>2h) over 1GB — split before upload to streaming.",
+      ],
+      engineerNotes: [
+        "Always record at 0 dBFS peak budget — leave 3 dB headroom for transients.",
+        "Tag and date every recording — your archive is your reputation.",
+      ],
+    },
+    flow: "Setup recording before play → Verify levels mid-set → Save with date/venue → Listen next day → Note 3 wins + 3 fixes",
+    walkthrough: [
+      { do: "Open rekordbox, hit REC button before starting set.", listen: "Indicator goes red; file path shown." },
+      { do: "Mid-set, check levels — peaks should hit -3 to -1 dBFS, not 0.", listen: "Verify no clipping in record file." },
+      { do: "After set, STOP REC; locate WAV file, rename 'YYYY-MM-DD - Venue - 90min - 128BPM'.", listen: "Searchable archive." },
+      { do: "Listen back next morning at moderate volume.", listen: "Distance reveals what live adrenaline hid." },
+      { do: "Note 3 wins (keep doing) and 3 fixes (work on next).", listen: "Concrete actionable feedback per gig." },
+    ],
+    listenFor: ["Clipping (≥0 dBFS = digital distortion)", "Transitions you remember nailing — were they really clean?", "Pacing — does the energy curve hold up on re-listen?"],
+    mistakes: ["Not recording — kills the feedback loop.", "Recording at clipping levels — ruins the file.", "Never listening back — recording without review is pointless."],
+    proMoves: ["Upload best recordings to SoundCloud monthly — builds public proof.", "Build a 'best of' folder of strongest sets — your demo reel for bookings.", "Compare year-over-year recordings — concrete proof of growth."],
+    quizHard: [
+      { q: "Why leave 3 dB headroom when recording?", options: ["Quieter is better", "Live transients (kick hits, FX peaks) often exceed metered level — headroom prevents clipping", "Just convention", "Saves CPU"], answer: 1, explain: "Meters smooth peaks; real peaks are higher. Headroom protects.", hint: "Meters lie about peaks." },
+      { q: "Best post-processing for a live set recording?", options: ["Heavy EQ + compression", "Light limiter to control transients, optional gentle bus compression — preserve the live sound", "Reverb on master", "Pitch correction"], answer: 1, explain: "The point is to represent the live performance, not re-master.", hint: "Represent, don't reinvent." },
+      { q: "Why listen back next day instead of immediately?", options: ["No reason", "Live adrenaline distorts perception — distance reveals real quality and mistakes", "File needs to settle", "Software requires"], answer: 1, explain: "Time = perspective. Same set sounds different in calm.", hint: "Adrenaline edits memory; time corrects it." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Recording" }],
+  },
+
+  "dvs-basics": {
+    hook: "DVS = vinyl control of digital files. The feel of records, the library of a hard drive.",
+    beginner: {
+      what: [
+        "DVS = Digital Vinyl System. Special timecode vinyl records control digital tracks via the DJ software.",
+        "Setup: turntables → audio interface (Pioneer Interface 2, Rane SL3) → laptop running rekordbox / Serato.",
+        "Move the timecode vinyl, the software moves the digital file — same tactile feel as vinyl, infinite library.",
+      ],
+      why: ["Tactile feedback unmatched by jog wheels.", "Scratch DJs prefer DVS for authentic feel.", "No physical record collection limit."],
+      analogy: "Drive an electric car with a manual gear stick. The interface is familiar; the engine is modern.",
+    },
+    advanced: {
+      what: [
+        "Timecode signal: a high-frequency audio tone encodes position and direction. Software decodes it 200 times a second.",
+        "Calibration: software must read timecode level and threshold; bad needles or worn vinyl break tracking.",
+        "Modes: Absolute (vinyl position = file position), Relative (vinyl moves = file moves, but position decoupled), Internal (no vinyl control).",
+      ],
+      edgeCases: [
+        "Dust/scratches on timecode vinyl = tracking drift.",
+        "Worn needles = signal degradation; replace every 6–12 months heavy use.",
+        "Audio interface latency >5 ms feels sluggish in scratch.",
+      ],
+      engineerNotes: [
+        "Always carry spare timecode vinyl + spare needles.",
+        "Test signal before set — software shows timecode quality % live.",
+      ],
+    },
+    flow: "Connect turntables → Audio interface → Software → Calibrate timecode → Load track to virtual deck → Play timecode vinyl",
+    walkthrough: [
+      { do: "Connect turntables to Pioneer Interface 2, USB to laptop.", listen: "rekordbox detects DVS-capable inputs." },
+      { do: "Place timecode vinyl on each turntable, drop needle.", listen: "Software shows green 'timecode OK' indicator." },
+      { do: "Load a digital track to Deck 1 virtual.", listen: "Track loaded; ready to play." },
+      { do: "Move the vinyl — software follows.", listen: "Tactile control over digital playback." },
+      { do: "Scratch the timecode; software cuts and rewinds digitally.", listen: "Vinyl scratch feel, digital source." },
+    ],
+    listenFor: ["Tracking dropouts = vinyl/needle issue", "Latency in scratch = audio interface buffer too high", "Signal quality % in software"],
+    mistakes: ["Old timecode vinyl — degrades fast.", "Wrong needle/cartridge pairing — tracking suffers.", "Skipping calibration — software guesses, badly."],
+    proMoves: ["Replace timecode vinyl every 6 months for heavy use.", "Set audio interface buffer to 256 samples or less for scratch.", "Master Internal mode as backup for vinyl failure mid-set."],
+    quizHard: [
+      { q: "How does DVS know where the vinyl is?", options: ["Optical sensor", "Timecode tone encoded on the vinyl — software decodes pitch and direction of the tone", "Magnetic strip", "Cartridge sensor"], answer: 1, explain: "Audio timecode → software decoder → position info.", hint: "It's all in the audio signal." },
+      { q: "Relative mode means", options: ["Vinyl position = file position absolutely", "Vinyl movement controls file movement but absolute position is decoupled — useful for needle drops on damaged vinyl", "No vinyl control", "Higher quality"], answer: 1, explain: "Relative = movement matters, not position. Useful when vinyl skips.", hint: "Movement yes, location no." },
+      { q: "Why does worn needle hurt DVS more than regular vinyl?", options: ["No difference", "Signal degradation reduces timecode decoding accuracy — tracking errors and dropouts", "Looks bad", "Louder"], answer: 1, explain: "DVS needs clean signal for accurate decoding; degraded signal = errors.", hint: "Decoder needs clean input." },
+    ],
+    sources: [{ label: "Pioneer Interface 2 manual", section: "DVS setup" }],
+  },
+
+  "dj-business": {
+    hook: "Talent gets you noticed; business gets you booked. Both matter equally.",
+    beginner: {
+      what: [
+        "DJing as a career = music + brand + bookings + finances + relationships.",
+        "Streams: gig fees, residencies, productions, merchandise, streaming, label deals, teaching.",
+        "Brand = consistent visual identity + sound identity + reliable delivery.",
+      ],
+      why: ["Most pro DJs earn from multiple streams, not just gigs.", "Brand consistency = repeat bookings and recognition.", "Business sense = sustainable career, not flash-in-pan."],
+      analogy: "A restaurant: kitchen quality (your skill) gets praise; supply chain, marketing, finance keep the lights on.",
+    },
+    advanced: {
+      what: [
+        "Pricing tiers: opening (£100–£300), residency (£200–£500), peak slot (£500–£2000+), headline (£2000+).",
+        "Contract essentials: fee, hospitality, travel, accommodation, tech rider, cancellation policy.",
+        "Tax: keep all gig income records; deduct gear, travel, music purchases. Get an accountant past £20k/year.",
+      ],
+      edgeCases: [
+        "Free gigs only when strategic — exposure for new market, not as a habit.",
+        "Cancellation fees: standard is 50% within 14 days, 100% within 48 hours.",
+      ],
+      engineerNotes: [
+        "Build a press kit: bio, photos, mixes, technical rider, contact.",
+        "Social presence: Instagram for visuals, SoundCloud for mixes, Bandcamp for paid downloads.",
+      ],
+    },
+    flow: "Brand identity → Press kit → Booking inquiries → Contract → Deliver → Invoice → Tax records",
+    walkthrough: [
+      { do: "Define brand: visual (logo, photos), audio (genre + signature mixes), tone (serious/playful).", listen: "Consistency across all touchpoints." },
+      { do: "Build press kit: 1-page bio + 3 photos + 2 mix links + tech rider.", listen: "Send to any promoter in 30 seconds." },
+      { do: "Set fee tiers for opener/peak/headline, decline below floor.", listen: "Pricing discipline = perceived value." },
+      { do: "Use contracts even for small gigs — protects both sides.", listen: "Professional precedent set." },
+      { do: "Track every gig income, save 25% for tax, keep receipts for deductibles.", listen: "Sustainable financial habit." },
+    ],
+    listenFor: ["Inconsistent brand across channels = amateur signal", "No press kit = friction for promoters", "Underpricing = devalues category"],
+    mistakes: ["Free gigs as default — devalues the category.", "No contracts — burned by cancellations.", "No tax tracking — disaster at year end."],
+    proMoves: ["Set a personal floor fee and stick to it — protects market value.", "Build relationships with 3–5 promoters who book you regularly — beats cold outreach.", "Invest in production — original tracks open doors gigs can't."],
+    quizHard: [
+      { q: "Why have a press kit?", options: ["Vanity", "Reduces friction for promoters to evaluate and book you — they review hundreds of inquiries", "Required by law", "Marketing trend"], answer: 1, explain: "Friction kills bookings. Press kit = instant decision support.", hint: "Reduce friction for the person paying you." },
+      { q: "Standard cancellation fee within 48 hours?", options: ["0%", "100% — the artist held the date and turned down other work", "10%", "Variable"], answer: 1, explain: "Held date + turned-down alternatives = full fee on short-notice cancellation.", hint: "Opportunity cost is real." },
+      { q: "Why diversify income beyond gig fees?", options: ["Greed", "Gigs are unpredictable (cancellations, market shifts) — multiple streams = stability", "Tax reasons", "Required by venues"], answer: 1, explain: "Diversification = resilience. One income source = single point of failure.", hint: "Single income = single point of failure." },
+    ],
+    sources: [{ label: "DJ industry practice", section: "Business" }],
+  },
+
+  "dj-advanced-complete": {
+    hook: "You finished the path. Now the real work begins — the rest of your career.",
+    beginner: {
+      what: [
+        "You've covered fundamentals, library, technique, performance, and business.",
+        "Mastery is not the destination — practice is the destination.",
+        "Pick 3 areas to deepen over the next year: more technique, more music knowledge, more performance, more production, more business.",
+      ],
+      why: ["Plateaus are real — only deliberate practice breaks them.", "DJing rewards consistency over talent.", "The best DJs are still students."],
+      analogy: "Black belt in martial arts isn't the end — it's the beginning. Same here.",
+    },
+    advanced: {
+      what: [
+        "Next levels: original production (Ableton/Logic), label outreach, A&R relationships, festival circuits, international touring.",
+        "Specialisation deepening: pick a niche within your genre — be the best at one thing.",
+        "Mentorship: find a DJ 5 years ahead; offer value before asking for time.",
+      ],
+      edgeCases: [
+        "Burnout is real in DJing — schedule recovery weeks.",
+        "Genre lifecycles: stay aware of when your scene peaks and what's next.",
+      ],
+      engineerNotes: [
+        "Production unlocks bookings — promoters book producers more than pure DJs.",
+        "Build a calendar: practice / production / business / rest in fixed blocks.",
+      ],
+    },
+    flow: "Audit current level → Pick 3 deepening areas → Set 12-month goals → Weekly practice schedule → Review quarterly",
+    walkthrough: [
+      { do: "Self-audit: rate yourself 1–10 on each path covered.", listen: "Find the lowest 3 — your growth areas." },
+      { do: "Set 12-month goals: 'Master harmonic mixing in techno', 'Release first track', '10 paid gigs'.", listen: "Specific + measurable." },
+      { do: "Weekly schedule: 3× practice (1h), 1× production (2h), 1× business admin (30min).", listen: "Rhythm beats intensity." },
+      { do: "Review quarterly — what worked, what didn't, what to adjust.", listen: "Iteration creates compound growth." },
+      { do: "Find a mentor — DJ 5 years ahead, offer value first, ask second.", listen: "Mentorship accelerates everything." },
+    ],
+    listenFor: ["Plateaus = signal to change practice approach", "Burnout signs = need recovery week", "Production gaps = bookings ceiling"],
+    mistakes: ["Plateau without changing practice — same input = same output.", "Skipping production — caps your bookings.", "Asking mentors for time without offering anything in return."],
+    proMoves: ["Production + DJing together — strongest path to long career.", "Build a tribe: 5 DJs at your level, share music + feedback weekly.", "Treat DJing as a craft you'll practice for 30 years — not a sprint."],
+    quizHard: [
+      { q: "Why does production unlock bookings beyond pure DJing?", options: ["Promoters don't care", "Original tracks = unique offering + label/scene credibility + radio + streaming presence — all create booking demand", "Just luck", "Required by law"], answer: 1, explain: "Producers create their own demand; DJs depend on existing demand.", hint: "Producers make their own gravity." },
+      { q: "Best way to break a plateau?", options: ["Practice more of the same", "Deliberate practice — identify weakness, design exercises targeting it, measure improvement", "Take a break only", "Buy new gear"], answer: 1, explain: "Plateau = repetitive practice ceiling. Change practice = change result.", hint: "Same practice, same plateau." },
+      { q: "How to approach a mentor?", options: ["Ask for time immediately", "Offer value first (engage with their work, contribute, build relationship), ask for time later", "Just DM 'be my mentor'", "Pay upfront"], answer: 1, explain: "Mentors are over-asked; relationships beat requests.", hint: "Value first, ask second." },
+    ],
+    sources: [{ label: "DJ career practice", section: "Mastery path" }],
+  },
 };
