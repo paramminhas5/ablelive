@@ -1,9 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { TERMS, slugTerm, type GlossaryTerm as Term } from "@/content/glossary";
 
-type Term = { term: string; def: string; cat: "Workflow" | "Devices" | "Audio" | "MIDI" | "Performance" | "Files" | "Live 12" };
-
-const TERMS: Term[] = [
+const _TERMS_UNUSED: Term[] = [
   // Workflow
   { cat: "Workflow", term: "Arrangement View", def: "Live's linear timeline view for composing full songs end-to-end. Tracks stack vertically, time runs left-to-right." },
   { cat: "Workflow", term: "Session View", def: "Live's clip grid for non-linear performance and ideation. Tracks vertical, scenes horizontal." },
