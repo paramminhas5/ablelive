@@ -407,5 +407,6 @@ function MissionPage() {
         )}
       </div>
     </div>
+    </GlossaryScope>
   );
 }
