@@ -2,10 +2,12 @@
 // Ableton Live 12 Reference Manual. The mission renderer reads `mode` and
 // swaps `beginner` / `advanced` blocks. Quizzes are also mode-aware.
 import type { LessonDeep } from "./types";
+import { FOUNDATIONS_LESSONS } from "./lesson-deep-foundations";
 
 const src = (label: string, section: string) => ({ label, section });
 
 export const LESSONS: Record<string, LessonDeep> = {
+  ...FOUNDATIONS_LESSONS,
   // ============ WORLD 1 — FIRST CONTACT ============
   "what-is-live": {
     hook: "Live is two DAWs in one window. The view you pick changes how you make music.",
