@@ -229,6 +229,59 @@ export const TERMS: GlossaryTerm[] = [
   { cat: "Audio", term: "Warp Mode: Pro", def: "An advanced version of the Complex mode with additional formant control." },
   { cat: "Devices", term: "Sampler Zone", def: "An area in Sampler where specific samples are mapped to ranges of keys or velocities." },
   { cat: "Workflow", term: "Solo Safe", def: "A setting that prevents a track from being muted when another track is soloed." },
+
+  // Foundations — acoustics & psychoacoustics
+  { cat: "Audio", term: "Fundamental", def: "The lowest frequency of a periodic waveform. It defines the pitch you perceive; everything above it is a harmonic or overtone." },
+  { cat: "Audio", term: "Overtone", def: "Any frequency above the fundamental in a complex tone. Harmonic overtones are integer multiples; inharmonic overtones (cymbals, bells) aren't." },
+  { cat: "Audio", term: "Partial", def: "A general term for any single sine component in a complex sound — fundamental and overtones are all partials." },
+  { cat: "Audio", term: "Timbre", def: "The 'tone colour' that lets you tell a flute from a guitar at the same pitch. Determined by harmonic content + attack/decay envelope." },
+  { cat: "Audio", term: "Wavelength", def: "The physical distance one cycle of a wave covers in air. Inversely proportional to frequency — bass has long wavelengths, treble short." },
+  { cat: "Audio", term: "dB SPL", def: "Sound Pressure Level in dB, measuring real-world acoustic loudness. 0 dB SPL = threshold of human hearing; 120 dB SPL = pain." },
+  { cat: "Audio", term: "dBFS", def: "Decibels relative to Full Scale — the digital scale where 0 dBFS is the loudest sample value a system can represent. Above that = clipping." },
+  { cat: "Audio", term: "K-weighting", def: "The frequency-weighting curve LUFS meters use to mimic human hearing — emphasises mids, rolls off subs and extreme highs." },
+  { cat: "Audio", term: "True-Peak", def: "Inter-sample peak measurement that accounts for waveform excursions between digital samples — catches clipping that sample-peak meters miss." },
+  { cat: "Audio", term: "Hertz", def: "Cycles per second — the unit of frequency. 440 Hz means 440 wave cycles every second." },
+  { cat: "Audio", term: "Nyquist Frequency", def: "Half the sample rate — the highest frequency a digital system can represent without aliasing. At 44.1 kHz, Nyquist = 22.05 kHz." },
+  { cat: "Audio", term: "Aliasing", def: "Distortion artefacts that appear when frequencies above Nyquist fold back into the audible range. Anti-alias filters prevent it." },
+  { cat: "Audio", term: "Clipping", def: "Distortion that happens when a signal exceeds the maximum level a system can represent — peaks get flattened into squares." },
+  { cat: "Audio", term: "Noise Floor", def: "The level of background hiss and electronic noise in a system. Quieter material has to live above it to be audible." },
+  { cat: "Audio", term: "Codec", def: "Coder/Decoder — software that compresses audio (MP3, AAC, Opus) for storage or streaming, then decodes it for playback." },
+
+  // Foundations — music theory
+  { cat: "Workflow", term: "Octave", def: "The interval between a note and one with double or half its frequency. Notes an octave apart share a letter name and sound 'the same' an octave higher or lower." },
+  { cat: "Workflow", term: "Semitone", def: "The smallest interval in Western tuning — one piano key to the next. Twelve semitones make an octave." },
+  { cat: "Workflow", term: "Tonic", def: "The 'home' note of a key — the one a melody resolves to and a piece usually ends on. Also called the root." },
+  { cat: "Workflow", term: "Dominant", def: "The fifth scale degree (V). Builds tension that wants to resolve to the tonic — the engine of Western harmony." },
+  { cat: "Workflow", term: "Subdominant", def: "The fourth scale degree (IV). A gentle pull away from the tonic, often used to set up the dominant." },
+  { cat: "Workflow", term: "Modulation", def: "(Theory) Changing key mid-song to lift energy or create contrast. (Synthesis) Routing one signal to vary the value of another parameter." },
+  { cat: "Workflow", term: "Cadence", def: "A chord progression that creates a sense of ending or pausing. Authentic = V→I; Plagal = IV→I; Deceptive = V→vi." },
+  { cat: "Workflow", term: "Pentatonic", def: "A five-note scale (no half steps). Major pentatonic = 1-2-3-5-6; minor pentatonic = 1-♭3-4-5-♭7. Hard to play 'wrong' over its key." },
+  { cat: "Workflow", term: "Chromatic", def: "Using all 12 semitones of the octave rather than staying in one key. A chromatic line walks one semitone at a time." },
+  { cat: "Workflow", term: "Triad", def: "A three-note chord built by stacking thirds — the basic building block of harmony. Major, minor, diminished, augmented." },
+  { cat: "Workflow", term: "Seventh Chord", def: "A triad with a fourth note (the seventh) stacked on top — gives chords a jazzier, more open quality." },
+  { cat: "Workflow", term: "Inversion", def: "A chord voiced with a note other than the root in the bass. First inversion = third on bottom; second = fifth on bottom." },
+  { cat: "Workflow", term: "Voicing", def: "How the notes of a chord are spread across octaves and instruments — the same chord can sound thin or huge depending on voicing." },
+  { cat: "Workflow", term: "Arpeggio", def: "The notes of a chord played one at a time instead of together. The basis of basslines, plucks, and arp-driven leads." },
+  { cat: "Workflow", term: "Consonance", def: "Notes/intervals that sound stable and pleasant together — octaves, fifths, thirds. The 'resolved' end of harmonic tension." },
+  { cat: "Workflow", term: "Dissonance", def: "Notes/intervals that clash and want to resolve — minor seconds, tritones. Used deliberately to create motion and pull." },
+  { cat: "Workflow", term: "Tritone", def: "The interval of three whole tones (six semitones). Historically 'the devil in music' — extremely tense, the engine of dominant-seventh resolution." },
+  { cat: "Workflow", term: "Enharmonic", def: "Two note names for the same pitch — C♯ and D♭ sound identical but are spelled differently depending on the key." },
+  { cat: "Workflow", term: "Accidental", def: "A sharp, flat, or natural sign placed in front of a note to alter its pitch from the key signature." },
+
+  // Foundations — rhythm
+  { cat: "Workflow", term: "Tuplet", def: "Any rhythmic grouping that doesn't fit the prevailing subdivision — triplets (3-in-2), quintuplets (5-in-4), etc." },
+  { cat: "Workflow", term: "Syncopation", def: "Placing accents on weak beats or off-beats instead of the expected strong beats — what makes a groove feel 'pushed' or funky." },
+  { cat: "Workflow", term: "Downbeat", def: "The first beat of a bar — the strongest accent in most music. The 'one' you tap your foot to." },
+  { cat: "Workflow", term: "Upbeat", def: "The unaccented beat before a downbeat — the 'and' between beats. Pickup notes often start on an upbeat." },
+  { cat: "Workflow", term: "Swing", def: "Pushing every other sub-beat slightly later to create a triplet-ish lilt instead of straight 16ths. Swing percentage controls how much." },
+  { cat: "Workflow", term: "Shuffle", def: "A swung 8th- or 16th-note feel, common in blues, hip-hop, and UK garage. Heavier than light swing." },
+
+  // Synthesis basics
+  { cat: "Audio", term: "Envelope", def: "A control signal that shapes how a parameter changes over the lifetime of a note — typically ADSR for an amp envelope." },
+  { cat: "Audio", term: "ADSR", def: "Attack-Decay-Sustain-Release — the four stages of a classic envelope. Attack = fade in; Decay = fall to sustain; Sustain = held level; Release = fade out." },
+  { cat: "Audio", term: "Attack", def: "The fade-in time at the start of a sound or envelope stage. Short attack = punchy; long attack = pad-like." },
+  { cat: "Audio", term: "Sustain", def: "The held level a synth envelope settles to while a note is pressed, before release kicks in." },
+  { cat: "Audio", term: "Filter Cutoff", def: "The frequency where a filter starts attenuating signal. The 'tone knob' of most synth patches." },
 ];
 
 // Slug an arbitrary term for the glossary anchor + URL.
