@@ -25,7 +25,7 @@ const WORLD_CONFIG: Record<WorldSlug, {
   producer: {
     title: "Producer", emoji: "🎛",
     tagline: "Build music in Ableton Live 12",
-    description: "5 chapters · 12 paths · 73 missions. Source: Ableton Live 12 Reference Manual",
+    description: "6 chapters · 15 paths · 91 missions. Source: Ableton Live 12 Reference Manual + learningsynths.ableton.com",
     hero: "bg-sun text-ink", accent: "bg-sun", nodeActive: "bg-ink text-bone", nodeInactive: "bg-bone text-ink/40", bar: "bg-ink",
   },
 };
