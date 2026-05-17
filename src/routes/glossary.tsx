@@ -22,6 +22,20 @@ function Glossary() {
       .filter((t) => !q || t.term.toLowerCase().includes(q.toLowerCase()) || t.def.toLowerCase().includes(q.toLowerCase()))
       .sort((a, b) => a.term.localeCompare(b.term));
   }, [q, cat]);
+
+  // If we arrived with a #slug, scroll to that term and pulse-highlight it.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const hash = window.location.hash.replace(/^#/, "");
+    if (!hash) return;
+    const el = document.getElementById(hash);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+      el.classList.add("ring-4", "ring-acid");
+      setTimeout(() => el.classList.remove("ring-4", "ring-acid"), 1800);
+    }
+  }, []);
+
   return (
     <div className="max-w-6xl mx-auto p-6 md:p-12 space-y-4">
       <header className="brutal-border bg-sun p-6 brutal-shadow">
@@ -40,7 +54,7 @@ function Glossary() {
       </div>
       <div className="grid md:grid-cols-2 gap-3">
         {filtered.map((t) => (
-          <div key={t.term} className="brutal-border bg-card p-4 brutal-shadow-sm">
+          <div key={t.term} id={slugTerm(t.term)} className="brutal-border bg-card p-4 brutal-shadow-sm scroll-mt-24 transition-shadow">
             <div className="flex items-baseline justify-between gap-2">
               <div className="font-display text-xl">{t.term}</div>
               <span className="brutal-border bg-volt text-bone px-2 py-0.5 font-mono text-[10px] uppercase">{t.cat}</span>
