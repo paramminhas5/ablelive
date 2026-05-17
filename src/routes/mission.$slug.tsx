@@ -10,6 +10,7 @@ import { LESSONS } from "@/content/lesson-deep";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
 import { CompletionModal } from "@/components/CompletionModal";
 import { HeartsWall } from "@/components/HeartsWall";
+import { Glossarized } from "@/components/Term";
 
 export const Route = createFileRoute("/mission/$slug")({
   head: ({ params }) => {
@@ -169,17 +170,19 @@ function MissionPage() {
           <div className="space-y-2">
             {whatParas.map((para, i) => (
               <p key={i} className="font-mono text-sm md:text-base leading-relaxed">
-                {para}
+                <Glossarized text={para} />
               </p>
             ))}
           </div>
         ) : fallbackWhat && "text" in fallbackWhat ? (
-          <p className="font-mono text-sm md:text-base leading-relaxed">{fallbackWhat.text}</p>
+          <p className="font-mono text-sm md:text-base leading-relaxed">
+            <Glossarized text={fallbackWhat.text} />
+          </p>
         ) : null}
         {!advanced && deep?.beginner?.analogy && (
           <div className="mt-3 brutal-border bg-acid p-3 font-mono text-sm">
             <span className="font-bold uppercase text-xs">Think of it like →</span>{" "}
-            {deep.beginner.analogy}
+            <Glossarized text={deep.beginner.analogy} />
           </div>
         )}
         {!advanced && deep?.beginner?.why && (
@@ -187,7 +190,7 @@ function MissionPage() {
             <div className="font-mono text-xs uppercase font-bold mb-1">▸ WHY YOU CARE</div>
             <ul className="space-y-1 font-mono text-sm">
               {deep.beginner.why.map((item, i) => (
-                <li key={i}>• {item}</li>
+                <li key={i}>• <Glossarized text={item} /></li>
               ))}
             </ul>
           </div>
@@ -243,7 +246,7 @@ function MissionPage() {
                 <div className="font-mono text-xs uppercase font-bold mb-1">EDGE CASES</div>
                 <ul className="space-y-2 font-mono text-sm">
                   {deep.advanced.edgeCases.map((x, i) => (
-                    <li key={i}>· {x}</li>
+                    <li key={i}>· <Glossarized text={x} /></li>
                   ))}
                 </ul>
               </div>
@@ -253,7 +256,7 @@ function MissionPage() {
                 <div className="font-mono text-xs uppercase font-bold mb-1">ENGINEER'S NOTES</div>
                 <ul className="space-y-2 font-mono text-sm">
                   {deep.advanced.engineerNotes.map((x, i) => (
-                    <li key={i}>⚙ {x}</li>
+                    <li key={i}>⚙ <Glossarized text={x} /></li>
                   ))}
                 </ul>
               </div>
@@ -267,7 +270,7 @@ function MissionPage() {
           <div className="font-mono text-xs uppercase mb-2 font-bold">▸ LISTEN FOR</div>
           <ul className="space-y-1 font-mono text-sm">
             {deep.listenFor.slice(0, advanced ? 99 : 3).map((x, i) => (
-              <li key={i}>• {x}</li>
+              <li key={i}>• <Glossarized text={x} /></li>
             ))}
           </ul>
         </div>
@@ -282,9 +285,9 @@ function MissionPage() {
             {deep.walkthrough.map((s, i) => (
               <li key={i} className="brutal-border bg-bone p-2 font-mono text-sm">
                 <div>
-                  <span className="font-bold">{i + 1}. DO:</span> {s.do}
+                  <span className="font-bold">{i + 1}. DO:</span> <Glossarized text={s.do} />
                 </div>
-                <div className="opacity-80 mt-1">▸ LISTEN: {s.listen}</div>
+                <div className="opacity-80 mt-1">▸ LISTEN: <Glossarized text={s.listen} /></div>
               </li>
             ))}
           </ol>
@@ -298,7 +301,7 @@ function MissionPage() {
           </summary>
           <ul className="space-y-1 mt-2 font-mono text-sm">
             {deep.proMoves.map((x, i) => (
-              <li key={i}>★ {x}</li>
+              <li key={i}>★ <Glossarized text={x} /></li>
             ))}
           </ul>
         </details>
@@ -311,7 +314,7 @@ function MissionPage() {
           </summary>
           <ul className="space-y-1 mt-2 font-mono text-sm">
             {deep.mistakes.map((x, i) => (
-              <li key={i}>✗ {x}</li>
+              <li key={i}>✗ <Glossarized text={x} /></li>
             ))}
           </ul>
         </details>

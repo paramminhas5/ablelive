@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getCtx } from "@/lib/audio";
+import { ensureAudio, getCtx } from "@/lib/audio";
 
 // Mobile Safari requires a user gesture to start AudioContext. Show an
 // overlay until ctx.state === 'running'. Renders nothing once unlocked.
@@ -17,9 +17,8 @@ export function AudioUnlock() {
 
   if (!locked) return null;
   const unlock = async () => {
-    const c = getCtx();
-    try { await c?.resume(); } catch {}
-    if (c?.state === "running") setLocked(false);
+    const ok = await ensureAudio();
+    if (ok) setLocked(false);
   };
   return (
     <button

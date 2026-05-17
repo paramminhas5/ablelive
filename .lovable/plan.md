@@ -1,68 +1,73 @@
-## What's wrong right now
+# Make Foundations world-class
 
-The 18 Synths missions exist as data (`missions-synths.ts`) and even have their own sims, but they're invisible in the UI. The site's world pages drive off `CHAPTERS` + `PATHS`, not the legacy `WORLDS` array — and Synths is in neither. So `/world/producer` never lists them and `/worlds` shows the original three.
+Five workstreams, each independently shippable. I'll execute in the order below and stop after each batch so you can sanity-check before I burn more turns.
 
-## Plan
+## 1. Glossary-linked jargon (highest leverage)
 
-### 1. Restructure Synths as a Producer chapter (not a standalone world)
+Build a `<Term>` inline component that wraps any jargon word in mission prose. On desktop: dotted underline + hover popover with the glossary definition. On mobile: tap to open a small sheet, "Open in glossary" link inside.
 
-In `src/content/chapters.ts`, add a 6th Producer chapter:
+Mechanism:
+- Build `src/lib/glossary-index.ts` — keyed lookup from the existing `TERMS` array in `src/routes/glossary.tsx` (extract `TERMS` into `src/content/glossary.ts` so both the route and the tooltip share one source).
+- New component `src/components/Term.tsx` using Radix Popover (works for hover *and* tap, already in the project via shadcn).
+- Update the lesson renderer (the component that renders `beginner.what`, `advanced.what`, `walkthrough`, etc. inside `src/routes/mission.$slug.tsx`) to auto-wrap matches against the glossary index. Match longest-term-first, case-insensitive, word-boundary, skip inside code blocks. Cap at first 2 occurrences per page per term so it doesn't get noisy.
+- Add ~30 missing terms the audit surfaces (transient detection, Camelot, formant, key-lock, quantize launch, etc.).
 
-- `synthesis` · world: `producer` · number: 6 · title "Synthesis" · trophy "Synth Architect" · paths `["synth-sound", "synth-shaping", "synth-movement"]`
-- Bump the Producer world description on `/worlds` + `/world/producer` from "5 chapters" → "6 chapters · 15 paths · 91 missions" (recount after wiring).
+## 2. Mobile audio fix
 
-In `src/content/paths.ts`, add 3 new paths under that chapter, splitting the 18 existing synth slugs:
+Symptom: nothing plays on iOS Safari / Android Chrome despite the unlock overlay.
 
-- `synth-sound` (5): synth-what-is-sound, synth-pitch-vs-amplitude, synth-timbre, synth-harmonics, synth-noise
-- `synth-shaping` (7): synth-oscillators, synth-mixing-oscillators, synth-detune-unison, synth-filters, synth-amp-envelope, synth-filter-envelope, synth-amp-vs-filter-env
-- `synth-movement` (6): synth-lfo, synth-modulation-routing, synth-fm-basics, synth-effects, synth-preset-anatomy, synth-build-your-own
-- `source: "learningsynths.ableton.com"`
+Likely causes in `src/lib/audio.ts` and sim files:
+- `AudioContext` created at module scope before any gesture on iOS (the auto-listener helps but `getCtx()` is also called during render in some sims, creating the ctx in a non-gesture frame).
+- `exponentialRampToValueAtTime(0.0001, ...)` is fine, but several sims call `osc.start()` with a past timestamp on slow phones → silent.
+- `MasterTransportBar` overlay only shows if `isAudioUnlocked()` is false — but `unlocked` flips to true the moment ctx is created in suspended state on iOS (false positive).
 
-Flip each synth mission's `world` from `"synths"` to `"producer"` in `missions-synths.ts` so breadcrumbs and filters behave. Remove Synths from `WORLDS` in `worlds.ts` (legacy list) and from the `WorldSlug` union in `types.ts` to avoid two sources of truth.
+Fix plan:
+- Don't construct `AudioContext` until first user gesture. Replace module-load listener with a strict `ensureCtx()` that only runs inside a verified gesture handler.
+- Gate `unlocked = true` on `ctx.state === "running"` *after* a successful `resume()` resolves, not on `getCtx()` calls.
+- Add iOS-specific silent-buffer prime (play 1 sample of silence on resume) — known fix for Safari muting subsequent nodes.
+- Audit each sim's "Play" button to call `await ensureCtx()` before scheduling, and schedule with `Math.max(now + 0.02, when)`.
+- Verify on the in-tool mobile viewport (390x844) by visiting `/mission/drums-101` and tapping the pad.
 
-### 2. Theme palettes from the CCD reference repo
+## 3. Advanced-content depth audit on Foundations
 
-The reference (`paramminhas5/ccdfinal/src/lib/theme.ts`) uses HSL token sets. Our project uses oklch CSS vars under `[data-theme=...]` in `styles.css`. I'll port the same 14 named presets (default, midnight, sunburn, original, synthwave, brutalist, y2k, matcha, mono, sunset, oceanic, candy, forest, pinkpunk, linework) by converting each preset's surface/ink/accent/hotPink/electricBlue/acidYellow into our `--bone / --ink / --acid / --hot / --volt / --sun` slots.
+The audit script (`scripts/audit.mjs`) already flags jargon, thin paragraphs, missing edge cases. Run it scoped to `world: "foundations"`, then for each flagged mission:
+- Rewrite `advanced.what` so every jargon term is *defined in plain English on first use*, then the term is used. Pattern: "The buffer size (how many samples Live processes between each callback) determines latency…"
+- Add 3+ `edgeCases` per mission (currently many have 0–1).
+- Add `engineerNotes` with numeric specifics (sample rate, dB values, ms timings).
+- Keep beginner track untouched — it's already strong from prior batches.
 
-Files:
-- `src/styles.css` — add 14 `[data-theme="..."] { ... }` blocks (oklch conversions of the HSL values above), keep CCD Classic as default.
-- `src/content/themes.ts` — replace the 6 `ThemeDef`s with the 14 new ones, matching ids so `<ThemePicker>` shows the full set.
-- No component changes needed — picker, root attribute and persistence already drive off `THEMES[].id`.
+Target: 0 "advanced-thin" / "jargon" / "edgeCases" flags for foundations missions.
 
-### 3. Hydration fix on mission page
+## 4. Sim-fit audit
 
-Already-shipped guard in `src/routes/mission.$slug.tsx` renders both Standard/Advanced toggle states unconditionally with `disabled={!hasAdvanced}`. Verify with a quick render at `/mission/overtones-harmonics` and confirm no React hydration warning in console.
+For all 42 foundations missions, score sim fit and re-route mis-matches. Examples I already see:
+- `bpm-tap` → fine for "tempo & BPM" mission
+- `ear-training` is used 8× — some are right (intervals, chord quality), some are lazy fallbacks (e.g. "what is sound" probably wants a waveform visualizer, not an interval guesser)
+- `none` is used 4× — every one of those is a missed teaching moment
 
-### 4. Foundations advanced rewrite (in-place)
+Deliverable: a table (`/dev-server/.lovable/sim-audit.md`) listing slug → current sim → recommended sim → rationale. Then update `missions-foundations.ts` for the ~10 most impactful swaps. If a needed sim doesn't exist (e.g. "waveform-explorer"), I'll flag it but not build it in this pass.
 
-Sweep `src/content/lesson-deep-foundations.ts`. For every entry where `advanced.what` reads like manual jargon, rewrite in place using: plain-English definition → one analogy → concrete musical example → why the number matters → what breaks if pushed. Beginner content stays where already strong; top up thin `walkthrough` / `analogy` / `quizHard` fields flagged by the audit. No slug or schema changes.
+## 5. "Pay immediately" polish
 
-### 5. DJ world deep rewrite (rekordbox-spined)
+Concrete, low-risk additions ordered by impact:
+1. **Progress receipts**: after each mission completion, a shareable card already exists (`ShareCard.tsx`) — wire it into the completion modal with a "Save image" + "Copy link" button.
+2. **Mastery badges with real criteria**: replace participation badges with "Perfect quiz on hard mode" / "Built the walkthrough end-to-end in <2min" criteria.
+3. **Daily drill** on `/train`: 3 quiz questions sampled from completed missions, streak counter in `localStorage`.
+4. **Search**: `CommandPalette.tsx` exists — add glossary terms + missions + devices as searchable entries (cmd-K).
+5. **Print-friendly lesson page**: `@media print` styles so users can save a PDF cheat sheet per mission — high perceived value, ~30 lines of CSS.
+6. **Empty-state on `/profile`**: show what unlocks at each tier ("Complete Foundations → unlock Producer World"). Currently no aspirational hook.
 
-For each of the 40 DJ missions in `src/content/missions-dj.ts` and the matching deep lessons, map to the rekordbox 6.0 manual section already referenced in `paths.ts` (Beat Sync, Hot Cues, Beat FX, Phrase, EXPORT mode, etc.). Rewrite both beginner and advanced bodies to that manual section's depth, and re-point each mission's `sim.type` to the best-fit sim from the existing set (`beatmatch-trainer`, `hot-cue-drill`, `loop-roll`, `harmonic-mix-wheel`, `mixer`, `bpm-tap`, `beat-builder`).
+## Execution order (so you can stop me anytime)
 
-### 6. Sim swaps across the catalog
+1. Extract glossary, build `<Term>` component, wire into mission renderer. *(1 turn)*
+2. Mobile audio fix + verify on mobile viewport. *(1 turn)*
+3. Foundations advanced-content rewrite, batch of 14 missions. *(1 turn)*  → STOP, you review tone
+4. Remaining 28 foundations missions. *(2 turns)*
+5. Sim-fit audit doc + top-10 swaps. *(1 turn)*
+6. Polish bundle: ShareCard wiring, CommandPalette search, daily drill, print CSS. *(1 turn)*
 
-Add `scripts/audit-sim-fit.mjs` that prints `(mission, current sim) → (suggested sim)` based on mission slug keywords. Apply the swaps directly:
-- rhythm theory on generic `drum-pad` → `beat-builder`
-- interval/scale on `piano-roll` → `note-explorer`
-- chord missions → `chord-stacker`
-- arrangement missions → `song-structure`
-- synth theory in Foundations Tech path → `subtractive-synth`
+## Out of scope this round
 
-### 7. Audit extension + final pass
-
-Extend `scripts/audit.mjs` with thresholds (`beginner.what ≥ 400`, `walkthrough ≥ 5`, `listenFor ≥ 4`, `advanced.edgeCases ≥ 3`, `quizHard ≥ 3`, `analogy` present) plus a "reads like jargon" check against a small undefined-term glossary. Run it, fix remaining red rows, then click one mission per world at 390px to confirm mobile layout.
-
-## Files touched
-
-- New: `scripts/audit-sim-fit.mjs`
-- Edited: `src/content/chapters.ts`, `src/content/paths.ts`, `src/content/missions-synths.ts` (world → producer), `src/content/worlds.ts` (drop synths), `src/content/types.ts` (drop `synths` from WorldSlug), `src/content/themes.ts` (14 presets), `src/styles.css` (14 `[data-theme]` blocks), `src/content/lesson-deep-foundations.ts` (advanced rewrite), `src/content/missions-dj.ts` + `src/content/dj-missions.ts` (rewrite + sim swaps), `src/content/missions.ts` + `src/content/lesson-deep.ts` (re-aggregations if needed), `scripts/audit.mjs` (extend), `src/routes/world.$slug.tsx` (update Producer description string).
-
-## Order of commits
-
-1. **Plumbing & visibility** — chapters/paths wiring + theme presets + hydration verify. (Synths becomes clickable under Producer; theme switcher shows new options.)
-2. **Content mega-pass** — Foundations advanced rewrite + DJ deep rewrite + sim swaps + audit extension, in one diff grouped by world.
-3. **Final audit + mobile pass.**
-
-Green light and I'll start landing commit 1 right after.
+- New simulators (flagged in §4 but not built)
+- DJ/Producer/Synths content audits (same treatment, separate plan once Foundations lands)
+- Auth/paywall — only mentioned as "world-class" target; gating logic is a separate ask

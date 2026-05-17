@@ -1,4 +1,6 @@
 // Web Audio engine — synthesised sources, no asset files.
+// Mobile-safe: ctx is created on first user gesture, unlocked flips only after
+// successful resume() + iOS silent-buffer prime.
 let ctx: AudioContext | null = null;
 let masterGain: GainNode | null = null;
 let unlocked = false;
@@ -14,6 +16,26 @@ export const onAudioUnlocked = (cb: () => void) => {
 };
 export const isAudioUnlocked = () => unlocked;
 
+function notifyUnlocked() {
+  if (unlocked) return;
+  unlocked = true;
+  unlockListeners.forEach((cb) => {
+    try { cb(); } catch {}
+  });
+}
+
+// iOS Safari requires playing a real silent buffer to truly enable audio
+// after resume(). Without this, subsequent oscillator nodes are silent.
+function primeIOS(c: AudioContext) {
+  try {
+    const buf = c.createBuffer(1, 1, c.sampleRate);
+    const src = c.createBufferSource();
+    src.buffer = buf;
+    src.connect(c.destination);
+    src.start(0);
+  } catch {}
+}
+
 export const getCtx = () => {
   if (typeof window === "undefined") return null;
   if (!ctx) {
@@ -26,37 +48,46 @@ export const getCtx = () => {
       return null;
     }
   }
-  if (ctx.state === "suspended") {
-    ctx
-      .resume()
-      .then(() => {
-        if (ctx?.state === "running" && !unlocked) {
-          unlocked = true;
-          unlockListeners.forEach((cb) => cb());
-        }
-      })
-      .catch(() => {});
-  } else if (ctx.state === "running" && !unlocked) {
-    unlocked = true;
-    unlockListeners.forEach((cb) => cb());
+  if (ctx.state === "running" && !unlocked) {
+    primeIOS(ctx);
+    notifyUnlocked();
   }
   return ctx;
 };
 
-// Auto-attach a one-time global gesture listener so the very first click
-// anywhere on the page unlocks audio (browsers require a user gesture).
+// Async unlock — call from inside a user gesture handler (button onClick).
+// Returns true once the context is actually running. Use this in every
+// simulator's Play button BEFORE scheduling any nodes.
+export const ensureAudio = async (): Promise<boolean> => {
+  const c = getCtx();
+  if (!c) return false;
+  if (c.state !== "running") {
+    try { await c.resume(); } catch {}
+  }
+  if (c.state === "running") {
+    primeIOS(c);
+    notifyUnlocked();
+    return true;
+  }
+  return false;
+};
+
+// Auto-attach one-time global gesture listener so the first tap/click anywhere
+// triggers an explicit resume. Critical for iOS Safari.
 if (typeof window !== "undefined") {
-  const unlock = () => {
-    getCtx();
-    if (ctx && ctx.state === "running") {
+  const unlock = async () => {
+    await ensureAudio();
+    if (unlocked) {
       window.removeEventListener("pointerdown", unlock);
       window.removeEventListener("keydown", unlock);
       window.removeEventListener("touchstart", unlock);
+      window.removeEventListener("touchend", unlock);
     }
   };
   window.addEventListener("pointerdown", unlock, { passive: true });
   window.addEventListener("keydown", unlock);
   window.addEventListener("touchstart", unlock, { passive: true });
+  window.addEventListener("touchend", unlock, { passive: true });
 }
 
 export const getMaster = (): AudioNode => {

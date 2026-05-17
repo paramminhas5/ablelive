@@ -1,7 +1,7 @@
 // Master bar — audio unlock prompt ONLY.
 // Each device / sim owns its own play button & audio path; no shared transport.
 import { useEffect, useState } from 'react';
-import { getCtx, isAudioUnlocked, onAudioUnlocked } from '@/lib/audio';
+import { ensureAudio, isAudioUnlocked, onAudioUnlocked } from '@/lib/audio';
 
 export function MasterTransportBar() {
   const [unlocked, setUnlocked] = useState(false);
@@ -12,9 +12,8 @@ export function MasterTransportBar() {
   }, []);
 
   const enable = async () => {
-    const c = getCtx();
-    if (c && c.state === 'suspended') { try { await c.resume(); } catch {} }
-    setUnlocked(isAudioUnlocked());
+    const ok = await ensureAudio();
+    setUnlocked(ok || isAudioUnlocked());
   };
 
   if (unlocked) return null;
