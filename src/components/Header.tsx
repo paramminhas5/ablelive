@@ -5,7 +5,6 @@ import { useProgress, DAILY_GOAL_XP, MAX_HEARTS } from "@/lib/progress";
 import { useAuth, signOut } from "@/lib/auth";
 import { RankBadge } from "./HomeWidgets";
 import { PALETTE_OPEN_EVENT } from "./CommandPalette";
-import { ThemePicker } from "./ThemePicker";
 
 const PRIMARY = [
   { to: "/worlds", label: "Worlds" },
