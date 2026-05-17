@@ -282,6 +282,7 @@ export const TERMS: GlossaryTerm[] = [
   { cat: "Audio", term: "Attack", def: "The fade-in time at the start of a sound or envelope stage. Short attack = punchy; long attack = pad-like." },
   { cat: "Audio", term: "Sustain", def: "The held level a synth envelope settles to while a note is pressed, before release kicks in." },
   { cat: "Audio", term: "Filter Cutoff", def: "The frequency where a filter starts attenuating signal. The 'tone knob' of most synth patches." },
+];
 
 // Slug an arbitrary term for the glossary anchor + URL.
 export const slugTerm = (s: string) =>
