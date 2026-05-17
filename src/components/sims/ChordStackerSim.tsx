@@ -1,6 +1,6 @@
 // ChordStackerSim — pick root + quality, see chord tones on a keyboard, hear them.
 import { useState } from "react";
-import { getMaster, triggerSample } from "@/lib/audio";
+import { playTone, midiToFreq } from "@/lib/audio";
 
 const NOTES = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
 const QUALITIES: Record<string, number[]> = {
@@ -23,10 +23,8 @@ export function ChordStackerSim() {
   const chordName = `${NOTES[root]} ${quality}`;
 
   const playChord = () => {
-    const ctx = getMaster();
-    if (!ctx) return;
     QUALITIES[quality].forEach((iv, i) => {
-      setTimeout(() => triggerSample("piano-c", ctx, 0.4, Math.pow(2, (root + iv) / 12)), i * 10);
+      playTone(midiToFreq(60 + root + iv), i * 0.02, 0.8, "triangle", 0.2);
     });
   };
 

@@ -1,6 +1,6 @@
 // MelodyShaperSim — draw a melodic contour on a grid; hear it played back.
 import { useRef, useState } from "react";
-import { getMaster, triggerSample } from "@/lib/audio";
+import { playTone, midiToFreq } from "@/lib/audio";
 
 const STEPS = 16;
 const PITCHES = 12; // 1 octave in semitones
@@ -13,10 +13,9 @@ export function MelodyShaperSim() {
     setNotes((ns) => ns.map((v, i) => (i === col ? row : v)));
 
   const play = async () => {
-    const ctx = getMaster(); if (!ctx) return;
     for (let i = 0; i < STEPS; i++) {
       const n = notes[i];
-      if (n !== null) triggerSample("piano-c", ctx, 0.4, Math.pow(2, n / 12));
+      if (n !== null) playTone(midiToFreq(60 + n), 0, 0.18, "triangle", 0.25);
       await new Promise((r) => setTimeout(r, 150));
     }
   };

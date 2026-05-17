@@ -1,6 +1,6 @@
 // NoteExplorerSim — keyboard with scale overlay; click to hear interval names.
 import { useState } from "react";
-import { getMaster, triggerSample } from "@/lib/audio";
+import { playTone, midiToFreq } from "@/lib/audio";
 
 const NOTES = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
 const SCALES: Record<string, number[]> = {
@@ -21,11 +21,8 @@ export function NoteExplorerSim() {
 
   const inScale = (n: number) => SCALES[scale].includes((n - root + 12) % 12);
   const playNote = (n: number) => {
-    // Map semitone to a basic playback rate over a C anchor sample.
-    const rate = Math.pow(2, n / 12);
-    const ctx = getMaster();
-    if (ctx) triggerSample("piano-c", ctx, 0.5, rate);
-    setLast({ note: NOTES[(root + n) % 12], interval: INTERVALS[(n) % 12] });
+    playTone(midiToFreq(60 + root + n), 0, 0.6, "triangle", 0.25);
+    setLast({ note: NOTES[(root + n) % 12], interval: INTERVALS[n % 12] });
   };
 
   // 2 octaves of white + black keys

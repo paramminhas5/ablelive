@@ -1,6 +1,6 @@
 // BasslineLabSim — 16-step bass pattern with octave + note picker, synced against a drum loop.
 import { useEffect, useRef, useState } from "react";
-import { getCtx, getMaster, triggerSample, startLoop, type LoopHandle } from "@/lib/audio";
+import { getCtx, getMaster, playTone, midiToFreq, startLoop, type LoopHandle } from "@/lib/audio";
 
 const STEPS = 16;
 const SCALE = [0,2,3,5,7,8,10]; // natural minor
@@ -38,8 +38,8 @@ export function BasslineLabSim() {
       setStep(i);
       const n = notes[i];
       if (n !== null) {
-        const semis = n + octave * 12 - 24;
-        triggerSample("bass-note", getMaster(), 0.7, Math.pow(2, semis / 12));
+        const midi = 45 + n + octave * 12; // A2 root
+        playTone(midiToFreq(midi), 0, 0.2, "sawtooth", 0.3);
       }
       stepRef.current++;
       timerRef.current = window.setTimeout(tick, (60 / bpm) / 4 * 1000);
