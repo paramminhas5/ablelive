@@ -10,6 +10,7 @@ import { LESSONS } from "@/content/lesson-deep";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
 import { CompletionModal } from "@/components/CompletionModal";
 import { HeartsWall } from "@/components/HeartsWall";
+import { Glossarized } from "@/components/Term";
 
 export const Route = createFileRoute("/mission/$slug")({
   head: ({ params }) => {
