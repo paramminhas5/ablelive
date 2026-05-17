@@ -534,4 +534,524 @@ export const DJ_LESSONS: Record<string, LessonDeep> = {
       { label: "Pioneer DJM-A9 Operating Instructions", section: "Channel fader & EQ" },
     ],
   },
+
+  // ============================================================
+  // PATH 2 — LIBRARY & REKORDBOX
+  // ============================================================
+  "music-library-dj": {
+    hook: "Your library is your voice. A thousand tracks you know cold beats ten thousand you half-recognise.",
+    beginner: {
+      what: [
+        "Your music library is the collection of every track you own and could play in a set. It's not just files — it's a curated, organised, named set of tools that you know well enough to recall at 2 a.m. under pressure.",
+        "Quality matters: WAV or AIFF (uncompressed) sound best on a club PA. 320 kbps MP3 is acceptable. Anything below 256 kbps is audibly worse on a big system — and the crowd notices, even if they can't say why.",
+        "Where you buy matters: Beatport, Bandcamp, Juno Download, Traxsource, and label websites all sell DJ-friendly high-quality files with proper metadata. YouTube rips and streaming captures are low quality and usually unlicensed.",
+      ],
+      why: [
+        "On a club system, low-bitrate compression artefacts (cymbal smear, swimming hi-hats) are obvious in a way they aren't on laptop speakers.",
+        "A library you actually know — by ear, by feel — lets you respond to a crowd in seconds rather than scrolling for minutes.",
+        "Buying from specialist stores supports the artists making the music you play. The scene shrinks when no one buys.",
+      ],
+      analogy:
+        "A library is a chef's pantry. Stocked, organised, and known by heart. Nobody wants to read every label during dinner service.",
+    },
+    advanced: {
+      what: [
+        "Audio quality budget: WAV/AIFF (1411 kbps PCM) > FLAC (lossless ~700-1000 kbps) > 320 kbps MP3 / 256 kbps AAC > anything below. The lossy floor for club use is 256 kbps. Pro DJs avoid going lower.",
+        "Tagging discipline: artist, title, BPM, key, year, genre, label, and a personal 'energy' or 'role' tag. Inconsistent tags = an un-searchable library. Use Mp3Tag, Picard or rekordbox's own tag editor consistently.",
+        "Backup strategy: 3-2-1 rule — at least 3 copies, on 2 different media types, with 1 off-site (cloud or different physical location). Hard drives fail; SSDs fail less, but USB sticks are the most common loss vector.",
+      ],
+      edgeCases: [
+        "Beatport WAV files are sold without ID3 tags in some cases — you must apply tags manually before importing to rekordbox, or your library becomes search-hostile.",
+        "DRM-protected files (some streaming services) cannot be exported to a CDJ USB. Only owned (purchased, unencrypted) files work in Export Mode.",
+        "FLAC support on CDJs: CDJ-3000 and CDJ-2000NXS2 (firmware >=1.50) support FLAC; older CDJs do not. Always check the venue's firmware before relying on FLAC.",
+      ],
+      engineerNotes: [
+        "Re-encoding from lossy → lossy (e.g. 256 kbps MP3 → 320 kbps MP3) does not improve quality; it adds artefacts. Always start from the highest-quality source you own.",
+        "Sample rate: 44.1 kHz is the dance-music standard; 48 kHz is fine but pointless conversion overhead. Don't upsample.",
+      ],
+    },
+    flow: "Buy from store → Tag properly → Import to rekordbox → Analyse → Organise into playlists → Sync to USB × 2 → Backup off-site",
+    walkthrough: [
+      { do: "Pick one purchased track in your library. Right-click → Open in Finder/Explorer.", listen: "Note the file format and bitrate. If it's <256 kbps MP3, consider re-buying as WAV from a specialist store." },
+      { do: "Open rekordbox Preferences → View → Columns. Enable Bitrate, Sample Rate, File Type.", listen: "Now your Collection view shows the quality of every track at a glance — sort by bitrate and audit the low end." },
+      { do: "Find your 5 lowest-quality tracks. Decide: re-buy, keep with a 'low-quality' tag, or delete.", listen: "Library hygiene starts at the bottom of the bitrate column." },
+      { do: "Set up a tagging template (artist - title) using your tag editor of choice. Apply to any inconsistently named files.", listen: "Search now works the way you expect — by partial title, partial artist, partial label." },
+      { do: "Plug in a second USB stick. Use rekordbox Sync Manager (Cloud or LAN) to mirror your library and playlists.", listen: "Now you have two synced copies. Lose one mid-set, swap in the other — no missed downbeat." },
+    ],
+    listenFor: [
+      "Cymbal smear / 'swimming' high frequencies on low-bitrate MP3s — the easiest cue to a bad source.",
+      "Pre-echo on transients (sharp kick attacks) — another lossy-compression giveaway.",
+      "Inconsistent volume across the library — different masters from different eras. Don't 'fix' with normalisation; gain-stage per track in the moment.",
+    ],
+    mistakes: [
+      "Treating quantity as a feature. 50,000 tracks you can't recall is worse than 500 you know cold.",
+      "Hoarding low-quality files 'just in case'. They reduce trust in your library.",
+      "Skipping the tag step on import. The cost compounds across thousands of tracks.",
+      "One backup, one USB, one laptop. The first failure deletes years of work.",
+    ],
+    proMoves: [
+      "Audit your library quarterly: delete or upgrade anything you'd be embarrassed to play.",
+      "Tag every track with personal metadata the moment you import — energy level, role, scene/year heard, vibe.",
+      "Buy on Bandcamp Friday — artists get 100% on those days, and the metadata is usually clean.",
+      "Keep a 'graveyard' folder of tracks you used to love but have outgrown. Don't delete; archive. Tastes loop.",
+    ],
+    quizHard: [
+      { q: "Why does low-bitrate MP3 sound worse on a club PA than on laptop speakers?", options: ["It doesn't", "Compression artefacts cluster in upper midrange and treble — frequencies that a club system reproduces accurately and at high SPL", "Club PAs add distortion to MP3", "Laptops hide artefacts with EQ"], answer: 1, explain: "Lossy compression sacrifices high-frequency detail. Laptop speakers can't reproduce those frequencies anyway, so the loss is hidden. A club rig exposes it.", hint: "Where do compression artefacts live, and what reveals them?" },
+      { q: "The 3-2-1 backup rule is", options: ["3 hard drives at home", "3 copies, 2 media types, 1 off-site", "3 USBs in your bag", "3 cloud services"], answer: 1, explain: "Industry-standard backup discipline. Survives drive failure, theft, fire, and ransomware.", hint: "Three numbers, three layers of safety." },
+      { q: "Why is re-encoding from 256 kbps MP3 to 320 kbps MP3 pointless?", options: ["It is, in fact, an improvement", "Lossy encoding throws data away that no later step can recover — re-encoding adds new artefacts on top of old ones", "320 kbps is identical to 256 kbps", "It corrupts the file"], answer: 1, explain: "Once data is gone, it's gone. Higher bitrate just stores the lossy result in a bigger file with extra generation loss.", hint: "Can you un-shred paper by photocopying the shreds at higher resolution?" },
+    ],
+    sources: [
+      { label: "rekordbox 6 Operating Manual", section: "Importing and managing your collection" },
+      { label: "Audio Engineering Society", section: "Perceptual audio coding (lossy formats)" },
+    ],
+  },
+
+  "bpm-analysis-dj": {
+    hook: "BPM is the first number rekordbox prints, and the most often wrong on tracks that don't behave.",
+    beginner: {
+      what: [
+        "BPM (Beats Per Minute) is how many beats happen in one minute. House at 124 BPM = 124 kick drums per minute. Tempo is the heartbeat of every dance track.",
+        "When you drop a track into rekordbox, it scans the waveform looking for repeating low-frequency hits (kicks) and times them. The result becomes the track's BPM and a 'beatgrid' — a visual overlay showing where every beat is supposed to land.",
+        "Most of the time the auto-analysis is right. But it can be wrong on tracks with: unusual time signatures, half-time/double-time feel, slow intros that confuse the algorithm, or live recordings where the tempo drifts.",
+      ],
+      why: [
+        "Sync, key lock, beat jumps, loops and quantised effects all read the beatgrid. Wrong grid = wrong sync = audible chaos.",
+        "Knowing where the grid lies lets you trust hot cues and beat-quantised loops without testing every drop live.",
+        "Spotting a wrong grid in 5 seconds (zoom in, look at a downbeat at 2:00) saves you a public mistake.",
+      ],
+      analogy:
+        "A beatgrid is the staff lines on sheet music. The notes can be perfect, but if the lines are crooked the whole reading is off.",
+    },
+    advanced: {
+      what: [
+        "rekordbox's analysis engine uses transient detection — short low-frequency energy bursts treated as candidate kicks — then a tempo-locking algorithm that picks the most likely steady pulse and projects a grid from an anchor point.",
+        "Static beatgrid mode assumes constant tempo: one anchor + one BPM, grid extrapolated mathematically. Dynamic mode allows tempo curves (multiple BPM zones) — necessary for live recordings, mixes, edits with built-in tempo changes.",
+        "Manual correction tools: the Edit Beatgrid panel offers anchor placement, ½× / 2× BPM toggles, fine-tune nudges (±0.01 BPM), shift entire grid left/right by sub-beats, and grid-splitting for tracks with multiple tempo zones.",
+      ],
+      edgeCases: [
+        "Drum & bass tracks (174 BPM) very often detect at 87 BPM half-time. Trance and uptempo tracks (>140) sometimes detect at half. Always sanity-check tempo against genre expectation.",
+        "Tracks with no kick in the intro (ambient builds, vocal-only openings) can have their anchor placed on the wrong beat — fix the anchor at the first clear downbeat of the drop.",
+        "Imported edits (white labels, bootlegs, your own mash-ups) may have offset bar phases relative to the original — the grid can be on-beat but mis-aligned to the bar.",
+        "Variable speed recordings (live techno from a vinyl pressing, old funk) need Dynamic mode and multiple anchors; Static will drift visibly by track end.",
+      ],
+      engineerNotes: [
+        "Always zoom in and inspect the beatgrid at three points: intro (0:30), middle (2:00), and end (4:00+). Drift shows up at the end of long tracks.",
+        "After grid editing, save the analysis to the file (rekordbox writes back to the database). Re-export to USB to propagate.",
+      ],
+    },
+    flow: "Import → Auto-analyse (transients → BPM → grid) → Zoom-check grid at 3 points → Fix anchor / x2 / dynamic mode if needed → Save → Export",
+    walkthrough: [
+      { do: "Import a drum & bass track to rekordbox. Note the detected BPM.", listen: "If it shows ~85-90 BPM, the analyser locked half-time. Click ×2 in the Edit Beatgrid panel — now it reads ~170-180." },
+      { do: "Open any track and zoom the waveform to 1-bar view in rekordbox.", listen: "You see the beatgrid as vertical lines. Check that each line lands on a kick transient — that's a healthy grid." },
+      { do: "Jump to 3:30 in a 5-minute track and zoom in.", listen: "If the grid lines now sit slightly *before* or *after* the kicks, your grid has drifted — set Dynamic mode and add an anchor at the new tempo zone." },
+      { do: "Use the 'Adjust' arrows to nudge the entire grid left or right by sub-beats.", listen: "When the grid sits right on the kicks throughout, you're done. Set hot cues only after grid is locked." },
+      { do: "Find a track with a free-form intro (no kick for 30+ seconds). Set the anchor at the first solid downbeat of the drop, not the silent intro.", listen: "Grid extends correctly forwards and backwards from the anchor." },
+    ],
+    listenFor: [
+      "'Gallop' (uneven kick spacing) when you sync to a track — almost always grid drift, not pitch.",
+      "Beats arriving before or after the visual grid line — the eye is faster than the ear here.",
+      "Hot cues landing slightly off the downbeat after auto-analysis — symptom of a misplaced anchor.",
+    ],
+    mistakes: [
+      "Trusting the auto-grid for sync without zoom-checking at the track's end.",
+      "Fixing a drifted grid by adding more anchors when the real fix is switching to Dynamic mode.",
+      "Setting hot cues before the grid is correct — you'll re-do every cue when you fix the grid later.",
+      "Leaving DnB tracks at half-detected BPM and then 'syncing' them — your software will think they're a different tempo than they sound.",
+    ],
+    proMoves: [
+      "Batch-import new tracks once a week and audit grids the same day — never enter a gig with un-audited tracks.",
+      "Keep a 'grid-corrected' tag in My Tags. Filter to find tracks you've verified vs. raw imports.",
+      "Set Preferences → Analysis → Mode = Normal for most music; switch to Dynamic temporarily for live recordings and re-analyse those individually.",
+    ],
+    quizHard: [
+      { q: "Static vs. Dynamic beatgrid: which is correct for a live techno recording with subtle tempo drift?", options: ["Static — simpler", "Dynamic — allows multiple anchors and tempo zones to follow the drift", "Doesn't matter", "Neither — disable analysis"], answer: 1, explain: "Live recordings drift. Static assumes constant tempo; Dynamic supports tempo curves. Use Dynamic, place anchors at drift points.", hint: "Curving tempo needs a curving grid." },
+      { q: "Why must hot cues be set *after* grid correction?", options: ["They mustn't — set them first", "Cues store absolute positions in the track — if you change the grid, cue positions can drift relative to musical events", "Cues only work with Static grids", "Cues store the grid offset"], answer: 1, explain: "Cues are positions in time. If you re-anchor the grid, the cues stay at the same time but may no longer fall on the musical downbeat they were placed on.", hint: "Cues are absolute; downbeats are relative to the grid." },
+      { q: "Half-time detection (174 BPM read as 87) happens because", options: ["The file is corrupted", "The algorithm picked a strong but slower pulse rate — typically the snare-on-3 in DnB looks like a downbeat", "The track is in 6/8", "Software bug"], answer: 1, explain: "Auto-tempo prefers the strongest periodic event. DnB's heavy snare reads as a beat 1, halving the perceived tempo.", hint: "What looks like a beat 1 to a machine?" },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Beat analysis & grid editing" }],
+  },
+
+  "key-detection-dj": {
+    hook: "Two tracks in compatible keys blend; two in clashing keys fight. Key detection turns guesswork into a filter.",
+    beginner: {
+      what: [
+        "Every melodic piece of music has a 'key' — the home note its melody and chords are built around. C major, A minor, F# minor: these are keys.",
+        "rekordbox analyses each track and labels its key, usually shown in two forms: musical (Am, Cmaj, F#m) and Camelot (8A, 8B, 11A). Camelot is a cheat code — adjacent numbers and same-numbers across A/B are harmonically compatible.",
+        "Harmonic mixing means picking your next track so its key plays nicely with the current one. Same number (8A↔8B) = relative major/minor, very close. Adjacent number same letter (8A→9A or 7A) = up or down a fifth, classic safe move.",
+      ],
+      why: [
+        "Mixing clashing keys creates dissonance during the blend window — the moment two melodies overlap sounds 'wrong' in a way crowds feel even if they can't name it.",
+        "Harmonic mixing lets you blend for longer (32 bars instead of 8) without melodic clash, opening up sophisticated transitions.",
+        "Moving up the Camelot wheel one step (8A→9A) is the classic 'energy lift' — same harmonic relationship, slightly higher emotional intensity.",
+      ],
+      analogy:
+        "The Camelot wheel is a colour wheel for keys. Neighbours blend smoothly; opposites clash. You can break the rule for effect, but only on purpose.",
+    },
+    advanced: {
+      what: [
+        "Pitch class detection algorithms estimate the dominant tonal centre by analysing the spectral content over time — typically harmonic pitch class profiles (chromagrams) fed into a key-templating step.",
+        "Camelot notation maps the 24 major/minor keys onto a 12-hour wheel. A = minor (inside), B = major (outside). Same number = relative key pair. ±1 step = perfect fifth relationship. +1 step is 'energy boost' (same key, modal brightness).",
+        "Compatibility rules (most→least compatible): same key (8A↔8A) > relative major/minor (8A↔8B) > adjacent fifth (8A↔7A or 9A) > parallel major/minor (Am↔A maj, 8A↔3B) > 'mood shift' across the wheel for dramatic effect.",
+      ],
+      edgeCases: [
+        "Detection fails on heavily atonal or noise-based tracks (some hardcore, harsh techno, industrial). Trust your ear and override.",
+        "Vocal samples chopped and resampled in modern dance music can sit in a different key from the underlying chord pads — the algorithm picks one and the other may clash.",
+        "Tracks with modulations (key changes mid-track) only get one key tag. Note the modulation in a personal tag if you mix during the second key.",
+        "Master Tempo pitch-shift moves the key — pitching a track +3% raises perceived pitch by ~52 cents (half a semitone is 100 cents). Camelot label is wrong post-pitch unless you compensate.",
+      ],
+      engineerNotes: [
+        "Mixed In Key (third-party) is a more accurate detector than rekordbox's built-in for many catalogues — many pros analyse there first and import the result.",
+        "Some DJs use 'open key' notation (1d, 2d, 1m, 2m) instead of Camelot — same wheel, different labels. Pick one and stay consistent across your library.",
+      ],
+    },
+    flow: "Track in → Chromagram analysis → Key template match → Camelot label → You filter library by compatible Camelot neighbours → Plan transitions",
+    walkthrough: [
+      { do: "Open rekordbox preferences → Display → Key format → set to Camelot.", listen: "All tracks now show numeric labels like 8A or 11B in the Key column." },
+      { do: "Pick any track. Note its Camelot key — say 8A.", listen: "8A means A minor. Same number means a relative major/minor pair; adjacent means fifth-related." },
+      { do: "Filter your collection by key 8A, 8B, 7A, and 9A.", listen: "These are your most compatible neighbours for that starting track. The result is your transition pool." },
+      { do: "Play the 8A track. Cue an 8B (relative major) track and blend.", listen: "Notice how the second track feels brighter but never clashes — they share the same notes, just centre on different ones." },
+      { do: "Now try blending 8A into 2A (a far point on the wheel).", listen: "You hear the clash — minor 2nd interval. Sometimes this is the artistic move; usually it's an accident to avoid." },
+    ],
+    listenFor: [
+      "Dissonant overlap during a blend — the most common cause is key mismatch, not bad EQ.",
+      "Modulations within a single track — common in trance, drum & bass, soulful house. The Camelot label only describes the opening section.",
+      "Whether the bass note clashes with the next track's bass note — that's the most exposed clash, even if upper melodies are fine.",
+    ],
+    mistakes: [
+      "Treating Camelot as gospel and never breaking the rule. Mood shifts and dramatic key clashes are part of the art.",
+      "Pitching tracks more than ±3% without re-checking the effective key. A 124→128 BPM stretch with Key Lock off changes the key.",
+      "Ignoring the detection on melodic tracks while trusting it on busy tracks. The reverse is usually true.",
+      "Blending two vocal tracks in clashing keys. Vocals expose key clashes the most.",
+    ],
+    proMoves: [
+      "When you find two tracks in compatible keys that go well, save them as a 'transition pair' in My Tags — you've found a free move for a future set.",
+      "Use key shifts (pitch +/- semitones on CDJ-3000) to bring a near-compatible track into compatible range — costs CPU but expands options.",
+      "Build your set's key arc, not just BPM arc — sets that hit 5 keys in 10 tracks feel busy; sets that hold 2-3 keys feel coherent.",
+    ],
+    quizHard: [
+      { q: "Why does pitching a track +6% with Key Lock OFF change the Camelot key?", options: ["It doesn't", "Tempo shift shifts pitch by the same ratio — 6% ≈ 1 semitone, moving the key", "Camelot labels are time-based", "rekordbox auto-updates labels"], answer: 1, explain: "Without Key Lock, tempo and pitch move together. 6% ≈ 100 cents ≈ one semitone, so the key shifts by one semitone (e.g. A minor → A# minor = 8A → 3A).", hint: "Pitch and tempo without Key Lock are the same dial." },
+      { q: "Adjacent same-letter Camelot positions (e.g. 8A and 9A) are related by what musical interval?", options: ["Major third", "Perfect fifth", "Octave", "Tritone"], answer: 1, explain: "The Camelot wheel is arranged by fifths. 8A=Am, 9A=Em — a perfect fifth apart, harmonically very close.", hint: "Why is the wheel a circle of...?" },
+      { q: "Vocal-on-vocal blends are more exposed to key clash because", options: ["Vocals are always louder", "Voice has a clear melodic line and the brain picks pitch clashes in melodic content faster than in percussive content", "Vocals always have wider frequency range", "Vocals are usually doubled"], answer: 1, explain: "Pitched melodic content (especially the human voice) makes key clashes immediately audible. Drums and texture mask key.", hint: "What does the brain hear pitch in most?" },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Key analysis & display formats" }],
+  },
+
+  "my-tags-dj": {
+    hook: "My Tags turn a library into a searchable instrument. Filter by 'peak time + 8A + builder' in two clicks.",
+    beginner: {
+      what: [
+        "My Tags are coloured labels you stick on tracks. You can create your own categories — Peak Hour, Warm Up, Closing, Vocal, Instrumental, Tool, Classic, New — and apply as many as you want to each track.",
+        "Once tagged, you can filter your library in real time during a set. Need a peak-hour driving track? Filter by 'Peak Hour' and 'Tool' — your library shrinks from 5000 to 50 in one click.",
+        "Tags survive export to USB, so they work on CDJ-3000 and CDJ-2000NXS2 just like in rekordbox. You filter on the deck the same way you filter on your laptop.",
+      ],
+      why: [
+        "Searching by artist/title at 2 a.m. is slow. Searching by mood and role is fast and matches how DJs actually think.",
+        "Tags let you re-purpose the same track across multiple roles. A track can be both 'Vocal' and 'Closing' and 'Classic'.",
+        "On CDJs, the tag filter is one button press away. You can refine selection without losing the current track's view.",
+      ],
+      analogy:
+        "Tags are like Spotify's mood playlists, except you control the moods and the same song can sit in 6 of them at once.",
+    },
+    advanced: {
+      what: [
+        "rekordbox supports up to 8 My Tag categories with up to 8 sub-tags each (configurable in My Tag settings). Common pro setups: Mood (Dark, Bright, Driving), Role (Opener, Builder, Peak, Closer), Vocal (Full, Hook, Instrumental), Energy (1-5).",
+        "The CDJ-3000 'Mixer Tags' page lets you filter the deck's browse window by any combination of active tags — including AND/OR logic in firmware ≥1.30.",
+        "Tags export to USB as part of the rekordbox database. Lost tags after export usually mean a Sync Manager mismatch or a USB exported from a different machine.",
+      ],
+      edgeCases: [
+        "My Tags do not transfer to other DJ software (Serato, Traktor). If you cross-platform DJ, mirror your tags into the Comments field or use a tag-export script.",
+        "Tag names with non-ASCII characters can render oddly on older CDJ firmware. Keep tag names short and ASCII.",
+        "Bulk-tagging (multi-select → apply tag) works in rekordbox but not on CDJs — plan tagging at home.",
+      ],
+      engineerNotes: [
+        "Use the Comment field for free-form notes (e.g. 'mixes well into X', 'first drop at 1:12') that aren't filterable but are visible on the deck.",
+        "Tag taxonomy matters more than tag quantity. 4 well-defined categories beats 12 overlapping ones.",
+      ],
+    },
+    flow: "Define category schema → Tag tracks at import → Sync to USB → Live: filter by tag combination → Find next track in seconds",
+    walkthrough: [
+      { do: "Open rekordbox → Preferences → My Tag → set up categories: Mood, Role, Energy, Vocal.", listen: "Save. Categories now appear in the lower panel under any track view." },
+      { do: "Pick 20 tracks you know well. For each, apply 1-3 tags.", listen: "Don't over-tag — 2-3 tags per track is plenty. More than 5 dilutes the signal." },
+      { do: "Switch to the My Tag view (View menu).", listen: "Tracks now sortable and filterable by your categories. Click 'Peak Hour' — only those tracks appear." },
+      { do: "Combine filters: click 'Peak Hour' + '8A'.", listen: "Library shrinks to peak-hour tracks in 8A — your transition pool for one specific moment." },
+      { do: "Export to USB. Plug into a CDJ-3000. Press My Tag filter on the deck.", listen: "Same filtering on the deck as in rekordbox. Find tracks under pressure without scrolling." },
+    ],
+    listenFor: [
+      "Whether your tags actually describe how you think about music. If you never filter by 'Genre = Tech House' but always by 'Mood = Dark', drop the genre tag.",
+      "Tracks that don't fit any tag — usually they're library bloat you should delete or you need a new tag.",
+    ],
+    mistakes: [
+      "Creating 30 tags. You'll abandon the system within a month. 4-8 well-defined tags max.",
+      "Tagging by genre when you already have a genre column. Tags should describe role/mood/use, not file metadata.",
+      "Tagging in batch with no listening. Use the cue point view to skim each track for 15 seconds before tagging.",
+      "Skipping the tag workflow until 'later'. Later is during a set, and it's too late.",
+    ],
+    proMoves: [
+      "Use a 1-5 energy tag on every track. It becomes your most-used filter.",
+      "Create a 'tested live' tag — only tracks you've played out and validated. Filtering by this is your trust-list.",
+      "Re-audit tags every 6 months. Tags that you never use should die.",
+    ],
+    quizHard: [
+      { q: "Why is a 4-tag taxonomy usually better than a 12-tag one?", options: ["It isn't — more is always more", "Cognitive load — you can hold 4 categories in active memory under stress; 12 is unusable mid-set", "rekordbox limits to 4", "CDJs only display 4"], answer: 1, explain: "Tag systems exist to be used live. Anything you can't recall and apply in seconds is dead weight.", hint: "How many things can you juggle at 2 a.m.?" },
+      { q: "My Tags survive export to a USB stick on", options: ["No CDJ", "All CDJ models", "CDJ-3000 and CDJ-2000NXS2 (firmware-dependent for full filter UI)", "Only the laptop in Performance Mode"], answer: 2, explain: "Tags are stored in the rekordbox export database on the USB and read by compatible CDJs.", hint: "Newer Pioneer hardware reads the full export database." },
+      { q: "Bulk-tagging in rekordbox works on", options: ["The laptop only — CDJs apply tags one at a time", "CDJs only", "Both", "Neither"], answer: 0, explain: "Multi-select → apply tag is a rekordbox-only workflow. Do tagging at home; use tagged libraries live.", hint: "Live decks aren't tagging stations." },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "My Tag configuration & filtering" }],
+  },
+
+  "playlists-dj": {
+    hook: "Crates beat folders. A good playlist is a question your future self will ask you live.",
+    beginner: {
+      what: [
+        "A playlist (or 'crate') is a saved list of tracks grouped by anything you choose — genre, BPM range, vibe, gig, set position. They don't move files; they're just lists pointing at tracks in your collection.",
+        "Smart playlists are dynamic — set rules like 'BPM 122-128 AND Energy 3-5 AND Key = 8A' and the playlist auto-fills with matching tracks as your library grows.",
+        "Folder structure beats giant flat lists. A typical pro DJ has folders like: Genres → House → Tech House, Energy → Peak/Build/Close, Sets → 2025-11-22 Warehouse, Tools → Acapellas/Loops.",
+      ],
+      why: [
+        "Live, you don't have time to scroll 5000 tracks. You navigate playlists, not files.",
+        "Smart playlists do the curation work for you — when you import 50 new tracks, the relevant ones automatically appear in your peak-time crate.",
+        "Set playlists (one per gig) become a record of what you played — invaluable for studying your own decisions later.",
+      ],
+      analogy:
+        "Crates in a vinyl bag. Physical DJs carry 3-5 crates to a gig; digital DJs do the same with playlists.",
+    },
+    advanced: {
+      what: [
+        "rekordbox supports nested folders to arbitrary depth and smart playlists with multi-criteria rules (AND/OR logic, range comparisons, tag inclusion/exclusion).",
+        "On CDJs, only the top 8 levels of folder nesting are practically navigable on the screen — keep your tree shallow.",
+        "Intelligent Playlists (rekordbox term for smart playlists) update on import and on tag change — perfect for 'fresh ≤ 30 days' or 'energy ≥ 4 in 8A'.",
+      ],
+      edgeCases: [
+        "Playlists do not store track order metadata that overrides analyser data. If you re-import a track or it loses its database link, it may drop out of playlists silently.",
+        "Smart playlist rules can become slow on libraries >50,000 tracks — split into category folders if you see lag in the browser.",
+        "Exporting a playlist to USB takes only the tracks in that playlist — useful for travelling light, dangerous if you forget a tool you need.",
+      ],
+      engineerNotes: [
+        "Playlist hierarchy I recommend: 01_TONIGHT (set playlists for upcoming gigs) / 02_NEW (last 30 days, smart) / 03_GENRE / 04_ENERGY / 05_TOOLS / 99_ARCHIVE.",
+        "Number prefixes (01_, 02_) force ordering. Without them, rekordbox sorts alphabetically and you lose mental priority cues.",
+      ],
+    },
+    flow: "Import → Auto-categorise via smart playlist → Manual curation into gig playlist → Export gig playlist → Play",
+    walkthrough: [
+      { do: "Create a folder called '02_NEW' and inside it a smart playlist with rule: Date Added in last 30 days AND Genre = House.", listen: "It populates with anything fresh from a house import. No manual sorting." },
+      { do: "Create '01_TONIGHT_<date>' folder with subfolders Opener / Builder / Peak / Closer.", listen: "Drag 15-20 tracks into each subfolder from your library. Now you have a 60-80 track set pool, structured by role." },
+      { do: "Export only the 01_TONIGHT_ folder to a USB stick (right-click → Export to Device).", listen: "Stick is now small, focused, fast to navigate at the gig." },
+      { do: "After the gig, in rekordbox, create '99_PLAYED_<date>' and drag the tracks you actually used from the gig folder.", listen: "You now have a record of every track you played — sortable, searchable, learnable from." },
+      { do: "Smart playlist: rule 'My Tag includes Peak AND Key = 8A AND Played count < 3 in last 90 days'.", listen: "It surfaces strong peak tracks you haven't been over-playing — your idea-generator for the next set." },
+    ],
+    listenFor: [
+      "Tracks that show up in every gig playlist — those are your signature sounds.",
+      "Tracks that smart playlists suggest but you ignore — interrogate why; maybe re-rate or retire.",
+    ],
+    mistakes: [
+      "Flat folder structures with 1000-track playlists. Unnavigable live.",
+      "Deeply nested folders >5 levels. CDJ navigation becomes tedious.",
+      "Never deleting playlists after gigs. Library becomes a junkyard.",
+      "Relying only on smart playlists. Manual curation for the actual set matters.",
+    ],
+    proMoves: [
+      "One folder per gig, deleted (or archived to 99_PLAYED_) after. Keeps the library current.",
+      "Maintain a '00_GO_TO' folder — your 50 most-trusted tracks. The safety net for any gig.",
+      "Use rekordbox Cloud Library Sync to keep the same playlists on every device.",
+    ],
+    quizHard: [
+      { q: "Smart playlist with rule 'Genre = House AND BPM 122-128 AND Date Added > 30 days ago' will show", options: ["All house tracks", "Recently added house tracks in the 122-128 BPM range", "Old house tracks", "Tracks added more than 30 days ago"], answer: 3, explain: "Date Added > 30 days ago means added MORE than 30 days ago — older tracks. Reverse the operator for 'fresh'.", hint: "Read the operator literally." },
+      { q: "Number prefixes (01_, 02_) on folders are useful because", options: ["They're required by rekordbox", "They force alphabetical sort order so your highest-priority folders appear at the top", "They denote BPM", "They're decorative"], answer: 1, explain: "Without prefixes, folders sort alphabetically — your most-used folder may end up at the bottom.", hint: "How does alphabetical sort treat numbers?" },
+      { q: "Exporting only a gig folder to USB is useful but risky because", options: ["Risk-free", "You may forget to include a tool (acapella, FX loop, emergency track) that lives outside the folder", "USB will be too big", "Tracks get re-encoded"], answer: 1, explain: "Smaller exports are faster but only contain what you chose. Always include a Tools folder.", hint: "What does 'only export this folder' miss?" },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Playlists & smart playlists" }],
+  },
+
+  "crate-digging": {
+    hook: "Crate digging is the slow, weekly habit that builds a library no algorithm can replicate.",
+    beginner: {
+      what: [
+        "Crate digging means actively searching for music — going beyond the algorithm, beyond the chart, beyond what your friends play. Spending time on Bandcamp, Discogs, label sites, soundcloud, NTS, blogs and second-hand bins to find tracks that hit you personally.",
+        "The discipline is regular: 1-2 hours a week, scanning new releases, deep catalogues, reissues, label compilations. Skim fast, save anything that grabs you, audition properly later.",
+        "Half of what you save you'll never play. The other half is what gives your sets character no one else has.",
+      ],
+      why: [
+        "Algorithms recommend what's like what you already liked. Digging finds what's outside that loop.",
+        "DJs who only play current Beatport top-100 sound like every other DJ playing current Beatport top-100.",
+        "The hours you spend digging build taste. Taste is the only thing that can't be copied.",
+      ],
+      analogy:
+        "Like reading widely vs. only reading bestsellers. Both work; only one makes you interesting to talk to.",
+    },
+    advanced: {
+      what: [
+        "Discovery sources you should rotate through weekly: Bandcamp (label discover, follow artist), Discogs (artist discography, related releases, marketplace for vinyl), NTS Radio shows, Resident Advisor charts, Boiler Room recent sets, label Soundclouds, Bleep, Phonica/Hardwax/Juno staff picks.",
+        "Mining tactics: pick one track you love → check the label's catalogue → check the artist's collaborations → check who remixed it → check what they remixed → 20 minutes later you've expanded your reach by 50 tracks.",
+        "Re-issues, archive labels (Soundway, Strut, Music From Memory, Awesome Tapes From Africa) surface deep historical material. Modern DJs lean heavily on these for 'classic' moments.",
+      ],
+      edgeCases: [
+        "Promo lists (label promo pools, artist direct lists) give early access but require relationships — start by buying everything from a label, then ask politely.",
+        "Vinyl-only releases force a different workflow: rip to high-quality digital, set hot cues, tag carefully — you can't re-download these.",
+        "Pre-release Beatport / Bandcamp drops are timed — being early on a hot track buys you 2-4 weeks before every other DJ plays it.",
+      ],
+      engineerNotes: [
+        "Maintain a 'dig list' (a smart playlist or note) of artists/labels to check monthly. Discipline beats inspiration.",
+        "Audition with intent — first 30 seconds is hook check, scan to the drop, scan to the breakdown. ~90 seconds per track when digging.",
+      ],
+    },
+    walkthrough: [
+      { do: "Pick one label you trust. Open their Bandcamp page → 'discography' → newest first.", listen: "Audition 30 seconds of every track on every release back ~6 months. Wishlist anything that hits." },
+      { do: "Take a track you played last weekend. Search the artist on Discogs.", listen: "Discogs shows every release, every credit, every remix, every label they've worked with. Follow 3 threads outwards." },
+      { do: "Open an NTS recent show from a host whose taste overlaps yours. Note 3 tracks from the tracklist.", listen: "Each unfamiliar track is a digging starting point — search the artist, the label, what came out around it." },
+      { do: "Set a weekly calendar block: '90 minutes — dig'.", listen: "Without the calendar block, life eats the habit. With it, your library grows by 5-15 keepers a week." },
+      { do: "On a 90-minute Bandcamp dig: buy 1-3 tracks, wishlist 5-10, ignore the rest.", listen: "Money concentrates attention. The tracks you buy are the tracks you'll know." },
+    ],
+    listenFor: [
+      "Tracks that grab you in <15 seconds — those are usually the keepers.",
+      "Production hallmarks of a label (mix character, drum textures) — they cluster.",
+      "Tracks that sample older records — chains backwards through music history.",
+    ],
+    mistakes: [
+      "Only digging when you 'need new music' — by then it's a stressed chore, not a habit.",
+      "Hoarding tracks you'll never play. Discipline is also editing what you don't buy.",
+      "Only following labels — also follow individual artists and DJs whose taste informs you.",
+      "Treating Beatport top 100 as the universe. It's a slice.",
+    ],
+    proMoves: [
+      "Follow 50 labels and 50 artists on Bandcamp — your weekly email is a custom newsletter no algorithm can match.",
+      "Buy 1-3 records a week on Bandcamp Friday (artists keep 100% revenue).",
+      "Maintain a 'dig journal' — date, source, tracks bought, why. Re-reading it teaches you about your own taste.",
+      "Trade dig finds with one or two trusted DJ friends. Your blind spots are different.",
+    ],
+    quizHard: [
+      { q: "Why is algorithmic recommendation weak for DJ digging?", options: ["It isn't", "Algorithms optimise for similarity to what you already played — they cannot surface things outside your past patterns", "Algorithms are biased against dance music", "Algorithms can't read BPM"], answer: 1, explain: "Recommenders are similarity engines. They surface variations on a theme, not break-out finds.", hint: "What does 'similar to' tell you about novelty?" },
+      { q: "Pre-release drops on Bandcamp/Beatport are valuable for DJs because", options: ["They sound better", "They give you 2-4 weeks of exclusivity before peers play the same track", "They are cheaper", "They include stems"], answer: 1, explain: "Being first on a track that catches fire is one of the cheapest ways to differentiate a set.", hint: "Early access = scarcity = perceived value." },
+      { q: "Discogs is most useful for", options: ["Streaming music", "Mapping artist discographies, label catalogues, collaborations and remix histories — and buying physical media", "Detecting BPM", "Hot cue management"], answer: 1, explain: "Discogs is a music database with marketplace bolted on. It excels at relational digging.", hint: "What's behind the marketplace?" },
+    ],
+  },
+
+  "export-mode-dj": {
+    hook: "Export mode is the bridge from your laptop to the CDJ. Get it right at home; the gig is just plugging in.",
+    beginner: {
+      what: [
+        "Export Mode is rekordbox set up to send your music + database to a USB stick or SD card, which you then plug into a CDJ at the venue. No laptop needed at the gig.",
+        "The CDJ reads the stick: your tracks, hot cues, beat grids, key, BPM, playlists, My Tags — all of it appears on the deck exactly as you set it up at home.",
+        "Workflow: in rekordbox, switch to Export Mode (top-left menu), prepare playlists/cues, plug in USB, right-click → Export to Device, wait for copy, safely eject.",
+      ],
+      why: [
+        "Most clubs you play will be CDJ-equipped. Knowing Export Mode means you walk in with a stick and play.",
+        "No laptop on stage = no driver issues, no audio interface fiddling, no risk of a laptop crash mid-set.",
+        "Your prep at home (cues, tags, playlists) survives perfectly to the deck. Live energy goes into mixing, not setup.",
+      ],
+      analogy:
+        "Like cooking a meal at home, transferring it to a thermos, and serving it warm at the destination. All the work happened in the kitchen.",
+    },
+    advanced: {
+      what: [
+        "Export Mode writes a PIONEER folder to the USB containing: the audio files (copied or referenced), a SQLite-style database, image cache (waveforms), and per-track metadata (cues, grid, key, tags).",
+        "File system: USB must be FAT32 (universal but 4 GB single-file limit) or exFAT (CDJ-3000 / 2000NXS2 firmware ≥ specific versions, supports >4 GB). HFS+, NTFS and APFS are NOT readable by most CDJs.",
+        "Performance Mode (the other mode, used with controllers and the rekordbox audio interface) shares the same master library but routes audio through the laptop. Switching between Export and Performance is one menu click and doesn't disturb the library.",
+      ],
+      edgeCases: [
+        "Pulling the USB without 'safely eject' can corrupt the PIONEER database. Symptom: CDJ shows 'No tracks' or hangs on the stick. Fix: re-export from rekordbox.",
+        "Newly added tracks not appearing on the stick = you exported BEFORE adding them. Re-export or use rekordbox Cloud Library Sync.",
+        "Two sticks exported at different times can drift in cue/grid positions if you continued editing. Use Sync Manager to keep them aligned.",
+        "USB hardware quality matters — cheap or counterfeit USB 2.0 sticks can corrupt under repeated writes. Use SanDisk / Samsung / Kingston brands.",
+      ],
+      engineerNotes: [
+        "Always carry TWO USB sticks, identical, exported moments apart. Murphy's law applies most violently at the start of a peak-time set.",
+        "Test the stick in a CDJ (your own or a friend's) before every important gig. Catch problems at home, not at the venue.",
+      ],
+    },
+    flow: "Prep in rekordbox → Switch to Export Mode → Insert USB → Right-click playlist → Export to Device → Safely eject → Pocket → Plug into CDJ",
+    walkthrough: [
+      { do: "Open rekordbox, top-left menu → switch to Export Mode if you're in Performance Mode.", listen: "UI changes slightly — Export Mode hides controller-specific panels and shows the export workflow." },
+      { do: "Format a USB stick as exFAT (Disk Utility on Mac, Disk Management on Windows). Name it something memorable.", listen: "Stick is now compatible with modern CDJs and supports files >4 GB." },
+      { do: "Insert the stick. In rekordbox, it appears in the left panel under 'Devices'. Right-click your gig folder → Export to Device → choose this stick.", listen: "Copy starts. Time depends on track count and stick speed — 100 tracks ≈ 2-5 minutes on a decent USB 3.0 stick." },
+      { do: "When done, click the eject icon next to the device in rekordbox, then OS-level eject before pulling.", listen: "Stick is now safe to remove. Pulling without ejecting risks database corruption." },
+      { do: "Plug into a CDJ-3000 (or borrow one). Press USB. Browse — your playlists, cues, tags should all appear.", listen: "If anything is missing, you found a problem at home, not at the venue." },
+    ],
+    listenFor: [
+      "'No tracks' or 'database error' on the CDJ — almost always a corrupt PIONEER folder. Re-export.",
+      "Cues missing on the deck but present in rekordbox — you exported before saving the cues. Save → re-export.",
+      "Hot cue colours / names not appearing — older CDJ firmware. Update venue firmware if you can, accept basic display otherwise.",
+    ],
+    mistakes: [
+      "Exporting on the day of the gig with 30 minutes to spare. Always export the day before; test the stick.",
+      "Single USB stick. Lose it, drop it, snap it — gig over.",
+      "Cheap USB sticks bought in bulk. The price of a corrupt PIONEER folder mid-set is much higher than a quality stick.",
+      "Formatting the stick as MacOS Extended (HFS+). CDJs can't read it.",
+    ],
+    proMoves: [
+      "Two identical USBs, kept in sync via rekordbox Sync Manager Cloud. Lose one, swap the second in instantly.",
+      "Label sticks physically with reflective tape and your initials. Booth lights are dim.",
+      "Keep one stick in your bag, one on your person (pocket). If the bag walks, you still have music.",
+      "Test stick in a CDJ before EVERY gig. Habits prevent disasters.",
+    ],
+    quizHard: [
+      { q: "Why does exFAT support >4 GB single files where FAT32 doesn't?", options: ["It doesn't", "FAT32's file size field is 32-bit signed (2 GB) → effectively 4 GB cap; exFAT uses 64-bit and supports vast files", "exFAT compresses files", "FAT32 only works on Windows"], answer: 1, explain: "FAT32 is a 1990s file system with a 4 GB single-file limit. exFAT was designed to remove that limit.", hint: "Numerical limits in old file systems." },
+      { q: "Safely ejecting the USB matters because", options: ["It doesn't, modern systems handle it", "The PIONEER database may have pending writes cached by the OS; pulling early can leave the database in an inconsistent state", "Voltage spikes corrupt the stick", "It zeroes the index"], answer: 1, explain: "OS file caches buffer writes for speed. Eject flushes them. Pull early = half-written database.", hint: "Where do recent writes live before they hit the stick?" },
+      { q: "Performance Mode and Export Mode share", options: ["Nothing", "The same master rekordbox library, cues, tags, playlists — just different audio routing and output", "Only the audio files", "Only the playlists"], answer: 1, explain: "One library, two routing modes. Switching is one click and non-destructive.", hint: "What does 'master library' mean?" },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Export Mode & device management" }],
+  },
+
+  "waveform-reading": {
+    hook: "The waveform tells you the structure of a track in 3 seconds. Once you can read it, you can mix anything.",
+    beginner: {
+      what: [
+        "The waveform is the visual shape of the audio — a graph of loudness over time. Tall = loud, short = quiet. Colour usually indicates frequency content (blue = bass, green = mid, red/yellow = highs in rekordbox's default).",
+        "Most dance tracks have a recognisable shape: quiet intro, build, drop (tall colourful section), breakdown (shorter section), second drop, outro. Once you see the shape, you know where to mix in, when to mix out, and what's coming.",
+        "rekordbox shows the waveform at two zooms: the 'overview' (whole track, top of the deck) and the 'zoomed' view (a few bars around the playhead). Use overview for structure, zoom for beatmatching.",
+      ],
+      why: [
+        "Reading the waveform lets you mix tracks you've never heard, just from the visual shape.",
+        "You spot drops and breakdowns coming and time your transitions to land on the right musical moment.",
+        "Colour clues (blue = bass-heavy, red/yellow = high-frequency-heavy) help you predict EQ clashes before they happen.",
+      ],
+      analogy:
+        "Like reading a topographic map. Once you know what hills and valleys mean, you can navigate territory you've never visited.",
+    },
+    advanced: {
+      what: [
+        "rekordbox 3-band waveform colouring decomposes the spectrum into low/mid/high energy bands and renders them as overlapping coloured layers — blue (lows ≤ ~200 Hz), green (mids ~200 Hz-2 kHz), red/yellow (highs ≥ ~2 kHz). The colour at any point tells you which band dominates.",
+        "Structural shapes to recognise: tall solid block (full mix), tall thin spikes (drum-only section, often the drop or intro), thin solid horizontal (sustained bass / pad, often the breakdown), dense colour clusters (busy mid-frequency content, often the build).",
+        "On CDJ-3000 the waveform supports phrase analysis overlays: coloured bars above the waveform marking intro / verse / chorus / outro phrases, computed by rekordbox.",
+      ],
+      edgeCases: [
+        "Mastered loudness affects waveform height. A modern brick-wall-mastered track will look uniformly tall throughout; an older or dynamic track shows real variation. Don't confuse loudness mastering with structural energy.",
+        "Hidden hi-hats and percussion (low amplitude but high frequency) show as faint red/yellow speckles — easy to miss but important for groove.",
+        "Sub-only sections (bass drop, sub-only outro) read as flat blue rectangles with no spikes. They're loud on the meter but visually unimpressive.",
+      ],
+      engineerNotes: [
+        "Calibrate your eye by reading the waveform while listening — within an hour you'll pattern-match structures without listening.",
+        "The 30-second overview waveform plus phrase analysis is enough to plan a transition for a track you've never heard.",
+      ],
+    },
+    flow: "Track loads → Eye scans overview → ID intro/drop/breakdown/outro → Pick transition window (intro or outro) → Beatmatch in zoom view → Execute",
+    walkthrough: [
+      { do: "Load a familiar track. Look at the full-track waveform (top of the deck).", listen: "Identify the intro (small left), drop (first tall section), breakdown (shorter middle), second drop, outro (small right)." },
+      { do: "Load an unfamiliar track. Predict where the drops are from the shape alone, then press play.", listen: "Within 3 tracks you'll be right almost every time." },
+      { do: "Look at the colour of each section. The breakdown should be more green/red (mids and highs, no kick); the drop should be a balanced mix of all three.", listen: "Colour patterns confirm structural reading." },
+      { do: "Find a track with a sub-only outro (flat blue rectangle at the end).", listen: "It looks quiet but it's full of sub bass — a clean blend opportunity for a track with a tall intro." },
+      { do: "Zoom into a transition window (e.g. last 32 bars). Count phrases (8-bar units).", listen: "Phrase boundaries are visible as small density changes in the waveform." },
+    ],
+    listenFor: [
+      "Drum-only sections (intro/outro of dance tracks) — visible as a row of tall thin spikes with little colour fill.",
+      "Vocal sections — often visible as long sustained mid-frequency content (green-heavy).",
+      "Build-ups — visible as gradually rising amplitude over a section, often with red/yellow filter sweeps.",
+    ],
+    mistakes: [
+      "Trusting the waveform over your ears. The waveform shows amplitude, not necessarily musical content.",
+      "Confusing a brick-mastered modern track with constant energy. Listen for actual dynamic structure.",
+      "Watching the waveform during a beatmatch instead of feeling the kick. Eye is for structure; ear is for timing.",
+      "Ignoring colour — colour is half the information.",
+    ],
+    proMoves: [
+      "Practice reading 5 unfamiliar tracks' waveforms a day. Predict structure before playing. You'll get to >90% accuracy in two weeks.",
+      "Memorise the waveform shapes of your top 20 tracks. You'll navigate them on the deck without reading the title.",
+      "Use phrase analysis overlays on CDJ-3000 to verify your structural reading — it's a free tutor.",
+    ],
+    quizHard: [
+      { q: "A tall blue rectangle at the end of a waveform means", options: ["The track is clipped", "Sustained sub bass content — often a sub-only outro, great for blending under a high-content intro of the next track", "The file is corrupt", "No high frequencies at all"], answer: 1, explain: "Blue = low frequencies in the rekordbox colour scheme. Tall + sustained = lots of sub. Quiet-looking on meters of an untrained eye but actually loud in the lows.", hint: "Colour code says lows; shape says sustained." },
+      { q: "Phrase analysis on CDJ-3000 helps you", options: ["Detect the key", "See computed song structure (intro/verse/chorus/outro/etc.) as overlay bars on the waveform", "Detect BPM", "Set hot cues automatically"], answer: 1, explain: "It's a structural overlay computed by rekordbox and read by the deck.", hint: "Structure visualisation, not pitch/tempo." },
+      { q: "Why does a brick-wall-mastered modern track look uniformly tall throughout?", options: ["It's brighter", "Limiting/compression in mastering pushes the entire track to the same peak loudness, hiding structural dynamic variation", "It contains more bass", "Older waveform display issue"], answer: 1, explain: "Loud-as-possible mastering removes amplitude variation. The waveform looks flat even when the music has clear structural shifts.", hint: "What does brick-wall limiting do to peaks?" },
+    ],
+    sources: [{ label: "rekordbox 6 Operating Manual", section: "Waveform display & phrase analysis" }],
+  },
 };
