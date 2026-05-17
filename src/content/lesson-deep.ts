@@ -4,12 +4,14 @@
 import type { LessonDeep } from "./types";
 import { FOUNDATIONS_LESSONS } from "./lesson-deep-foundations";
 import { SYNTHS_LESSONS } from "./lesson-deep-synths";
+import { DJ_LESSONS } from "./lesson-deep-dj";
 
 const src = (label: string, section: string) => ({ label, section });
 
 export const LESSONS: Record<string, LessonDeep> = {
   ...FOUNDATIONS_LESSONS,
   ...SYNTHS_LESSONS,
+  ...DJ_LESSONS,
   // ============ WORLD 1 — FIRST CONTACT ============
   "what-is-live": {
     hook: "Live is two DAWs in one window. The view you pick changes how you make music.",
