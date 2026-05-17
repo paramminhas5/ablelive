@@ -19,7 +19,11 @@ import { CommandPalette } from "@/components/CommandPalette";
 import { Onboarding } from "@/components/HomeWidgets";
 
 function ThemeInit() {
-  useEffect(() => { initTheme(); }, []);
+  useEffect(() => {
+    if (typeof document === "undefined") return;
+    const saved = localStorage.getItem("ccd.theme") || DEFAULT_THEME;
+    document.documentElement.setAttribute("data-theme", saved);
+  }, []);
   return null;
 }
 
