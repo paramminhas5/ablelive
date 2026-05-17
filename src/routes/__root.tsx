@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import { initTheme } from "@/lib/theme";
+import { DEFAULT_THEME } from "@/content/themes";
 import {
   Outlet,
   Link,
