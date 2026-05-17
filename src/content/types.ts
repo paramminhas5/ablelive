@@ -1,7 +1,7 @@
 export type WorldSlug =
   | "foundations"
   | "dj"
-  | "synths"
+  | "producer"
   | "first-contact"
   | "two-views"
   | "midi-audio"

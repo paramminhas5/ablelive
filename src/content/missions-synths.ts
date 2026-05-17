@@ -6,7 +6,7 @@ import type { Mission } from "./types";
 const soundPath: Mission[] = [
   {
     slug: "synth-what-is-sound",
-    world: "synths",
+    world: "producer",
     number: 1,
     title: "Sound, Before The Synth",
     tagline: "A synth makes electricity that pretends to be sound.",
@@ -26,7 +26,7 @@ const soundPath: Mission[] = [
   },
   {
     slug: "synth-pitch-vs-amplitude",
-    world: "synths",
+    world: "producer",
     number: 2,
     title: "Pitch vs Amplitude",
     tagline: "Two knobs hidden in every sound.",
@@ -44,7 +44,7 @@ const soundPath: Mission[] = [
   },
   {
     slug: "synth-timbre",
-    world: "synths",
+    world: "producer",
     number: 3,
     title: "Timbre — Tone Colour",
     tagline: "Why a saw at 220 Hz sounds different to a sine at 220 Hz.",
@@ -63,7 +63,7 @@ const soundPath: Mission[] = [
   },
   {
     slug: "synth-harmonics",
-    world: "synths",
+    world: "producer",
     number: 4,
     title: "Harmonics & Overtones",
     tagline: "Every 'rich' sound is many notes pretending to be one.",
@@ -81,7 +81,7 @@ const soundPath: Mission[] = [
   },
   {
     slug: "synth-noise",
-    world: "synths",
+    world: "producer",
     number: 5,
     title: "Noise — The Odd Friend",
     tagline: "All frequencies at once. Useful, surprisingly often.",
@@ -102,7 +102,7 @@ const soundPath: Mission[] = [
 const shapingPath: Mission[] = [
   {
     slug: "synth-oscillators",
-    world: "synths",
+    world: "producer",
     number: 6,
     title: "Oscillators — The Sound Source",
     tagline: "Sine, saw, square, triangle. Pick your raw material.",
@@ -120,7 +120,7 @@ const shapingPath: Mission[] = [
   },
   {
     slug: "synth-mixing-oscillators",
-    world: "synths",
+    world: "producer",
     number: 7,
     title: "Mixing Oscillators",
     tagline: "One voice is good. Two is huge.",
@@ -138,7 +138,7 @@ const shapingPath: Mission[] = [
   },
   {
     slug: "synth-detune-unison",
-    world: "synths",
+    world: "producer",
     number: 8,
     title: "Detune & Unison",
     tagline: "Why supersaws sound enormous.",
@@ -156,7 +156,7 @@ const shapingPath: Mission[] = [
   },
   {
     slug: "synth-filters",
-    world: "synths",
+    world: "producer",
     number: 9,
     title: "Filters — Carving The Sound",
     tagline: "Start bright. Take frequencies away.",
@@ -176,7 +176,7 @@ const shapingPath: Mission[] = [
   },
   {
     slug: "synth-amp-envelope",
-    world: "synths",
+    world: "producer",
     number: 10,
     title: "Amp Envelope — ADSR",
     tagline: "Attack, Decay, Sustain, Release. The shape of a note.",
@@ -194,7 +194,7 @@ const shapingPath: Mission[] = [
   },
   {
     slug: "synth-filter-envelope",
-    world: "synths",
+    world: "producer",
     number: 11,
     title: "Filter Envelope",
     tagline: "Move the cutoff over time. The whole sound transforms.",
@@ -212,7 +212,7 @@ const shapingPath: Mission[] = [
   },
   {
     slug: "synth-amp-vs-filter-env",
-    world: "synths",
+    world: "producer",
     number: 12,
     title: "Two Envelopes, One Voice",
     tagline: "Volume shape and tone shape, working together.",
@@ -233,7 +233,7 @@ const shapingPath: Mission[] = [
 const movementPath: Mission[] = [
   {
     slug: "synth-lfo",
-    world: "synths",
+    world: "producer",
     number: 13,
     title: "LFO — Slow Oscillator",
     tagline: "An oscillator too slow to hear, used to move something.",
@@ -252,7 +252,7 @@ const movementPath: Mission[] = [
   },
   {
     slug: "synth-modulation-routing",
-    world: "synths",
+    world: "producer",
     number: 14,
     title: "Modulation Routing",
     tagline: "Anything can control anything.",
@@ -270,7 +270,7 @@ const movementPath: Mission[] = [
   },
   {
     slug: "synth-fm-basics",
-    world: "synths",
+    world: "producer",
     number: 15,
     title: "FM — Frequency Modulation",
     tagline: "When one oscillator modulates another's pitch fast, magic happens.",
@@ -288,7 +288,7 @@ const movementPath: Mission[] = [
   },
   {
     slug: "synth-effects",
-    world: "synths",
+    world: "producer",
     number: 16,
     title: "Synth Effects — Glue The Voice",
     tagline: "Chorus, delay, reverb. The last 20% of every great patch.",
@@ -306,7 +306,7 @@ const movementPath: Mission[] = [
   },
   {
     slug: "synth-preset-anatomy",
-    world: "synths",
+    world: "producer",
     number: 17,
     title: "Preset Anatomy",
     tagline: "Bass, lead, pad, pluck — what each one needs.",
@@ -324,7 +324,7 @@ const movementPath: Mission[] = [
   },
   {
     slug: "synth-build-your-own",
-    world: "synths",
+    world: "producer",
     number: 18,
     title: "Build Your Own Patch",
     tagline: "Take the test: design a sound from scratch.",

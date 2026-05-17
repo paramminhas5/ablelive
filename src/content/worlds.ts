@@ -18,14 +18,6 @@ export const WORLDS: World[] = [
     description: "From setting up your first rig to reading a crowd at peak hour. 40 missions built from the rekordbox manual.",
   },
   {
-    slug: "synths",
-    number: 10,
-    title: "Synth World",
-    tagline: "Build any sound from oscillators, filters, envelopes and LFOs.",
-    color: "hot",
-    description: "How a synth actually makes noise — and how to bend that noise into bass, leads, pads and plucks. 18 missions across 3 paths.",
-  },
-  {
     slug: "first-contact",
     number: 1,
     title: "First Contact",

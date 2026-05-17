@@ -365,6 +365,38 @@ export const PATHS: LearningPath[] = [
     source: "Ableton Live 12 Reference Manual",
     missionSlugs: ["stem-separation", "midi-transforms", "scale-awareness", "sound-similarity", "comping-flow", "groove-pool", "linked-track-editing", "push3-standalone", "cpu-audio-setup", "accessibility-features"],
   },
+
+  // Chapter 6: Synthesis (learningsynths.ableton.com)
+  {
+    slug: "synth-sound",
+    world: "producer", chapter: "synthesis", number: 1,
+    title: "Sound",
+    tagline: "What sound is — before you touch a synth",
+    description: "Pressure waves, pitch vs amplitude, timbre, harmonics and noise. The physical vocabulary every synth knob ultimately changes.",
+    color: "bg-sun",
+    source: "learningsynths.ableton.com",
+    missionSlugs: ["synth-what-is-sound", "synth-pitch-vs-amplitude", "synth-timbre", "synth-harmonics", "synth-noise"],
+  },
+  {
+    slug: "synth-shaping",
+    world: "producer", chapter: "synthesis", number: 2,
+    title: "Oscillators & Shaping",
+    tagline: "Pick a wave, blend it, filter it, give it an envelope",
+    description: "Sine, saw, square and triangle oscillators. Mixing and detuning two oscillators. Low-pass and high-pass filters. Amp and filter envelopes — the four-stage ADSR that turns a buzz into a pluck, a pad or a bass.",
+    color: "bg-sun",
+    source: "learningsynths.ableton.com",
+    missionSlugs: ["synth-oscillators", "synth-mixing-oscillators", "synth-detune-unison", "synth-filters", "synth-amp-envelope", "synth-filter-envelope", "synth-amp-vs-filter-env"],
+  },
+  {
+    slug: "synth-movement",
+    world: "producer", chapter: "synthesis", number: 3,
+    title: "Movement & Character",
+    tagline: "LFOs, modulation, FM, effects and building your own patch",
+    description: "LFOs for vibrato, wobble and tremolo. Modulation routing. FM basics. Chorus/delay/reverb on synths. Anatomy of bass, lead, pad and pluck presets — then build your own from scratch.",
+    color: "bg-sun",
+    source: "learningsynths.ableton.com",
+    missionSlugs: ["synth-lfo", "synth-modulation-routing", "synth-fm-basics", "synth-effects", "synth-preset-anatomy", "synth-build-your-own"],
+  },
 ];
 
 export function pathBySlug(slug: string) {

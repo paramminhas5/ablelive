@@ -1,84 +1,68 @@
-# Mega-pass — clear writing, real sims, Synths world, all at once
+## What's wrong right now
 
-Goal: one shippable pass that fixes voice, depth, sims, and adds the Synths world. Reuse what we already have; rewrite only what reads like jargon or one-liners.
+The 18 Synths missions exist as data (`missions-synths.ts`) and even have their own sims, but they're invisible in the UI. The site's world pages drive off `CHAPTERS` + `PATHS`, not the legacy `WORLDS` array — and Synths is in neither. So `/world/producer` never lists them and `/worlds` shows the original three.
 
-## Voice rules (every mission we touch)
+## Plan
 
-- **High-school clear.** First time a term appears, give a one-line plain-English definition. No undefined jargon.
-- **One analogy per concept** (bouncing ball, conversation, LEGO…). Stops once the idea lands.
-- **Concrete musical example** — name the genre, the part of the track, the move you'd actually make.
-- **Advanced ≠ jargon.** Advanced means *deeper*, still plain. Engineer notes explain *why* the number matters, not just what it is.
-- Verbatim is fine where it's the clearest phrasing; we rephrase only when it's unclear.
+### 1. Restructure Synths as a Producer chapter (not a standalone world)
 
-## Source material (knowledge we draw from, written in our own voice)
+In `src/content/chapters.ts`, add a 6th Producer chapter:
 
-- **learningmusic.ableton.com** — structure & exercise sequence for Foundations.
-- **learningsynths.ableton.com** — structure & sims for new Synths world.
-- **Ableton Live 12 Reference Manual** — Live worlds.
-- **rekordbox Operation Manual (Pioneer DJ, v6.x)** — DJ world. This is the spine we were missing; every DJ mission gets re-checked against the manual section it covers (Browse, Analysis, Beatgrid, Cues, Loops, Pad FX, Beat FX, Phrasing, Export, etc.).
-- *The Complete Idiot's Guide to Music Theory*, *Making Music* (DeSantis), *Rock The Dancefloor* (Morse) — extra background.
+- `synthesis` · world: `producer` · number: 6 · title "Synthesis" · trophy "Synth Architect" · paths `["synth-sound", "synth-shaping", "synth-movement"]`
+- Bump the Producer world description on `/worlds` + `/world/producer` from "5 chapters" → "6 chapters · 15 paths · 91 missions" (recount after wiring).
 
-## What ships in this pass (all batches in parallel)
+In `src/content/paths.ts`, add 3 new paths under that chapter, splitting the 18 existing synth slugs:
 
-### Batch 1 — Plumbing & fixes
+- `synth-sound` (5): synth-what-is-sound, synth-pitch-vs-amplitude, synth-timbre, synth-harmonics, synth-noise
+- `synth-shaping` (7): synth-oscillators, synth-mixing-oscillators, synth-detune-unison, synth-filters, synth-amp-envelope, synth-filter-envelope, synth-amp-vs-filter-env
+- `synth-movement` (6): synth-lfo, synth-modulation-routing, synth-fm-basics, synth-effects, synth-preset-anatomy, synth-build-your-own
+- `source: "learningsynths.ableton.com"`
 
-- **Hydration fix** on `/mission/$slug` (Standard/Advanced toggle renders different markup server vs client when `hasAdvanced` flips).  The user should be able to toggle between both 
-- Extend `scripts/audit.mjs` with depth thresholds (`beginner.what ≥ 400 chars`, `walkthrough ≥ 5`, `listenFor ≥ 4`, `advanced.what` present, `advanced.edgeCases ≥ 3`, `quizHard ≥ 3`, `analogy` present) and a "reads like jargon" flag (counts undefined terms from a small glossary).
-- Add `synths` to `WorldSlug` in `types.ts`; add Synths to `WORLDS` in `worlds.ts`.
-- Add 3 new `SimType`s: `osc-mixer`, `filter-envelope`, `lfo-lab`.
+Flip each synth mission's `world` from `"synths"` to `"producer"` in `missions-synths.ts` so breadcrumbs and filters behave. Remove Synths from `WORLDS` in `worlds.ts` (legacy list) and from the `WorldSlug` union in `types.ts` to avoid two sources of truth.
 
-### Batch 2 — Foundations advanced rewrite (52 missions)
+### 2. Theme palettes from the CCD reference repo
 
-- Pass over every Foundations mission's `advanced.what` + `engineerNotes`. Anywhere it reads like manual jargon, rewrite into plain English with: definition → one analogy → concrete example → why the number/setting matters → what happens if you push it too far.
-- Keep `beginner` content from last batch where it's already strong; tighten the few that drift abstract.
-- Top up missions flagged by the new audit: pad thin `walkthrough`, add missing `analogy`, fill `quizHard` where empty.
+The reference (`paramminhas5/ccdfinal/src/lib/theme.ts`) uses HSL token sets. Our project uses oklch CSS vars under `[data-theme=...]` in `styles.css`. I'll port the same 14 named presets (default, midnight, sunburn, original, synthwave, brutalist, y2k, matcha, mono, sunset, oceanic, candy, forest, pinkpunk, linework) by converting each preset's surface/ink/accent/hotPink/electricBlue/acidYellow into our `--bone / --ink / --acid / --hot / --volt / --sun` slots.
 
-### Batch 3 — DJ world deep rewrite (40 missions, rekordbox-spined)
+Files:
+- `src/styles.css` — add 14 `[data-theme="..."] { ... }` blocks (oklch conversions of the HSL values above), keep CCD Classic as default.
+- `src/content/themes.ts` — replace the 6 `ThemeDef`s with the 14 new ones, matching ids so `<ThemePicker>` shows the full set.
+- No component changes needed — picker, root attribute and persistence already drive off `THEMES[].id`.
 
-- For each DJ mission, map to the rekordbox manual section it teaches (e.g. *Beatmatching* → manual §"Performing with the Beat Sync" + §"TEMPO slider"; *Hot Cues* → §"Setting a Hot Cue"; *Beat FX* → §"Using BEAT FX"; *Phrase analysis* → §"Phrase").
-- Rewrite both `beginner` and `advanced` to that depth: what the control does, the exact gesture, what to listen for, what breaks if you do it wrong, the pro move on top.
-- Re-point each mission's `sim.type` to the best-fit sim (`beatmatch-trainer`, `hot-cue-drill`, `loop-roll`, `harmonic-mix-wheel`, `beat-builder`, `mixer`, `bpm-tap`).
+### 3. Hydration fix on mission page
 
-### Batch 4 — Synths world (NEW, ~18 missions, 3 paths)
+Already-shipped guard in `src/routes/mission.$slug.tsx` renders both Standard/Advanced toggle states unconditionally with `disabled={!hasAdvanced}`. Verify with a quick render at `/mission/overtones-harmonics` and confirm no React hydration warning in console.
 
-Modeled on learningsynths.ableton.com. Three new sims, ported in our own code from the same interaction patterns (no asset/source lifts):
+### 4. Foundations advanced rewrite (in-place)
 
-- `osc-mixer` — pick 2 oscillator shapes (sine/saw/square/tri/noise), blend, hear & see the sum waveform.
-- `filter-envelope` — ADSR on filter cutoff, animated curve overlay on spectrum.
-- `lfo-lab` — LFO shape + rate + depth + target (pitch / cutoff / amp).
+Sweep `src/content/lesson-deep-foundations.ts`. For every entry where `advanced.what` reads like manual jargon, rewrite in place using: plain-English definition → one analogy → concrete musical example → why the number matters → what breaks if pushed. Beginner content stays where already strong; top up thin `walkthrough` / `analogy` / `quizHard` fields flagged by the audit. No slug or schema changes.
 
-Existing reusable sims: `SubtractiveSynthSim`, `NoteExplorerSim`, `KnobTrainerSim`, `SynthPlaygroundSim`, `EarTrainingSim`.
+### 5. DJ world deep rewrite (rekordbox-spined)
 
-**Paths:**
+For each of the 40 DJ missions in `src/content/missions-dj.ts` and the matching deep lessons, map to the rekordbox 6.0 manual section already referenced in `paths.ts` (Beat Sync, Hot Cues, Beat FX, Phrase, EXPORT mode, etc.). Rewrite both beginner and advanced bodies to that manual section's depth, and re-point each mission's `sim.type` to the best-fit sim from the existing set (`beatmatch-trainer`, `hot-cue-drill`, `loop-roll`, `harmonic-mix-wheel`, `mixer`, `bpm-tap`, `beat-builder`).
 
-1. **Sound** (5) — what a sound wave is, pitch vs amplitude, timbre, harmonics/overtones, noise.
-2. **Oscillators & Shaping** (7) — sine/saw/square/tri, mixing oscillators, detune & unison, sub-osc, filters (LP/HP/BP, cutoff, resonance), amp envelope, filter envelope.
-3. **Movement & Character** (6) — LFOs, modulation routing, FM basics, effects (chorus/delay/reverb), preset anatomy (bass/lead/pad/pluck), build-your-own patch challenge.
+### 6. Sim swaps across the catalog
 
-All 18 missions ship with the full beginner+advanced template from day one.
+Add `scripts/audit-sim-fit.mjs` that prints `(mission, current sim) → (suggested sim)` based on mission slug keywords. Apply the swaps directly:
+- rhythm theory on generic `drum-pad` → `beat-builder`
+- interval/scale on `piano-roll` → `note-explorer`
+- chord missions → `chord-stacker`
+- arrangement missions → `song-structure`
+- synth theory in Foundations Tech path → `subtractive-synth`
 
-### Batch 5 — Sim swaps across the catalog
+### 7. Audit extension + final pass
 
-One script (`scripts/audit-sim-fit.mjs`) prints `(mission, current sim) → (suggested sim)` and we apply the swaps. Targets to fix:
-
-- Rhythm theory missions on generic `drum-pad` → `beat-builder`.
-- Interval/scale missions on `piano-roll` → `note-explorer`.
-- Chord missions → `chord-stacker`.
-- Arrangement missions → `song-structure`.
-- Synth theory missions in Foundations Tech path → `subtractive-synth` (and the new Synths sims where deeper).
-- DJ practice missions → the trainer sims (see Batch 3).
-
-### Batch 6 — Final audit + mobile pass
-
-- Re-run audit, fix remaining red rows.
-- Click one mission per world at 390px viewport (mobile) and at desktop.
-- Confirm hydration error gone on `/mission/overtones-harmonics`.
+Extend `scripts/audit.mjs` with thresholds (`beginner.what ≥ 400`, `walkthrough ≥ 5`, `listenFor ≥ 4`, `advanced.edgeCases ≥ 3`, `quizHard ≥ 3`, `analogy` present) plus a "reads like jargon" check against a small undefined-term glossary. Run it, fix remaining red rows, then click one mission per world at 390px to confirm mobile layout.
 
 ## Files touched
 
-- **New**: `src/content/missions-synths.ts`, `src/content/lesson-deep-synths.ts`, `src/components/sims/OscillatorMixerSim.tsx`, `FilterEnvelopeSim.tsx`, `LFOLabSim.tsx`, `scripts/audit-sim-fit.mjs`.
-- **Edited**: `src/content/worlds.ts`, `src/content/types.ts`, `src/content/missions.ts`, `src/content/lesson-deep.ts`, `src/content/lesson-deep-foundations.ts` (advanced rewrite), `src/content/dj-missions.ts` + `src/content/missions-dj.ts` (rewrite + sim swaps), `src/components/sims/Simulator.tsx` (register 3 sims), `src/routes/mission.$slug.tsx` (hydration fix), `scripts/audit.mjs` (extend).
+- New: `scripts/audit-sim-fit.mjs`
+- Edited: `src/content/chapters.ts`, `src/content/paths.ts`, `src/content/missions-synths.ts` (world → producer), `src/content/worlds.ts` (drop synths), `src/content/types.ts` (drop `synths` from WorldSlug), `src/content/themes.ts` (14 presets), `src/styles.css` (14 `[data-theme]` blocks), `src/content/lesson-deep-foundations.ts` (advanced rewrite), `src/content/missions-dj.ts` + `src/content/dj-missions.ts` (rewrite + sim swaps), `src/content/missions.ts` + `src/content/lesson-deep.ts` (re-aggregations if needed), `scripts/audit.mjs` (extend), `src/routes/world.$slug.tsx` (update Producer description string).
 
-## What I need from you
+## Order of commits
 
-Green light to run all six batches together. It'll be one big diff — I'll group by world in the file list so it's reviewable. Default first commit lands the plumbing (Batch 1) + Synths world (Batch 4) so you can click around immediately while I push the content rewrites (Batches 2, 3, 5) right behind it.
+1. **Plumbing & visibility** — chapters/paths wiring + theme presets + hydration verify. (Synths becomes clickable under Producer; theme switcher shows new options.)
+2. **Content mega-pass** — Foundations advanced rewrite + DJ deep rewrite + sim swaps + audit extension, in one diff grouped by world.
+3. **Final audit + mobile pass.**
+
+Green light and I'll start landing commit 1 right after.
