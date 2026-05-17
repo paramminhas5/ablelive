@@ -76,6 +76,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { q: "What kind of wave is sound, physically?", options: ["Transverse electromagnetic", "Longitudinal pressure", "Standing only", "Quantum"], answer: 1, explain: "Sound is a longitudinal mechanical wave — compressions and rarefactions along the direction of travel.", hint: "Think push/pull along the direction of travel." },
       { q: "Roughly how fast does sound travel in air?", options: ["3 m/s", "34 m/s", "343 m/s", "3,430 m/s"], answer: 2, explain: "About 343 m/s at room temperature — slow enough that you notice delay over ~10 m.", hint: "Slower than light by a factor of about a million." },
       { q: "Inverse-square law: doubling distance from a point source drops SPL by about…", options: ["1 dB", "3 dB", "6 dB", "12 dB"], answer: 2, explain: "~6 dB per doubling of distance in a free field.", hint: "Half the level in dB-power terms." },
+      { q: "A bar in 4/4 contains how many quarter-note beats?", options: ["2", "3", "4", "8"], answer: 2 },
     ],
   },
 
@@ -122,6 +123,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     quizHard: [
       { q: "What does a flat-topped waveform indicate?", options: ["Healthy headroom", "Clipping", "Phase issue", "DC offset"], answer: 1, explain: "Flat tops are samples pinned at full scale — classic visual signature of clipping." },
       { q: "Why edit at zero crossings?", options: ["Faster CPU", "Avoids clicks at edit points", "Better compression", "Louder result"], answer: 1, explain: "If the wave is at zero amplitude on both sides of a cut, there is no instantaneous jump to create a click." },
+      { q: "Swing of 50% means…", options: ["Maximum shuffle", "Perfectly straight timing", "Triplet feel", "Half-time"], answer: 1 },
     ],
   },
 
@@ -172,6 +174,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { q: "Frequency ratio of one octave?", options: ["3:2", "2:1", "5:4", "9:8"], answer: 1 },
       { q: "Approximate wavelength of 100 Hz in air?", options: ["3.4 cm", "34 cm", "3.4 m", "34 m"], answer: 2, explain: "λ = 343/100 ≈ 3.43 m." },
       { q: "Where does human hearing typically peak in sensitivity?", options: ["100 Hz", "500 Hz", "2–5 kHz", "15 kHz"], answer: 2 },
+      { q: "Syncopation primarily accents…", options: ["On-beats", "Off-beats / weak positions", "The downbeat", "Bar one"], answer: 1 },
     ],
   },
 
@@ -223,6 +226,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { q: "Doubling voltage amplitude corresponds to…", options: ["+3 dB", "+6 dB", "+10 dB", "+20 dB"], answer: 1 },
       { q: "Typical streaming loudness target?", options: ["-6 LUFS", "-14 LUFS", "-23 LUFS", "-40 LUFS"], answer: 1 },
       { q: "0 dBFS represents…", options: ["Threshold of hearing", "Digital maximum", "Reference level", "Noise floor"], answer: 1 },
+      { q: "Sidechain compression on a pad creates…", options: ["Constant volume", "Rhythmic ducking", "Pitch shift", "Stereo width"], answer: 1 },
     ],
   },
 
@@ -273,6 +277,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { q: "Timbre is primarily encoded in…", options: ["Pitch", "Amplitude", "Harmonic spectrum + envelope", "Phase only"], answer: 2 },
       { q: "Even-order harmonics tend to sound…", options: ["Warm/musical", "Harsh/aggressive", "Inaudible", "Random"], answer: 0 },
       { q: "Attack transient duration on most instruments is roughly…", options: ["1 ms", "20–80 ms", "500 ms", "2 s"], answer: 1 },
+      { q: "A melody resolving onto scale degree 1 creates…", options: ["Tension", "Resolution / arrival", "Modulation", "Syncopation"], answer: 1 },
     ],
   },
 
@@ -323,6 +328,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { q: "Which waveform contains only odd harmonics with 1/n falloff?", options: ["Sine", "Square", "Triangle", "Saw"], answer: 1 },
       { q: "PWM stands for…", options: ["Pulse Wave Mixer", "Pulse Width Modulation", "Peak Wave Modifier", "Phase Width Master"], answer: 1 },
       { q: "Aliasing in digital oscillators is caused by…", options: ["Too low sample rate for the harmonic content", "Too much filtering", "Stereo imaging", "Phase cancellation"], answer: 0 },
+      { q: "Relative pitch is…", options: ["Naming notes without a reference", "Hearing intervals from a known note", "Reading sheet music", "Tuning by ear"], answer: 1 },
     ],
   },
 
@@ -373,6 +379,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { q: "RT60 measures…", options: ["Reverb decay to -60 dB", "Room temperature", "Round-trip latency", "Reflection at 60°"], answer: 0 },
       { q: "Early reflections fuse with direct sound when they arrive within roughly…", options: ["1 ms", "15 ms", "150 ms", "1500 ms"], answer: 1, explain: "Haas / precedence effect: reflections under ~15 ms fuse with direct sound." },
       { q: "Room modes most affect…", options: ["High frequencies", "Midrange clarity", "Low-frequency response", "Stereo imaging"], answer: 2 },
+      { q: "Dorian mode is built starting on which degree of the major scale?", options: ["1st", "2nd", "5th", "6th"], answer: 1 },
     ],
   },
 
@@ -423,6 +430,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { q: "A square wave contains…", options: ["All integer harmonics", "Only odd harmonics", "Only even harmonics", "No harmonics"], answer: 1 },
       { q: "Inharmonic partials are characteristic of…", options: ["Pure sine waves", "Bells and cymbals", "Sawtooth synths", "Vocals"], answer: 1 },
       { q: "The 3:2 ratio corresponds to which interval?", options: ["Octave", "Perfect fifth", "Major third", "Minor seventh"], answer: 1 },
+      { q: "A diminished triad consists of…", options: ["Root, m3, P5", "Root, M3, P5", "Root, m3, ♭5", "Root, M3, #5"], answer: 2 },
     ],
   },
 
@@ -474,6 +482,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { q: "Human hearing peaks in sensitivity around…", options: ["100 Hz", "500 Hz", "2–5 kHz", "12 kHz"], answer: 2 },
       { q: "Equal-loudness contours flatten as level…", options: ["Decreases", "Increases", "Stays constant", "Goes negative"], answer: 1 },
       { q: "ITD and ILD provide cues for…", options: ["Pitch", "Loudness", "Timbre", "Localisation"], answer: 3 },
+      { q: "Relative minor of C major is…", options: ["A minor", "E minor", "G minor", "F minor"], answer: 0 },
     ],
   },
 
@@ -511,6 +520,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     quizHard: [
       { q: "Which four properties define a sound for mix decisions?", options: ["Tempo, key, length, file size", "Frequency, amplitude, timbre, space", "Reverb, delay, EQ, compression", "Stereo, mono, mid, side"], answer: 1 },
       { q: "The most reliable mix-decision tool is…", options: ["Spectrum analyser alone", "Waveform display alone", "Meters alone", "Eyes + ears together"], answer: 3 },
+      { q: "A deceptive cadence resolves V to…", options: ["I", "vi", "IV", "ii"], answer: 1 },
     ],
   },
 
@@ -562,9 +572,9 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Quantising everything to a hard grid and losing feel.", "Confusing tempo (speed) with rhythm (pattern).", "Building melody before the rhythm sits."],
     proMoves: ["Program drums to a click, then nudge individual hits for feel.", "Steal microtiming from a reference loop with Live's Groove Pool.", "Always check rhythm at half speed — issues become obvious."],
     quizHard: [
-      { q: "Which is NOT a rhythmic concept?", options: ["Tempo", "Meter", "Cadence", "Subdivision",
-      { q: "A bar in 4/4 contains how many quarter-note beats?", options: ["2", "3", "4", "8"], answer: 2 },], answer: 2, explain: "Cadence is a harmonic concept (chord resolution)." },
+      { q: "Which is NOT a rhythmic concept?", options: ["Tempo", "Meter", "Cadence", "Subdivision"], answer: 2, explain: "Cadence is a harmonic concept (chord resolution)." },
       { q: "Backbeat in 4/4 typically lands on beats…", options: ["1 & 3", "2 & 4", "All four", "Off-beats only"], answer: 1 },
+      { q: "Why drop the 3rd of a chord in dense low-frequency mixes?", options: ["To make it major", "To avoid muddy low-mid clash", "To change the key", "To add tension"], answer: 1 },
     ],
   },
 
@@ -610,6 +620,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     quizHard: [
       { q: "PDC stands for…", options: ["Pre-Delay Compensation", "Plugin Delay Compensation", "Phase Drift Control", "Peak Detection Curve"], answer: 1 },
       { q: "Quantising at 80% strength…", options: ["Snaps to grid 80% of the way", "Quantises 80% of notes only", "Adds 80 ms swing", "Disables snap"], answer: 0 },
+      { q: "Purpose of a pre-chorus?", options: ["Repeat the verse", "Build tension into the chorus", "Replace the bridge", "Reduce energy"], answer: 1 },
     ],
   },
 
@@ -660,6 +671,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { q: "Quarter-note delay time at 120 BPM in milliseconds?", options: ["250 ms", "500 ms", "750 ms", "1000 ms"], answer: 1 },
       { q: "Half-time feel typically moves the snare to which beat in 4/4?", options: ["Beat 1", "Beat 2", "Beat 3", "Beat 4"], answer: 2 },
       { q: "Drum & bass tempo range is typically…", options: ["70–90 BPM", "120–130 BPM", "170–180 BPM", "200–220 BPM"], answer: 2 },
+      { q: "Best practice when learning from a reference?", options: ["Listen once casually", "Loop short sections and dissect", "Skip to the drop", "Compare loudness only"], answer: 1 },
     ],
   },
 
@@ -710,6 +722,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { q: "6/8 is which type of meter?", options: ["Simple", "Compound", "Asymmetric", "Free"], answer: 1 },
       { q: "How many quarter-notes are in one bar of 7/4?", options: ["6", "7", "8", "14"], answer: 1 },
       { q: "An anacrusis is…", options: ["Final bar of a phrase", "Pickup notes before bar 1", "Cadence chord", "Half-time section"], answer: 1 },
+      { q: "Why does Live use 32-bit float internally?", options: ["Smaller files", "Effectively unclippable headroom on internal buses", "Better latency", "MIDI accuracy"], answer: 1 },
     ],
   },
 
@@ -757,9 +770,9 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Applying swing to a kick drum that should stay locked.", "Random humanisation instead of intentional pattern.", "Forgetting to apply groove consistently across the kit."],
     proMoves: ["Build a personal groove library from your favourite breaks.", "Use accent rather than timing for jazz-leaning feel.", "Solo drums + bass and tweak groove together — they must agree."],
     quizHard: [
-      { q: "Swing % of 50% means…", options: ["Straight (no swing)", "Triplet feel", "Half-time", "Shuffle",
-      { q: "Swing of 50% means…", options: ["Maximum shuffle", "Perfectly straight timing", "Triplet feel", "Half-time"], answer: 1 },], answer: 0 },
+      { q: "Swing % of 50% means…", options: ["Straight (no swing)", "Triplet feel", "Half-time", "Shuffle"], answer: 0 },
       { q: "Live's Groove Pool extracts which three parameters?", options: ["Pitch, pan, EQ", "Timing, velocity, length", "Tempo, key, swing", "Reverb, delay, chorus"], answer: 1 },
+      { q: "Why does Note On with velocity 0 equal Note Off?", options: ["Bug in spec", "Bandwidth optimisation on serial MIDI", "Required by VSTs", "Bit-depth limit"], answer: 1 },
     ],
   },
 
@@ -807,9 +820,9 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Syncopating without an underlying steady pulse — listener loses orientation.", "Random off-beat hits without a recurring pattern.", "Avoiding syncopation entirely — beats stay 'square'."],
     proMoves: ["Anticipate chord changes by an 8th note for drive.", "Use 3-3-2 across hats while kick stays on the floor.", "Reference clave when stuck — it works in almost any genre."],
     quizHard: [
-      { q: "Syncopation places accents on…", options: ["Strong beats only", "Weak beats / off-beats", "Downbeats", "Bar lines",
-      { q: "Syncopation primarily accents…", options: ["On-beats", "Off-beats / weak positions", "The downbeat", "Bar one"], answer: 1 },], answer: 1 },
+      { q: "Syncopation places accents on…", options: ["Strong beats only", "Weak beats / off-beats", "Downbeats", "Bar lines"], answer: 1 },
       { q: "3-3-2 over 8 eighth-notes is…", options: ["A clave-style syncopation", "Compound triple meter", "Polyrhythm 3:4", "Half-time"], answer: 0 },
+      { q: "Dither is added when…", options: ["Increasing bit depth", "Reducing bit depth", "Changing sample rate", "Compressing audio"], answer: 1 },
     ],
   },
 
@@ -868,6 +881,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { q: "3:2 polyrhythm cycles realign every…", options: ["Every beat", "Every 6 sub-pulses", "Every 12 sub-pulses", "Never"], answer: 1, explain: "LCM(3,2) = 6 sub-pulses." },
       { q: "Polymeter differs from polyrhythm because…", options: ["It uses different bar lengths, not different rhythms in the same bar", "It only uses triplets", "It changes tempo", "It is the same thing"], answer: 0, explain: "Polymeter keeps the sub-pulse shared but lets bars differ in length, so downbeats drift." },
       { q: "What helps a listener separate two polyrhythmic voices?", options: ["Identical timbre and pan", "Pitch, timbre, or stereo separation between voices", "Adding more layers", "Removing the downbeat"], answer: 1, hint: "Bregman's auditory streaming." },
+      { q: "Which warp mode is generally best for full drum loops?", options: ["Beats", "Tones", "Texture", "Re-Pitch"], answer: 0 },
     ],
   },
 
@@ -918,6 +932,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { q: "How many 16th-notes fit in one bar of 4/4?", options: ["4", "8", "16", "32"], answer: 2 },
       { q: "A dotted quarter equals…", options: ["0.5 beats", "1 beat", "1.5 beats", "2 beats"], answer: 2 },
       { q: "A triplet divides a beat into…", options: ["2", "3", "4", "6"], answer: 1 },
+      { q: "Why does plugin order matter?", options: ["It doesn't — they're commutative", "Each device transforms the signal before the next sees it", "Only for MIDI plugins", "Only at master bus"], answer: 1 },
     ],
   },
 
@@ -965,9 +980,9 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Starting with melody before rhythm is locked.", "Layering too many same-value parts.", "Forgetting to vary rhythm between sections."],
     proMoves: ["Strip a finished beat back to kick + bass — if it still grooves, you nailed it.", "Use silence as rhythm — drop everything for one bar before a chorus.", "Reference target tracks at the rhythm-only stage."],
     quizHard: [
-      { q: "Sidechain compression typically adds…", options: ["Harmonic content", "Rhythmic pumping", "Stereo width", "Transient shaping",
-      { q: "Sidechain compression on a pad creates…", options: ["Constant volume", "Rhythmic ducking", "Pitch shift", "Stereo width"], answer: 1 },], answer: 1 },
+      { q: "Sidechain compression typically adds…", options: ["Harmonic content", "Rhythmic pumping", "Stereo width", "Transient shaping"], answer: 1 },
       { q: "Layering complementary rhythm typically uses…", options: ["The same note value for all parts", "Different note values per voice", "All triplets", "All 32nds"], answer: 1 },
+      { q: "Why use a send for reverb instead of an insert?", options: ["Lower CPU and consistent space across multiple tracks", "Higher fidelity always", "Required by the DAW", "Reverb only works on sends"], answer: 0 },
     ],
   },
 
@@ -1007,6 +1022,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     quizHard: [
       { q: "Best test of a rhythm-only loop?", options: ["Spectrum analyser readout", "Head-nod factor on small speakers", "LUFS measurement", "Bar count"], answer: 1 },
       { q: "Groove templates should typically be applied…", options: ["After all programming is done", "Before any programming", "Never", "Only to kicks"], answer: 0 },
+      { q: "Best comparison method when referencing?", options: ["Match peaks", "Match LUFS loudness", "Match RMS only", "By eye"], answer: 1 },
     ],
   },
 
@@ -1069,6 +1085,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
       { q: "Frequency ratio of one octave?", options: ["3:2", "2:1", "5:4", "4:3"], answer: 1 },
       { q: "How many semitones in an octave?", options: ["7", "8", "12", "13"], answer: 2 },
       { q: "Frequency of MIDI note 69?", options: ["220 Hz", "440 Hz", "880 Hz", "1760 Hz"], answer: 1, explain: "MIDI 69 = A4 = 440 Hz, the global tuning reference." },
+      { q: "Highest-leverage early-career investment?", options: ["More plugins", "Templates + shortcut fluency", "Newer interface", "Studio monitors upgrade"], answer: 1 },
     ],
   },
 
@@ -1402,8 +1419,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Writing melodies on the keyboard before checking if they're singable.", "All stepwise motion — sounds like a scale exercise.", "Too-wide range — listeners can't follow."],
     proMoves: ["Steal rhythm from spoken phrases for melodies.", "Constrain melody to 5 notes (pentatonic) when stuck.", "Test melody by humming it 6 hours later — if it sticks, it's strong."],
     quizHard: [
-      { q: "Most singable pop melodies span at most…", options: ["3 semitones", "9 semitones", "2 octaves", "3 octaves",
-      { q: "A melody resolving onto scale degree 1 creates…", options: ["Tension", "Resolution / arrival", "Modulation", "Syncopation"], answer: 1 },], answer: 1 },
+      { q: "Most singable pop melodies span at most…", options: ["3 semitones", "9 semitones", "2 octaves", "3 octaves"], answer: 1 },
       { q: "Phrase 'rule of 3' typically follows…", options: ["State, restate, depart", "Verse, chorus, bridge", "Tonic, dominant, tonic", "1, 4, 5"], answer: 0 },
     ],
   },
@@ -1446,8 +1462,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Practising once a week — daily 5 minutes beats weekly 1 hour.", "Only using one app/timbre — generalise across sources.", "Skipping singing — passive listening doesn't lock in pitches."],
     proMoves: ["Transcribe one chorus per week — fastest way to grow.", "Sing before you play during composition.", "Train in your project key all month — your ear becomes hyper-tuned to that key."],
     quizHard: [
-      { q: "Relative pitch is the ability to…", options: ["Name any note in absolute frequency", "Identify intervals and scale degrees relative to a reference", "Play in any key", "Tune by ear",
-      { q: "Relative pitch is…", options: ["Naming notes without a reference", "Hearing intervals from a known note", "Reading sheet music", "Tuning by ear"], answer: 1 },], answer: 1 },
+      { q: "Relative pitch is the ability to…", options: ["Name any note in absolute frequency", "Identify intervals and scale degrees relative to a reference", "Play in any key", "Tune by ear"], answer: 1 },
       { q: "Best daily ear-training duration?", options: ["1 hour weekly", "5 min daily", "30 min monthly", "None — passive listening is enough"], answer: 1 },
     ],
   },
@@ -1496,8 +1511,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Transposing only the melody but leaving chords in the original key.", "Modal progressions accidentally pulling back to major V-I.", "Modulating without setting it up — sounds random."],
     proMoves: ["Transpose to test different keys before committing.", "Modal mixture inside one section for colour.", "Pivot chords for smooth modulation."],
     quizHard: [
-      { q: "D Dorian uses the notes of which major scale?", options: ["C major", "D major", "G major", "A major",
-      { q: "Dorian mode is built starting on which degree of the major scale?", options: ["1st", "2nd", "5th", "6th"], answer: 1 },], answer: 0 },
+      { q: "D Dorian uses the notes of which major scale?", options: ["C major", "D major", "G major", "A major"], answer: 0 },
       { q: "Modulation up one semitone in a final chorus is called…", options: ["Pivot modulation", "Chromatic / 'truck driver' modulation", "Enharmonic modulation", "Modal mixture"], answer: 1 },
     ],
   },
@@ -1665,8 +1679,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Using only major and minor — palette stays narrow.", "Overusing 7ths in punchy pop contexts.", "Forgetting that dim/aug chords need resolution."],
     proMoves: ["Substitute a vi7 for a I to add R&B colour without changing the progression.", "Use sus4 → maj as a delayed resolution for impact.", "Try a tritone substitution (replace V with bII7) for jazz spice."],
     quizHard: [
-      { q: "Which chord quality typically demands resolution?", options: ["Major triad", "Suspended", "Dominant 7", "Major 7",
-      { q: "A diminished triad consists of…", options: ["Root, m3, P5", "Root, M3, P5", "Root, m3, ♭5", "Root, M3, #5"], answer: 2 },], answer: 2 },
+      { q: "Which chord quality typically demands resolution?", options: ["Major triad", "Suspended", "Dominant 7", "Major 7"], answer: 2 },
       { q: "An augmented triad divides the octave into…", options: ["Two equal halves", "Three equal thirds", "Four equal fourths", "Six equal sixths"], answer: 1 },
     ],
   },
@@ -1745,8 +1758,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Confusing relative and parallel keys.", "Treating modulations as 'just transposition' — modulation creates new perceived home.", "Mixing keys across DJ sets without harmonic matching."],
     proMoves: ["Tag your sample library with keys for fast harmonic combinations.", "Pick session keys based on vocalist range, not random preference.", "Use Camelot wheel for compatible DJ transitions."],
     quizHard: [
-      { q: "Key signature of D major?", options: ["1 sharp (F#)", "2 sharps (F#, C#)", "3 sharps (F#, C#, G#)", "1 flat (Bb)",
-      { q: "Relative minor of C major is…", options: ["A minor", "E minor", "G minor", "F minor"], answer: 0 },], answer: 1 },
+      { q: "Key signature of D major?", options: ["1 sharp (F#)", "2 sharps (F#, C#)", "3 sharps (F#, C#, G#)", "1 flat (Bb)"], answer: 1 },
       { q: "Parallel minor of C major is…", options: ["A minor", "C minor", "F minor", "G minor"], answer: 1 },
     ],
   },
@@ -1786,8 +1798,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Resolving too quickly — listener doesn't feel the release.", "Building tension without delivering — frustrating.", "Stacking only tension or only resolution — no contrast."],
     proMoves: ["Combine harmonic + rhythmic + arrangement tension for big payoffs.", "Delay resolution by 1 bar for extra anticipation.", "Use silence as the ultimate tension."],
     quizHard: [
-      { q: "Strongest harmonic resolution is…", options: ["IV → I", "V → I", "ii → I", "vi → I",
-      { q: "A deceptive cadence resolves V to…", options: ["I", "vi", "IV", "ii"], answer: 1 },], answer: 1 },
+      { q: "Strongest harmonic resolution is…", options: ["IV → I", "V → I", "ii → I", "vi → I"], answer: 1 },
       { q: "A 'leading tone' is which scale degree?", options: ["b3", "5", "b7", "7"], answer: 3 },
     ],
   },
@@ -1826,8 +1837,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["All harmony in one synth — flat and CPU-light but boring.", "Layers competing in the same frequency range.", "Ignoring voice leading across the ensemble."],
     proMoves: ["Use one synth for bass, one for chords, one for pad, one for stab — separate tracks, separate decisions.", "Vary chord rhythm across sections (whole notes in verse, 8ths in chorus).", "Pan stabs slightly off-centre to widen the soundstage."],
     quizHard: [
-      { q: "Typical harmonic layer order from bottom to top?", options: ["Sub, bass, pad, stab, melody", "Melody, stab, pad, bass, sub", "Pad, sub, melody, bass, stab", "Random",
-      { q: "Why drop the 3rd of a chord in dense low-frequency mixes?", options: ["To make it major", "To avoid muddy low-mid clash", "To change the key", "To add tension"], answer: 1 },], answer: 0 },
+      { q: "Typical harmonic layer order from bottom to top?", options: ["Sub, bass, pad, stab, melody", "Melody, stab, pad, bass, sub", "Pad, sub, melody, bass, stab", "Random"], answer: 0 },
       { q: "Sidechaining a pad to the kick adds…", options: ["Harmonic content", "Rhythmic pumping", "Stereo width", "Compression"], answer: 1 },
     ],
   },
@@ -1900,8 +1910,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["No clear section boundaries — song feels like a wandering loop.", "Every section the same density.", "Forgetting the outro — songs stop abruptly."],
     proMoves: ["Build skeleton arrangement before any sound design.", "Use one signature element per section (chord change, vocal chop, filter reveal).", "Always include a contrast moment in the bridge."],
     quizHard: [
-      { q: "Typical EDM drop length?", options: ["4 bars", "16 bars", "32 bars", "64 bars",
-      { q: "Purpose of a pre-chorus?", options: ["Repeat the verse", "Build tension into the chorus", "Replace the bridge", "Reduce energy"], answer: 1 },], answer: 2 },
+      { q: "Typical EDM drop length?", options: ["4 bars", "16 bars", "32 bars", "64 bars"], answer: 2 },
       { q: "First 15 seconds of a streaming song should…", options: ["Build slowly", "Deliver a hook immediately", "Be silent", "Be a long intro"], answer: 1 },
     ],
   },
@@ -1940,8 +1949,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Listening passively and absorbing nothing.", "No notes — observations evaporate.", "Listening only on one system."],
     proMoves: ["Active-listen one new song per day for a month — measurable taste improvement.", "Reverse-engineer mix decisions you like.", "Build a Notion or text file with 'cool moves I want to steal'."],
     quizHard: [
-      { q: "Most useful active-listening practice?", options: ["Listen to many songs once each", "Listen to one song 5 times, each focused on a different element", "Listen only on monitors", "Listen only at high volume",
-      { q: "Best practice when learning from a reference?", options: ["Listen once casually", "Loop short sections and dissect", "Skip to the drop", "Compare loudness only"], answer: 1 },], answer: 1 },
+      { q: "Most useful active-listening practice?", options: ["Listen to many songs once each", "Listen to one song 5 times, each focused on a different element", "Listen only on monitors", "Listen only at high volume"], answer: 1 },
       { q: "Why compare systems?", options: ["Saves CPU", "Different systems reveal different mix details", "Required by law", "It doesn't matter"], answer: 1 },
     ],
   },
@@ -2012,8 +2020,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Switching DAWs every month instead of learning one deeply.", "Not saving a template.", "Ignoring keyboard shortcuts — slow workflow."],
     proMoves: ["Memorise top 20 shortcuts.", "Set up a default template with routing pre-built.", "Use one DAW for at least a year before considering alternatives."],
     quizHard: [
-      { q: "Plugin Delay Compensation (PDC) does what?", options: ["Adds reverb", "Aligns tracks despite plugin latency", "Boosts CPU", "Compresses MIDI",
-      { q: "Why does Live use 32-bit float internally?", options: ["Smaller files", "Effectively unclippable headroom on internal buses", "Better latency", "MIDI accuracy"], answer: 1 },], answer: 1 },
+      { q: "Plugin Delay Compensation (PDC) does what?", options: ["Adds reverb", "Aligns tracks despite plugin latency", "Boosts CPU", "Compresses MIDI"], answer: 1 },
       { q: "Live's two main views are…", options: ["Browser and Mixer", "Session and Arrangement", "MIDI and Audio", "Stereo and Mono"], answer: 1 },
     ],
   },
@@ -2090,8 +2097,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Quantising velocity along with timing.", "Recording MIDI and bouncing too early — loses editability.", "Not freezing CPU-heavy synths for performance."],
     proMoves: ["Keep MIDI tracks editable until final mix.", "Use velocity to drive filter/timbre, not just volume.", "Capture MIDI as your safety net for happy accidents."],
     quizHard: [
-      { q: "MIDI velocity range?", options: ["0-100", "0-127", "0-255", "0-1000",
-      { q: "Why does Note On with velocity 0 equal Note Off?", options: ["Bug in spec", "Bandwidth optimisation on serial MIDI", "Required by VSTs", "Bit-depth limit"], answer: 1 },], answer: 1 },
+      { q: "MIDI velocity range?", options: ["0-100", "0-127", "0-255", "0-1000"], answer: 1 },
       { q: "MIDI carries…", options: ["Audio signal", "Performance instructions", "Both equally", "Only volume"], answer: 1 },
     ],
   },
@@ -2130,8 +2136,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Mixing sample rates within a project.", "Using 16-bit for tracking.", "Believing higher sample rates always sound better."],
     proMoves: ["Record 24-bit minimum.", "Dither when reducing bit depth at the end.", "Match project SR to your delivery format."],
     quizHard: [
-      { q: "Nyquist frequency at 48 kHz sample rate?", options: ["12 kHz", "24 kHz", "48 kHz", "96 kHz",
-      { q: "Dither is added when…", options: ["Increasing bit depth", "Reducing bit depth", "Changing sample rate", "Compressing audio"], answer: 1 },], answer: 1 },
+      { q: "Nyquist frequency at 48 kHz sample rate?", options: ["12 kHz", "24 kHz", "48 kHz", "96 kHz"], answer: 1 },
       { q: "16-bit dynamic range is approximately…", options: ["48 dB", "96 dB", "144 dB", "192 dB"], answer: 1 },
     ],
   },
@@ -2170,8 +2175,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Using samples at wrong tempo without warping.", "Layering identical samples (no benefit).", "Ignoring sample organisation — wastes hours searching."],
     proMoves: ["Build a personal go-to sample library you know intimately.", "Layer click + body + tail for composite percussion.", "Reverse samples for transitional FX."],
     quizHard: [
-      { q: "Warping a sample changes…", options: ["Tempo without pitch", "Pitch without tempo", "Both equally", "Neither",
-      { q: "Which warp mode is generally best for full drum loops?", options: ["Beats", "Tones", "Texture", "Re-Pitch"], answer: 0 },], answer: 0 },
+      { q: "Warping a sample changes…", options: ["Tempo without pitch", "Pitch without tempo", "Both equally", "Neither"], answer: 0 },
       { q: "Splice samples are typically licensed as…", options: ["Pay-per-use", "Royalty-free", "Copyrighted", "Public domain"], answer: 1 },
     ],
   },
@@ -2210,8 +2214,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Random plugin order without thinking.", "Reverb before comp causing unwanted pumping.", "EQing to fix problems that ordering would solve."],
     proMoves: ["Establish a default insert order template.", "Use racks to experiment with parallel processing.", "Bypass each plugin to verify its contribution."],
     quizHard: [
-      { q: "Reverb placed BEFORE a compressor will…", options: ["Have no effect on compression", "Cause the compressor to pump on reverb tails", "Boost the dry signal", "Cancel the comp",
-      { q: "Why does plugin order matter?", options: ["It doesn't — they're commutative", "Each device transforms the signal before the next sees it", "Only for MIDI plugins", "Only at master bus"], answer: 1 },], answer: 1 },
+      { q: "Reverb placed BEFORE a compressor will…", options: ["Have no effect on compression", "Cause the compressor to pump on reverb tails", "Boost the dry signal", "Cancel the comp"], answer: 1 },
       { q: "Standard plugin order (rough)?", options: ["Reverb → EQ → Comp", "EQ → Comp → Saturation → Reverb", "Comp → Reverb → EQ", "Saturation → Reverb → EQ → Comp"], answer: 1 },
     ],
   },
@@ -2251,8 +2254,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Reaching for the wrong family (EQ when compression is needed).", "Plugin maximalism — fewer is usually better.", "Skipping the A/B bypass check."],
     proMoves: ["Master one EQ and one compressor before adding more tools.", "Use stock plugins until you hit specific limits.", "A/B every plugin — if you can't tell, it's not helping."],
     quizHard: [
-      { q: "Convolution reverb uses…", options: ["Algorithmic models", "Impulse responses of real spaces", "Tape simulation", "MIDI",
-      { q: "Why use a send for reverb instead of an insert?", options: ["Lower CPU and consistent space across multiple tracks", "Higher fidelity always", "Required by the DAW", "Reverb only works on sends"], answer: 0 },], answer: 1 },
+      { q: "Convolution reverb uses…", options: ["Algorithmic models", "Impulse responses of real spaces", "Tape simulation", "MIDI"], answer: 1 },
       { q: "Which family fixes dynamic range issues?", options: ["EQ", "Compression", "Reverb", "Modulation"], answer: 1 },
     ],
   },
@@ -2292,8 +2294,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Reaching for EQ before balancing with faders.", "Compressing everything before EQing.", "Not checking on multiple systems."],
     proMoves: ["Reference at matched LUFS, not matched peak.", "Mono-check every session.", "Take breaks; mix tired ears = bad decisions."],
     quizHard: [
-      { q: "Best mixing reference comparison method?", options: ["Match peak meters", "Match LUFS loudness", "Match RMS only", "Compare visually",
-      { q: "Best comparison method when referencing?", options: ["Match peaks", "Match LUFS loudness", "Match RMS only", "By eye"], answer: 1 },], answer: 1 },
+      { q: "Best mixing reference comparison method?", options: ["Match peak meters", "Match LUFS loudness", "Match RMS only", "Compare visually"], answer: 1 },
       { q: "Subtractive EQ typically comes…", options: ["After compression", "Before compression", "After reverb", "Last"], answer: 1 },
     ],
   },
@@ -2333,8 +2334,7 @@ export const FOUNDATIONS_LESSONS: Record<string, LessonDeep> = {
     mistakes: ["Tweaking setup more than making music.", "Skipping templates and starting from blank every time.", "Ignoring backup until the disaster happens."],
     proMoves: ["Build genre-specific templates.", "Map a 'panic' shortcut for instant CPU freeze.", "Backup automatically — never manually."],
     quizHard: [
-      { q: "Best time investment in early production?", options: ["Buying more plugins", "Building templates and learning shortcuts", "Tweaking monitor placement weekly", "Reading forum threads",
-      { q: "Highest-leverage early-career investment?", options: ["More plugins", "Templates + shortcut fluency", "Newer interface", "Studio monitors upgrade"], answer: 1 },], answer: 1 },
+      { q: "Best time investment in early production?", options: ["Buying more plugins", "Building templates and learning shortcuts", "Tweaking monitor placement weekly", "Reading forum threads"], answer: 1 },
       { q: "Most important hardware piece?", options: ["Most expensive synth", "Audio interface", "Most expensive plugin", "RGB lighting"], answer: 1 },
     ],
   },
