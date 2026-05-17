@@ -39,6 +39,17 @@ export type SimType =
   | "synth-playground"
   | "buffer-sim"
   | "tempo-compare"
+  | "beat-builder"
+  | "note-explorer"
+  | "chord-stacker"
+  | "bassline-lab"
+  | "melody-shaper"
+  | "song-structure"
+  | "subtractive-synth"
+  | "beatmatch-trainer"
+  | "hot-cue-drill"
+  | "loop-roll"
+  | "harmonic-mix-wheel"
   | "none";
 
 export type QuizQ = {
