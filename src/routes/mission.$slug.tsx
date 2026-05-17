@@ -170,17 +170,19 @@ function MissionPage() {
           <div className="space-y-2">
             {whatParas.map((para, i) => (
               <p key={i} className="font-mono text-sm md:text-base leading-relaxed">
-                {para}
+                <Glossarized text={para} />
               </p>
             ))}
           </div>
         ) : fallbackWhat && "text" in fallbackWhat ? (
-          <p className="font-mono text-sm md:text-base leading-relaxed">{fallbackWhat.text}</p>
+          <p className="font-mono text-sm md:text-base leading-relaxed">
+            <Glossarized text={fallbackWhat.text} />
+          </p>
         ) : null}
         {!advanced && deep?.beginner?.analogy && (
           <div className="mt-3 brutal-border bg-acid p-3 font-mono text-sm">
             <span className="font-bold uppercase text-xs">Think of it like →</span>{" "}
-            {deep.beginner.analogy}
+            <Glossarized text={deep.beginner.analogy} />
           </div>
         )}
         {!advanced && deep?.beginner?.why && (
@@ -188,7 +190,7 @@ function MissionPage() {
             <div className="font-mono text-xs uppercase font-bold mb-1">▸ WHY YOU CARE</div>
             <ul className="space-y-1 font-mono text-sm">
               {deep.beginner.why.map((item, i) => (
-                <li key={i}>• {item}</li>
+                <li key={i}>• <Glossarized text={item} /></li>
               ))}
             </ul>
           </div>
