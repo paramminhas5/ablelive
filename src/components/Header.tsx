@@ -210,9 +210,7 @@ export function Header() {
 
         {/* Desktop right cluster */}
         <div className="hidden md:flex items-center gap-1.5 px-3">
-          {/* Theme picker */}
-          <ThemePicker />
-
+          {/* Theme picker (single switcher — was previously duplicated) */}
           {/* Search */}
           <button
             onClick={openSearch}
