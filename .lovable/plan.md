@@ -1,89 +1,122 @@
-## 1. Routing perf (priority fix)
+# Mission Overhaul Plan
 
-**Symptom:** clicks show same page, then redirect a beat later.
+Scope: ~125 missions across 10 worlds (Foundations 40, DJ 40, plus Live worlds W1–W8). All four problems get fixed in one pass, but lesson-deepening rolls out in tiered batches so it actually ships.
 
-Causes I'll address:
+---
 
-- `defaultPreloadStaleTime: 0` + no `defaultPreload` → every nav refetches loaders cold. Set `defaultPreload: "intent"` and bump stale time to ~30s.
-- `mission.$slug.tsx` / `beginner.$slug.tsx` likely run heavy work in component body on every nav. Wrap derivations in `useMemo`, key sims/quiz by slug (already done) but ensure parent doesn't re-mount the layout.
-- Header re-renders on every route change due to `useMode` + `useProgress` zustand selectors pulling whole state — switch to narrow selectors.
-- Verify no `<Navigate>` redirect chains in route loaders (the "shows same page then redirects" symptom). Audit `index.tsx`, `learn.tsx`, `paths.tsx` for redirect-on-mount patterns and replace with proper `redirect()` in `beforeLoad`.
+## 1. Per-world numbering (every world starts at 1)
 
-## 2. Breadcrumb fix on Foundations
+Today `Mission.number` is a single global counter (1…125). Confusing, especially when a world is filtered.
 
-`beginner.$slug.tsx` line 79 breadcrumb uses `<Link to="/beginner">` — verify `/beginner` route still exists & renders. Add a real Breadcrumb component (shadcn one is already in `src/components/ui/breadcrumb.tsx`) and reuse on mission/device/dj pages so it's consistent and clickable.
+- Treat `number` as **the position inside its own world**. Foundations 1–40, DJ 1–40, First Contact 1–N, Two Views 1–N, etc.
+- Recompute by grouping `MISSIONS` by `world` (in the order each world lists them today) and assigning 1..N. One small script under `scripts/renumber-missions.mjs` writes the new values back to `missions.ts`, `missions-foundations.ts`, `missions-dj.ts`.
+- Update everywhere that renders the number:
+  - `mission.$slug.tsx` header (`Mission {00X}`)
+  - `JourneyMap.tsx` stop labels (already per-world rail, just shows new `m.number`)
+  - `CompletionModal`, `HomeWidgets`, `SkillMap`, breadcrumbs
+- Add a `globalIndex` helper in `missions.ts` for any place that genuinely needs a unique ordinal (prev/next still works on array order, not number).
+- `nextMission` / `prevMission` switch to "next inside same world, else first of next world" so the per-world numbers feel right when you click through.
 
-## 3. Homepage rebuild
+## 2. Drop the per-mission "References — Ableton Live 12 Reference Manual" block
 
-Replace `src/routes/index.tsx` (currently just shows Foundations + DJ rails) with a proper marketing landing:
+- Delete the rendering block in `mission.$slug.tsx` (the `deep?.sources` section).
+- Leave the `sources` field on `LessonDeep` for now (data is harmless) but stop writing new ones. Add one global "Built from the Ableton Live 12 manual & learningmusic.ableton.com" line in the site footer instead.
 
-```text
-[ Hero ]          big mark, tagline, primary CTA → /learn, secondary → /login
-[ How it works ]  3 steps: Pick a path · Do missions · Build muscle
-[ Choose your    grid of all worlds (Foundations, DJ, Two Views, MIDI,
-  world ]         Devices, Mixing, Performance, MIDI Inst, Live 12)
-[ Paths & chapters ] horizontal rail of curated paths w/ chapter counts
-[ FAQ ]          6-8 Qs in accordion
-[ Get started ]  big CTA band
+## 3. Deepen every explanation (the big one)
+
+Today most `beginner.what` / `advanced.what` are one or two sentences. Target depth per mission:
+
+- **Hook** — one punchy line (already exists, keep).
+- **What it is** — 3–5 paragraphs, plain English, with a concrete musical example.
+- **Why you care** — 4–6 bullets tied to real production/DJ moves.
+- **How it works (mechanism)** — 2–3 paragraphs on the underlying signal/data flow, plus the existing `flow` arrow diagram.
+- **Walkthrough** — 5–8 do/listen steps (today many are 2–3).
+- **Listen for** — 5+ items.
+- **Common mistakes** — 4+.
+- **Pro moves** — 4+.
+- **Advanced track** (`advanced.what` + `edgeCases` + `engineerNotes`) — required for every mission, not optional. Edge cases ≥4, engineer notes ≥4.
+- **Quiz** — keep 3 questions for beginner, add 3 harder ones in `quizHard` for advanced mode. Every Q gets `explain` + `hint`.
+
+Content sourcing rule (per your earlier choice): mirror the structure and exercise sequence of learningmusic.ableton.com and the rekordbox manual, but write the copy ourselves with improvements — no verbatim paste. Cite nothing inline.
+
+### Rollout batches (so this actually ships)
+
+Because deepening 125 missions in one shot is too big to land cleanly:
+
+- **Batch A — Foundations (40)**: full rewrite of `beginner-foundations.ts` + matching `LESSONS[slug]` entries in `lesson-deep.ts`. Modeled on learningmusic.ableton.com chapters (Beat, Notes & Scales, Chords, Basslines, Melodies, Song Structure, Synthesis, Sampling).
+- **Batch B — DJ World (40)**: full rewrite of `dj-missions.ts` deep entries. Modeled on rekordbox manual + Pioneer/DJ school sequence (gear, beatmatching, EQ mixing, phrasing, FX, hot cues, harmonic mixing, sets).
+- **Batch C — Live worlds W1–W4 (~30)**: First Contact, Two Views, MIDI & Audio, Devices.
+- **Batch D — Live worlds W5–W8 (~25)**: Mixing, Performance, MIDI & Instruments, Live 12 Power.
+
+Each batch lands in its own commit-shaped edit so the build stays green and you can review per-world. You can copy paras verbatim if you need to cie somethin or where necessarry
+
+## 4. Better sims — copy what learningmusic.ableton.com does and reuse what we already built
+
+Important: "copy them directly" — I'll **rebuild the same interactions** in our own code and copy the code directly wherever its easier and more accurate. (drum sequencer grid, scale picker, chord stacker, bassline pattern, warp marker drag, etc.). We won't lift their source or assets.
+
+### Audit current sims (already built, just under-used)
+
+```
+drum-pad, piano-roll, mixer, device-chain, warp-lab, knob-trainer,
+session-grid, arrangement, routing-puzzle, midi-map, ear-training,
+interface-tour, browser-tour, midi-vs-audio, device-lab, sidechain,
+send-return, comp-lake, midi-transform, scale-aware, stem-splitter,
+groove-extractor, push3, bpm-tap, granular, synth-playground,
+buffer-sim, tempo-compare
 ```
 
-When `progress.xp > 0` OR user is authed → redirect home content to a **Dashboard** layout (Continue learning, streak, XP, recent missions, daily challenge, review queue) — essentially today's `/profile` widgets surfaced as the logged-in home. Use `beforeLoad` for the auth-aware redirect, not client-side.
+### New sims to add (matches learningmusic.ableton chapters)
 
-## 4. CCD visual language (full adopt)
+- `beat-builder` — 4×16 step grid for kick/snare/hat with swing slider. (Replaces generic `drum-pad` on Foundations beat lessons.)
+- `note-explorer` — keyboard with scale overlay, click to hear, shows interval names.
+- `chord-stacker` — root + quality picker, builds triad/7th/9th, shows on staff + keyboard.
+- `bassline-lab` — root-note pattern grid synced to a drum loop, octave + rhythm toggles.
+- `melody-shaper` — contour drawing → MIDI line.
+- `song-structure` — drag intro/verse/chorus/drop blocks on a timeline ruler.
+- `subtractive-synth` — osc → filter → amp env with live spectrum (extend `synth-playground`).
+- `beatmatch-trainer` — two decks, pitch fader, tempo offset; pass when phase locked >8 bars.
+- `hot-cue-drill` — load loop, set 4 cues, timed recall test.
+- `loop-roll` — beat/2 → 1/32 loop divider against a track.
+- `harmonic-mix-wheel` — Camelot wheel, pick compatible next key.
 
-Pull from `github.com/paramminhas5/ccdfinal`:
+### Mapping pass
 
-- Typography stack (display + mono + body).
-- Spacing/border/shadow tokens.
-- Motion timing (page transitions, hover lifts).
-- 4-6 palettes registered as data-theme attributes on `<html>`.
+One script (`scripts/audit-sim-fit.mjs`) prints `(mission, current sim) → (suggested sim)` so we can re-point every mission's `sim.type` to the most pedagogically relevant one. Replace generic reuses (e.g. `drum-pad` showing up on rhythm theory missions where `beat-builder` is the right tool).
 
-Implementation:
+## 5. Advanced mode everywhere
 
-- Add palettes to `src/styles.css` via `[data-theme="..."]` blocks of oklch tokens.
-- Build `ThemePicker` (header dropdown) writing to localStorage + `<html data-theme>`.
-- Refactor existing brutal-* utility usage to read from new tokens so the switch actually re-skins everything.
-- Restyle header, cards, buttons, mission tiles, journey map to match CCD's rhythm — keep brutalist edge but lift typographic hierarchy, breathing room, and motion polish.
+- Render the Standard/Advanced toggle in `mission.$slug.tsx` for **every** mission (no `hasAdvanced` gate after Batches A–D complete). Until each batch lands, the toggle keeps its current conditional behaviour for un-deepened missions, so we never show an empty Advanced tab.
+- Advanced mode also swaps the quiz to `quizHard` and unlocks the full `listenFor` list, all `edgeCases`, all `engineerNotes`, `proMoves`.
 
-## 5. Replace emoji labels with custom glyphs
+## 6. Verification
 
-- Create `src/components/glyphs/` — one tiny inline SVG per world & chapter (geometric monoline marks, 24×24, currentColor).
-- Map `worldSlug → Glyph` and `chapterSlug → Glyph`.
-- Remove emoji from `worlds.ts`, `beginner-foundations.ts`, `dj-missions.ts`, `paths.ts` headers; replace with `<Glyph name="..." />`.
-- Mission numerals stay typographic.
+- `scripts/audit.mjs` extended to check, per mission:
+  - `number` resets to 1 inside each world and is contiguous.
+  - `LESSONS[slug]` exists with `beginner.what.length ≥ 3` paragraphs, `advanced.what.length ≥ 2`, `walkthrough.length ≥ 5`, `quizHard.length ≥ 3`.
+  - `sim.type` is in the allowed list and not the "generic fallback" for theory missions.
+- Manual click-through of one mission per world after each batch.
+- Mobile pass at 390px on Foundations 1, DJ 1, First Contact 1.
 
-## 6. Foundations & DJ content content extention
+---
 
-Source structure from learningmusic.ableton.com chapters (Beat, Notes & Scales, Chords, Basslines, Melodies, Song Structure) and rekordbox manual sections (Browse, Hot Cues, Beatgrid, Sync, Loops, FX, Recording). I'll mirror their **structure and exercise types** (interactive grids, build-a-beat, scale player, beat-match drill) but write all copy in our voice and design our own exercises (some improved/extended). If cant be improved copy exactly as is
+## Files touched
 
-Per mission: `hook → simple → analogy → interactive exercise → deeper → quiz`. Bump quiz quality: 4 well-explained Qs per mission instead of generic ones. Make the quiz **Next button** bigger/sticky (`bg-ink text-bone` full-width, shadow, h-14).
+- **Data**: `src/content/missions.ts`, `missions-foundations.ts`, `missions-dj.ts`, `lesson-deep.ts`, `beginner-foundations.ts`, `dj-missions.ts`, `types.ts` (no schema change, just docs), `worlds.ts` (only if we renumber world ordering).
+- **UI**: `src/routes/mission.$slug.tsx` (remove sources block, always-on advanced toggle, per-world number rendering), `src/components/JourneyMap.tsx`, `CompletionModal.tsx`, `HomeWidgets.tsx`, `SkillMap.tsx`.
+- **Sims new**: `src/components/sims/BeatBuilderSim.tsx`, `NoteExplorerSim.tsx`, `ChordStackerSim.tsx`, `BasslineLabSim.tsx`, `MelodyShaperSim.tsx`, `SongStructureSim.tsx`, `BeatmatchTrainerSim.tsx`, `HotCueDrillSim.tsx`, `LoopRollSim.tsx`, `HarmonicMixWheelSim.tsx`. Register each in `Simulator.tsx` + extend `SimType` in `types.ts`.
+- **Scripts**: `scripts/renumber-missions.mjs`, `scripts/audit-sim-fit.mjs`, extend `scripts/audit.mjs`.
 
-New/upgraded exercises to add:
+## Order of execution
 
-- Beat builder (4-on-the-floor → break → fill)
-- Scale explorer (root + mode, hear intervals)
-- Chord stacker (triads → 7ths)
-- Beatmatch trainer (two decks, nudge to align)
-- Hot-cue drill (memory test)
-- Loop-roll drill
+1. Schema + UI plumbing: extend `SimType`, build the 10 new sim components as empty-but-mounted shells, remove sources block, always-on Advanced toggle, per-world numbering + audit.
+2. Batch A (Foundations content + sim re-mapping).
+3. Batch B (DJ content + sim re-mapping).
+4. Batch C (Live W1–W4).
+5. Batch D (Live W5–W8).
+6. Final audit + mobile pass.
 
-## 7. Beginner/Advanced scoping
+## Out of scope (call out so it's not a surprise)
 
-- Delete global `<ModeToggle>` from any remaining spot.
-- Delete `useMode` global store usage from `index.tsx` etc; keep only as a per-mission local state.
-- On mission/chapter pages: render the toggle **only** when `LessonDeep` has both `beginner` and `advanced` blocks. Otherwise show single-track content.
-- Audit which missions deserve an advanced track — output a `needs-advanced.md` checklist after build so we can fill in over time. Initial candidates: compression, eq, sidechain, warp-modes, midi-quantize, sampler, drum-rack, mixer-routing, send-return, group-tracks, arrangement-automation.
-
-## 8. Verification pass
-
-- Click through `/`, `/learn`, a beginner mission, a regular mission, a DJ mission, `/devices/wavetable` — confirm: no double-render redirect, breadcrumb works, beginner/advanced only where it matters, glyphs render, theme picker re-skins everything, quiz Next is prominent.
-- Mobile (390px) walkthrough.
-- Run audit script if present.
-
-## Technical details
-
-- Files touched: `src/router.tsx`, `src/routes/index.tsx`, `src/routes/beginner.$slug.tsx`, `src/routes/mission.$slug.tsx`, `src/routes/dj.$slug.tsx`, `src/components/Header.tsx`, `src/components/Quiz.tsx`, `src/styles.css`, `src/lib/mode.ts`, `src/content/{worlds,paths,beginner-foundations,dj-missions,missions}.ts`.
-- New files: `src/components/ThemePicker.tsx`, `src/components/Breadcrumbs.tsx`, `src/components/glyphs/*.tsx` + `index.ts`, `src/components/home/{Hero,HowItWorks,WorldGrid,PathsRail,FAQ,CTA,Dashboard}.tsx`, `src/content/themes.ts`, `src/content/exercises/*`.
-- Keep diffs surgical — no rewrites of files I don't need to touch.
-
-Scope note: rewriting all Foundations + DJ missions is large; I'll do a complete first pass for Foundations (10 chapters) and DJ core (12 missions). The remaining 73 world missions stay as-is in this turn and are flagged for follow-up.
+- No new backend, no auth changes, no theme changes.
+- Homepage/dashboard work from the earlier plan stays as-is; this plan is mission/world content only.
+  &nbsp;
