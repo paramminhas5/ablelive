@@ -70,6 +70,9 @@ const BeatmatchTrainerSim = lazy(() => import("./BeatmatchTrainerSim").then((m) 
 const HotCueDrillSim = lazy(() => import("./HotCueDrillSim").then((m) => ({ default: m.HotCueDrillSim })));
 const LoopRollSim = lazy(() => import("./LoopRollSim").then((m) => ({ default: m.LoopRollSim })));
 const HarmonicMixWheelSim = lazy(() => import("./HarmonicMixWheelSim").then((m) => ({ default: m.HarmonicMixWheelSim })));
+const OscillatorMixerSim = lazy(() => import("./OscillatorMixerSim").then((m) => ({ default: m.OscillatorMixerSim })));
+const FilterEnvelopeSim = lazy(() => import("./FilterEnvelopeSim").then((m) => ({ default: m.FilterEnvelopeSim })));
+const LFOLabSim = lazy(() => import("./LFOLabSim").then((m) => ({ default: m.LFOLabSim })));
 
 function SimSkeleton() {
   return (
@@ -194,6 +197,12 @@ function SimInner({ type, preset }: { type: SimType; preset?: Record<string, unk
       return <LoopRollSim />;
     case "harmonic-mix-wheel":
       return <HarmonicMixWheelSim />;
+    case "osc-mixer":
+      return <OscillatorMixerSim />;
+    case "filter-envelope":
+      return <FilterEnvelopeSim />;
+    case "lfo-lab":
+      return <LFOLabSim />;
     default:
       return (
         <div className="brutal-border bg-bone p-6 font-mono text-xs uppercase">
