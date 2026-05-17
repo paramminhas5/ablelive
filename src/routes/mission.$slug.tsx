@@ -10,7 +10,7 @@ import { LESSONS } from "@/content/lesson-deep";
 import { AnimatedSignalFlow } from "@/components/AnimatedSignalFlow";
 import { CompletionModal } from "@/components/CompletionModal";
 import { HeartsWall } from "@/components/HeartsWall";
-import { Glossarized } from "@/components/Term";
+import { Glossarized, GlossaryScope } from "@/components/Term";
 
 export const Route = createFileRoute("/mission/$slug")({
   head: ({ params }) => {
@@ -94,6 +94,7 @@ function MissionPage() {
   };
 
   return (
+    <GlossaryScope resetKey={slug}>
     <div className="max-w-5xl mx-auto p-4 md:p-12 space-y-6">
 
       {showModal && (
@@ -406,5 +407,6 @@ function MissionPage() {
         )}
       </div>
     </div>
+    </GlossaryScope>
   );
 }
