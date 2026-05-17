@@ -13,7 +13,6 @@ export type GlossaryCat =
 export type GlossaryTerm = { term: string; def: string; cat: GlossaryCat };
 
 export const TERMS: GlossaryTerm[] = [
-const TERMS: Term[] = [
   // Workflow
   { cat: "Workflow", term: "Arrangement View", def: "Live's linear timeline view for composing full songs end-to-end. Tracks stack vertically, time runs left-to-right." },
   { cat: "Workflow", term: "Session View", def: "Live's clip grid for non-linear performance and ideation. Tracks vertical, scenes horizontal." },
@@ -230,7 +229,6 @@ const TERMS: Term[] = [
   { cat: "Audio", term: "Warp Mode: Pro", def: "An advanced version of the Complex mode with additional formant control." },
   { cat: "Devices", term: "Sampler Zone", def: "An area in Sampler where specific samples are mapped to ranges of keys or velocities." },
   { cat: "Workflow", term: "Solo Safe", def: "A setting that prevents a track from being muted when another track is soloed." },
-];
 ];
 
 // Slug an arbitrary term for the glossary anchor + URL.
