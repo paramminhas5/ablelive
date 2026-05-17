@@ -1,6 +1,7 @@
 export type WorldSlug =
   | "foundations"
   | "dj"
+  | "synths"
   | "first-contact"
   | "two-views"
   | "midi-audio"
@@ -50,6 +51,9 @@ export type SimType =
   | "hot-cue-drill"
   | "loop-roll"
   | "harmonic-mix-wheel"
+  | "osc-mixer"
+  | "filter-envelope"
+  | "lfo-lab"
   | "none";
 
 export type QuizQ = {

@@ -129,19 +129,17 @@ function MissionPage() {
           Quiz
         </a>
         <span className="ml-auto flex items-center gap-1">
-          {hasAdvanced && (
-            <>
-              <button
-                onClick={() => setAdvancedTab(false)}
-                className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${!advancedTab ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}
-              >Standard</button>
-              <button
-                onClick={() => setAdvancedTab(true)}
-                className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${advancedTab ? "bg-ink text-bone" : "bg-bone hover:bg-sun"}`}
-              >Advanced</button>
-            </>
-          )}
-          {!hasAdvanced && <span className="opacity-50 font-mono text-[9px]">M{m.number}</span>}
+          <button
+            onClick={() => setAdvancedTab(false)}
+            disabled={!hasAdvanced}
+            className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${!advancedTab ? "bg-ink text-bone" : "bg-bone hover:bg-sun"} disabled:opacity-40 disabled:cursor-not-allowed`}
+          >Standard</button>
+          <button
+            onClick={() => setAdvancedTab(true)}
+            disabled={!hasAdvanced}
+            className={`brutal-border px-3 py-1 font-mono text-[9px] uppercase brutal-press ${advancedTab ? "bg-ink text-bone" : "bg-bone hover:bg-sun"} disabled:opacity-40 disabled:cursor-not-allowed`}
+          >Advanced</button>
+          <span className="opacity-50 font-mono text-[9px] ml-1">M{m.number}</span>
         </span>
       </nav>
 
