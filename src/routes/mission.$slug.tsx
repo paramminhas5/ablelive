@@ -246,7 +246,7 @@ function MissionPage() {
                 <div className="font-mono text-xs uppercase font-bold mb-1">EDGE CASES</div>
                 <ul className="space-y-2 font-mono text-sm">
                   {deep.advanced.edgeCases.map((x, i) => (
-                    <li key={i}>· {x}</li>
+                    <li key={i}>· <Glossarized text={x} /></li>
                   ))}
                 </ul>
               </div>
@@ -256,7 +256,7 @@ function MissionPage() {
                 <div className="font-mono text-xs uppercase font-bold mb-1">ENGINEER'S NOTES</div>
                 <ul className="space-y-2 font-mono text-sm">
                   {deep.advanced.engineerNotes.map((x, i) => (
-                    <li key={i}>⚙ {x}</li>
+                    <li key={i}>⚙ <Glossarized text={x} /></li>
                   ))}
                 </ul>
               </div>
@@ -270,7 +270,7 @@ function MissionPage() {
           <div className="font-mono text-xs uppercase mb-2 font-bold">▸ LISTEN FOR</div>
           <ul className="space-y-1 font-mono text-sm">
             {deep.listenFor.slice(0, advanced ? 99 : 3).map((x, i) => (
-              <li key={i}>• {x}</li>
+              <li key={i}>• <Glossarized text={x} /></li>
             ))}
           </ul>
         </div>
@@ -285,9 +285,9 @@ function MissionPage() {
             {deep.walkthrough.map((s, i) => (
               <li key={i} className="brutal-border bg-bone p-2 font-mono text-sm">
                 <div>
-                  <span className="font-bold">{i + 1}. DO:</span> {s.do}
+                  <span className="font-bold">{i + 1}. DO:</span> <Glossarized text={s.do} />
                 </div>
-                <div className="opacity-80 mt-1">▸ LISTEN: {s.listen}</div>
+                <div className="opacity-80 mt-1">▸ LISTEN: <Glossarized text={s.listen} /></div>
               </li>
             ))}
           </ol>
@@ -301,7 +301,7 @@ function MissionPage() {
           </summary>
           <ul className="space-y-1 mt-2 font-mono text-sm">
             {deep.proMoves.map((x, i) => (
-              <li key={i}>★ {x}</li>
+              <li key={i}>★ <Glossarized text={x} /></li>
             ))}
           </ul>
         </details>
@@ -314,7 +314,7 @@ function MissionPage() {
           </summary>
           <ul className="space-y-1 mt-2 font-mono text-sm">
             {deep.mistakes.map((x, i) => (
-              <li key={i}>✗ {x}</li>
+              <li key={i}>✗ <Glossarized text={x} /></li>
             ))}
           </ul>
         </details>
