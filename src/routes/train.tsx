@@ -346,11 +346,11 @@ function buildQuestion(drill: DrillKey): Question {
 
 function playQuestion(drill: DrillKey, q: Question): { stop: () => void } | undefined {
   if (drill === "interval") {
-    playInterval(q.payload);
+    playInterval(q.payload.semis, q.payload.rootMidi);
     return;
   }
   if (drill === "chord") {
-    playChord(q.payload);
+    playChord(q.payload.offsets, q.payload.rootMidi);
     return;
   }
   if (drill === "eq-cut") return playEqExcerpt(q.payload);
