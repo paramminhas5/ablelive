@@ -13,6 +13,7 @@ import {
   TEMPO_OPTIONS,
   type DrillKey,
   getLocalDrillStats,
+  pickRootMidi,
   playAtTempo,
   playChord,
   playCompressedLoop,
