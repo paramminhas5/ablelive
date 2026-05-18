@@ -264,23 +264,25 @@ function buildQuestion(drill: DrillKey): Question {
   if (drill === "interval") {
     const ans = pick(INTERVALS);
     const opts = sample(INTERVALS, 4, ans);
+    const rootMidi = pickRootMidi();
     return {
       prompt: "Two notes played. Name the interval.",
       options: opts.map((o) => ({ id: String(o.semis), label: o.name })),
       answerId: String(ans.semis),
       answerLabel: ans.name,
-      payload: ans.semis,
+      payload: { semis: ans.semis, rootMidi },
     };
   }
   if (drill === "chord") {
     const ans = pick(CHORDS);
     const opts = sample(CHORDS, 4, ans);
+    const rootMidi = pickRootMidi();
     return {
       prompt: "What kind of chord did you hear?",
       options: opts.map((o) => ({ id: o.id, label: o.name })),
       answerId: ans.id,
       answerLabel: ans.name,
-      payload: ans.offsets,
+      payload: { offsets: ans.offsets, rootMidi },
     };
   }
   if (drill === "eq-cut") {
