@@ -72,6 +72,27 @@ function MissionPage() {
   const fallbackWhat = m.explainer.find((b) => b.kind === "lead" || b.kind === "para");
   const track = advanced ? deep?.advanced : deep?.beginner;
   const whatParas = track?.what ?? deep?.definition;
+
+  // Collect every glossarizable text the page will render, in render order.
+  // <GlossaryScope> uses this to precompute which terms each text may wrap
+  // so each term shows AT MOST ONCE per mission (but across different missions
+  // the same term is wrapped fresh).
+  const allTexts = useMemo(() => {
+    const out: string[] = [];
+    if (whatParas) out.push(...whatParas);
+    else if (fallbackWhat && "text" in fallbackWhat) out.push(fallbackWhat.text);
+    if (!advanced && deep?.beginner?.analogy) out.push(deep.beginner.analogy);
+    if (!advanced && deep?.beginner?.why) out.push(...deep.beginner.why);
+    if (advanced && deep?.advanced?.edgeCases) out.push(...deep.advanced.edgeCases);
+    if (advanced && deep?.advanced?.engineerNotes) out.push(...deep.advanced.engineerNotes);
+    if (deep?.listenFor) out.push(...deep.listenFor.slice(0, advanced ? 99 : 3));
+    if (deep?.walkthrough) {
+      for (const s of deep.walkthrough) { out.push(s.do); out.push(s.listen); }
+    }
+    if (advanced && deep?.proMoves) out.push(...deep.proMoves);
+    if (deep?.mistakes) out.push(...deep.mistakes);
+    return out;
+  }, [slug, advanced, deep, whatParas, fallbackWhat]);
   // Always use m.quiz — it has explain + hint on every question.
   // deep.quizEasy/quizHard are unenriched and would shadow the explanations.
   const quizQs = useMemo(
@@ -94,7 +115,7 @@ function MissionPage() {
   };
 
   return (
-    <GlossaryScope resetKey={slug}>
+    <GlossaryScope resetKey={slug} texts={allTexts}>
     <div className="max-w-5xl mx-auto p-4 md:p-12 space-y-6">
 
       {showModal && (
