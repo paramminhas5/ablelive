@@ -167,8 +167,8 @@ export const INTERVALS = [
   { semis: 10, name: "Minor 7th" },
   { semis: 12, name: "Octave" },
 ];
-export function playInterval(semis: number) {
-  const root = 60 + Math.floor(Math.random() * 7);
+export function playInterval(semis: number, rootMidi?: number) {
+  const root = rootMidi ?? 60 + Math.floor(Math.random() * 7);
   playTone(midiToFreq(root), 0, 0.6, "triangle", 0.25);
   playTone(midiToFreq(root + semis), 0.5, 0.6, "triangle", 0.25);
 }
@@ -183,10 +183,13 @@ export const CHORDS = [
   { id: "min7", name: "Minor 7", offsets: [0, 3, 7, 10] },
   { id: "dom7", name: "Dominant 7", offsets: [0, 4, 7, 10] },
 ];
-export function playChord(offsets: number[]) {
-  const root = 60 + Math.floor(Math.random() * 7);
+export function playChord(offsets: number[], rootMidi?: number) {
+  const root = rootMidi ?? 60 + Math.floor(Math.random() * 7);
   offsets.forEach((o) => playTone(midiToFreq(root + o), 0, 1.4, "triangle", 0.18));
 }
+
+// Pick a stable root once per question so Replay plays the same notes.
+export const pickRootMidi = () => 60 + Math.floor(Math.random() * 7);
 
 // --- EQ CUT ---
 // Play a brief noise/pad burst with a deep notch at the chosen freq, ask which band it was.
