@@ -1,6 +1,12 @@
-// Inline glossary term: dotted underline + hover/tap popover with definition
-// and a "View in glossary" link. Works on touch (tap) and desktop (hover).
-import { createContext, useContext, useMemo, useRef } from "react";
+// Inline glossary term: dotted underline + hover/tap popover with definition.
+// Pure, hydration-safe dedup model:
+//   1. Mission page collects every text it will render into a string[].
+//   2. <GlossaryScope texts={...}> builds an allow-map (text -> Set<term>)
+//      once per slug. First occurrence of each term wins; later instances
+//      of the same term get a plain string (no wrapper).
+//   3. <Glossarized text /> looks up its allow set and wraps only those
+//      terms. Idempotent — re-renders never change output.
+import { createContext, useContext, useMemo } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Link } from "@tanstack/react-router";
 import {
@@ -10,6 +16,7 @@ import {
   type GlossaryTerm,
 } from "@/content/glossary";
 
+// --- Single term wrapper ---------------------------------------------------
 export function Term({
   children,
   term,
@@ -54,26 +61,7 @@ export function Term({
   );
 }
 
-// --- Shared dedup scope ----------------------------------------------------
-// Wrap a mission/page in <GlossaryScope> so every <Glossarized> below it
-// shares one "already seen" set — each term is auto-linked AT MOST ONCE per
-// scope, regardless of how many text blocks render it.
-type Scope = { seen: Set<string> };
-const ScopeCtx = createContext<Scope | null>(null);
-
-export function GlossaryScope({ children, resetKey }: { children: React.ReactNode; resetKey?: string }) {
-  // Reset the set whenever resetKey changes (e.g. mission slug).
-  const ref = useRef<{ key: string | undefined; scope: Scope }>({
-    key: resetKey,
-    scope: { seen: new Set() },
-  });
-  if (ref.current.key !== resetKey) {
-    ref.current = { key: resetKey, scope: { seen: new Set() } };
-  }
-  return <ScopeCtx.Provider value={ref.current.scope}>{children}</ScopeCtx.Provider>;
-}
-
-// --- Auto-wrap text --------------------------------------------------------
+// --- Regex source (cached) -------------------------------------------------
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 let CACHED_SRC: string | null = null;
 function getReSrc() {
@@ -81,23 +69,72 @@ function getReSrc() {
   CACHED_SRC = AUTO_WRAP_KEYS.map(escapeRe).join("|");
   return CACHED_SRC;
 }
+const makeRe = () => new RegExp(`\\b(${getReSrc()})\\b`, "gi");
 
+// --- Scope context: precomputed allow map ----------------------------------
+type AllowMap = Map<string, Set<string>>;
+const ScopeCtx = createContext<AllowMap | null>(null);
+
+function buildAllowMap(texts: string[]): AllowMap {
+  const map: AllowMap = new Map();
+  const globalSeen = new Set<string>();
+  for (const t of texts) {
+    if (!t || map.has(t)) continue; // duplicate text → no wraps (handled below)
+    const allowed = new Set<string>();
+    const re = makeRe();
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(t)) !== null) {
+      const lower = m[0].toLowerCase();
+      if (!globalSeen.has(lower)) {
+        globalSeen.add(lower);
+        allowed.add(lower);
+      }
+    }
+    map.set(t, allowed);
+  }
+  return map;
+}
+
+export function GlossaryScope({
+  children,
+  resetKey,
+  texts,
+}: {
+  children: React.ReactNode;
+  resetKey?: string;
+  texts: string[];
+}) {
+  const map = useMemo(
+    () => buildAllowMap(texts),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [resetKey, texts.length],
+  );
+  return <ScopeCtx.Provider value={map}>{children}</ScopeCtx.Provider>;
+}
+
+// --- Per-text wrapper ------------------------------------------------------
 export function Glossarized({ text }: { text: string }) {
-  const scope = useContext(ScopeCtx);
-  // Fall back to a fresh local set if no scope is present.
-  const localScope = useMemo<Scope>(() => ({ seen: new Set() }), [text]);
-  const seen = (scope ?? localScope).seen;
-
+  const map = useContext(ScopeCtx);
   if (!text) return null;
-  const re = new RegExp(`\\b(${getReSrc()})\\b`, "gi");
+
+  // No scope → wrap every term (fallback for routes that don't set up scope).
+  const allowed = map?.get(text);
+  if (!map) {
+    return <>{wrapAll(text, null)}</>;
+  }
+  return <>{wrapAll(text, allowed ?? new Set())}</>;
+}
+
+function wrapAll(text: string, allowed: Set<string> | null): React.ReactNode[] {
   const out: React.ReactNode[] = [];
+  const re = makeRe();
   let last = 0;
   let m: RegExpExecArray | null;
   let key = 0;
   while ((m = re.exec(text)) !== null) {
     const lower = m[0].toLowerCase();
-    if (seen.has(lower)) continue;
-    seen.add(lower);
+    const should = allowed === null ? true : allowed.has(lower);
+    if (!should) continue;
     if (m.index > last) out.push(text.slice(last, m.index));
     out.push(
       <Term key={`t${key++}`} term={lower}>
@@ -107,5 +144,5 @@ export function Glossarized({ text }: { text: string }) {
     last = m.index + m[0].length;
   }
   if (last < text.length) out.push(text.slice(last));
-  return <>{out}</>;
+  return out;
 }

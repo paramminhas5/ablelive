@@ -1,73 +1,52 @@
-# Make Foundations world-class
+## 1. Fix invisible tooltips (root cause)
 
-Five workstreams, each independently shippable. I'll execute in the order below and stop after each batch so you can sanity-check before I burn more turns.
+`<Glossarized>` mutates a shared `seen` Set **during render**. React renders components multiple times (StrictMode double-invoke in dev, any state change in prod). On the second render every term is already in `seen`, so nothing gets wrapped → no tooltips visible. The dedup model is correct (one tooltip per term per mission, but the same term can appear in other missions); the implementation is impure.
 
-## 1. Glossary-linked jargon (highest leverage)
+**Fix:** move dedup out of render.
 
-Build a `<Term>` inline component that wraps any jargon word in mission prose. On desktop: dotted underline + hover popover with the glossary definition. On mobile: tap to open a small sheet, "Open in glossary" link inside.
+- Add `useMissionGlossary(slug, texts: string[])` hook in `src/components/Term.tsx` (or a new `glossary-dedup.ts`).
+- The mission page collects every glossarizable string in render order (what / why / analogy / listenFor / walkthrough / edgeCases / engineerNotes / proMoves / etc.) into a stable array memoized on `slug`.
+- The hook returns a `Map<textIndex, Set<allowedTermLowercase>>` computed once per slug: walk the array in order, first occurrence of each term wins.
+- `<Glossarized text index />` reads its allow-set from context and only wraps terms in that set. Pure render, idempotent across re-renders.
+- Remove the impure `GlossaryScope` mutation path. Keep the component name + a thin context that exposes the precomputed map.
+- Verify by loading `/mission/what-is-sound` and confirming dotted-underline terms render on first paint and survive a tab toggle.
 
-Mechanism:
-- Build `src/lib/glossary-index.ts` — keyed lookup from the existing `TERMS` array in `src/routes/glossary.tsx` (extract `TERMS` into `src/content/glossary.ts` so both the route and the tooltip share one source).
-- New component `src/components/Term.tsx` using Radix Popover (works for hover *and* tap, already in the project via shadcn).
-- Update the lesson renderer (the component that renders `beginner.what`, `advanced.what`, `walkthrough`, etc. inside `src/routes/mission.$slug.tsx`) to auto-wrap matches against the glossary index. Match longest-term-first, case-insensitive, word-boundary, skip inside code blocks. Cap at first 2 occurrences per page per term so it doesn't get noisy.
-- Add ~30 missing terms the audit surfaces (transient detection, Camelot, formant, key-lock, quantize launch, etc.).
+## 2. Interval drill — reset on replay
 
-## 2. Mobile audio fix
+In `src/routes/train.tsx` `DrillRunner`:
+- Replay button currently re-calls `playQuestion` but `playInterval` re-randomizes the root MIDI each call, so the same "minor third" question plays at a different pitch — confusing. Fix by computing the root once per question (store on `question.payload` as `{ semis, rootMidi }`) and passing it through.
+- Apply the same "freeze randomness per round" pattern to `playChord` (root) and any other drill where re-rolling on replay changes the audible material.
+- Confirm: clicking ▶ REPLAY plays the identical two notes; clicking NEXT ROUND rolls a new question.
 
-Symptom: nothing plays on iOS Safari / Android Chrome despite the unlock overlay.
+## 3. Sim-fit audit (all 96 missions)
 
-Likely causes in `src/lib/audio.ts` and sim files:
-- `AudioContext` created at module scope before any gesture on iOS (the auto-listener helps but `getCtx()` is also called during render in some sims, creating the ctx in a non-gesture frame).
-- `exponentialRampToValueAtTime(0.0001, ...)` is fine, but several sims call `osc.start()` with a past timestamp on slow phones → silent.
-- `MasterTransportBar` overlay only shows if `isAudioUnlocked()` is false — but `unlocked` flips to true the moment ctx is created in suspended state on iOS (false positive).
+Produce `scripts/sim-audit.mjs` that joins `MISSIONS` with their `sim.type` and a curated "ideal sim" table, then prints a markdown report at `/mnt/documents/sim-audit.md` with three columns: `slug | current sim | recommended | rationale`.
 
-Fix plan:
-- Don't construct `AudioContext` until first user gesture. Replace module-load listener with a strict `ensureCtx()` that only runs inside a verified gesture handler.
-- Gate `unlocked = true` on `ctx.state === "running"` *after* a successful `resume()` resolves, not on `getCtx()` calls.
-- Add iOS-specific silent-buffer prime (play 1 sample of silence on resume) — known fix for Safari muting subsequent nodes.
-- Audit each sim's "Play" button to call `await ensureCtx()` before scheduling, and schedule with `Math.max(now + 0.02, when)`.
-- Verify on the in-tool mobile viewport (390x844) by visiting `/mission/drums-101` and tapping the pad.
+Rules for "fit":
+- Concept must be *demonstrated* by the sim, not merely adjacent (e.g. a "compression" mission should use `CompLakeSim`, not `MixerSim`).
+- Beginner missions get hands-on sims with one variable; advanced get multi-knob sims.
+- Flag missions where the sim is generic filler (`MixerSim`, `DrumPadSim` reused on theory missions) for swap.
 
-## 3. Advanced-content depth audit on Foundations
+After the report, apply the swaps in `src/content/missions*.ts` in a single pass. For missions where no existing sim fits, list them as "needs new sim" and address in step 4.
 
-The audit script (`scripts/audit.mjs`) already flags jargon, thin paragraphs, missing edge cases. Run it scoped to `world: "foundations"`, then for each flagged mission:
-- Rewrite `advanced.what` so every jargon term is *defined in plain English on first use*, then the term is used. Pattern: "The buffer size (how many samples Live processes between each callback) determines latency…"
-- Add 3+ `edgeCases` per mission (currently many have 0–1).
-- Add `engineerNotes` with numeric specifics (sample rate, dB values, ms timings).
-- Keep beginner track untouched — it's already strong from prior batches.
+## 4. Sim quality upgrades
 
-Target: 0 "advanced-thin" / "jargon" / "edgeCases" flags for foundations missions.
+Target the 6 lowest-quality / most-reused sims first based on the audit. Likely candidates: `EarTrainingSim`, `ChordStackerSim`, `MidiVsAudioSim`, `SidechainSim`, `FilterEnvelopeSim`, `SubtractiveSynthSim`.
 
-## 4. Sim-fit audit
+For each:
+- Reference proven open-source implementations (Tone.js examples, Learning Synths by Ableton, teropa/musictheory, Web Audio API examples on MDN, learningsynths.ableton.com source) — pulled via web search, adapted to our brutalist UI tokens.
+- Add: visible state readout (current values), labeled axes, "try this" preset buttons, and a teaching caption that updates as the user interacts.
+- Mobile: ensure all controls are tappable (44px min), audio routed through `ensureAudio()` from the unlock fix.
+- Each upgraded sim ships with: clear goal text, 2–3 preset challenges, and a "you got it" confirmation when the target is matched.
 
-For all 42 foundations missions, score sim fit and re-route mis-matches. Examples I already see:
-- `bpm-tap` → fine for "tempo & BPM" mission
-- `ear-training` is used 8× — some are right (intervals, chord quality), some are lazy fallbacks (e.g. "what is sound" probably wants a waveform visualizer, not an interval guesser)
-- `none` is used 4× — every one of those is a missed teaching moment
+## 5. Verify
 
-Deliverable: a table (`/dev-server/.lovable/sim-audit.md`) listing slug → current sim → recommended sim → rationale. Then update `missions-foundations.ts` for the ~10 most impactful swaps. If a needed sim doesn't exist (e.g. "waveform-explorer"), I'll flag it but not build it in this pass.
+- Run `bun run typecheck` equivalent (build) — must pass.
+- Spot-check 3 missions across worlds for tooltips + sim fit.
+- Run interval drill, confirm replay = identical notes.
+- Open `/mnt/documents/sim-audit.md` for the user to review the swap table.
 
-## 5. "Pay immediately" polish
+## Technical details
 
-Concrete, low-risk additions ordered by impact:
-1. **Progress receipts**: after each mission completion, a shareable card already exists (`ShareCard.tsx`) — wire it into the completion modal with a "Save image" + "Copy link" button.
-2. **Mastery badges with real criteria**: replace participation badges with "Perfect quiz on hard mode" / "Built the walkthrough end-to-end in <2min" criteria.
-3. **Daily drill** on `/train`: 3 quiz questions sampled from completed missions, streak counter in `localStorage`.
-4. **Search**: `CommandPalette.tsx` exists — add glossary terms + missions + devices as searchable entries (cmd-K).
-5. **Print-friendly lesson page**: `@media print` styles so users can save a PDF cheat sheet per mission — high perceived value, ~30 lines of CSS.
-6. **Empty-state on `/profile`**: show what unlocks at each tier ("Complete Foundations → unlock Producer World"). Currently no aspirational hook.
-
-## Execution order (so you can stop me anytime)
-
-1. Extract glossary, build `<Term>` component, wire into mission renderer. *(1 turn)*
-2. Mobile audio fix + verify on mobile viewport. *(1 turn)*
-3. Foundations advanced-content rewrite, batch of 14 missions. *(1 turn)*  → STOP, you review tone
-4. Remaining 28 foundations missions. *(2 turns)*
-5. Sim-fit audit doc + top-10 swaps. *(1 turn)*
-6. Polish bundle: ShareCard wiring, CommandPalette search, daily drill, print CSS. *(1 turn)*
-
-## Out of scope this round
-
-- New simulators (flagged in §4 but not built)
-- DJ/Producer/Synths content audits (same treatment, separate plan once Foundations lands)
-- Auth/paywall — only mentioned as "world-class" target; gating logic is a separate ask
+- Files touched: `src/components/Term.tsx` (rewrite), `src/routes/mission.$slug.tsx` (collect texts, pass index), `src/lib/drills.ts` (freeze root), `src/routes/train.tsx` (payload threading), `src/content/missions*.ts` (sim swaps), 6 sim components under `src/components/sims/`, plus `scripts/sim-audit.mjs`.
+- No schema or auth changes. No new dependencies expected; if a sim genuinely needs Tone.js for a specific feature we'll inline the minimal Web Audio code instead to keep the bundle lean.
